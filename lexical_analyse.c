@@ -106,6 +106,13 @@ struct Symbol getNextSymbol(FILE* input) {
           state = Q20;
           break;
         }
+        else
+        {
+          //tu nebolo osetrene, co ma nastat ak nie je zadany ani jeden pozadovany charakter, treba este osetrit puzzlebean
+          printf("There is not such a character\n");
+          break;
+        }
+        
 
       }
       case Q1: { // # single line comment
@@ -170,7 +177,7 @@ struct Symbol getNextSymbol(FILE* input) {
         if(character == '"') { 
           state = S;
           break;
-        } else if (character = EOF){
+        } else if (character == EOF){ // = namiesto ==
           state = EOF;
           break;
         } else {
