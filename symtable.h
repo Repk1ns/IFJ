@@ -32,6 +32,7 @@ typedef enum SymType {
 //neuplna deklarace struktur
 typedef struct SymTableItem SymTableItem_t;
 typedef struct SymTable SymTable_t;
+typedef struct SymTableIterator SymTableIterator_t;
 
 //typ hashovacia tabulka
 struct SymTable
@@ -45,6 +46,7 @@ struct SymTable
 //polozka tabulky
 struct SymTableItem
 {
+     
     //typ polozky
     SymType_t SymItemType;
     //data polozky
@@ -54,11 +56,26 @@ struct SymTableItem
 
 };
 
+// iterátor
+struct SymTableIterator
+{ 
+    // ukazatel na položku
+    SymTableItem_t *SymIterator; 
+    // na ktorom indexe v tabulke 
+    int idx; 
+}; 
+
 
 //inicializacia tabulky, vracia mi typ tabulky
 SymTable_t* SymTableInit(size_t size);
 //vymazanie tabulky
 void SymTableDelete(SymTable_t *ST);
+//hladanie v tabulke podla key
+void SymTableSearch(SymTable_t *ST);
+//vlozenie do tabulky
+void SymTableInsert(SymTable_t *ST);
+//hashovacia funkcia
+unsigned int SymTableHashFunction(const char *str, int SymTableSize); 
 
 
 #endif

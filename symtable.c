@@ -21,3 +21,43 @@ SymTable_t* SymTableInit(size_t size)
     }
     return ST;
 }
+ /*
+Take the next item that the head points to and save it
+Free the head item
+Set the head to be the next item that we've stored on the side
+*/
+void SymTableDelete(SymTable_t *ST)
+{
+    unsigned i=0;
+    SymTableItem_t *nod = NULL ; 
+    //prechadzame celu tabulku
+    while(i <  ST->SymTableSize)
+    {
+        //ak tabulka nie je prazdna -> narazili sme na ukazetel na item
+        if(ST->SymTableArray[i] != NULL)
+        {
+            //prechadzame pole pointrov dovtedy, dokym vsetky su null
+            while(ST->SymTableArray[i]!=NULL)
+            {
+                //ulozime su dalsi prvok
+                nod=ST->SymTableArray[i]->SymItemNext;
+                //odstranime aktulany prvok
+                free(ST->SymTableArray[i]);
+                //dalsi prvok sa stane aktualnym
+                ST->SymTableArray[i]=nod;
+            }
+        }    
+        i++;
+    }
+    free(ST);
+}
+
+//hashovacia funkcia na rozptylenie itemov v tabulke
+unsigned int htab_hash_function(const char *str, int size) 
+{ 
+    unsigned int h=0; 
+    const unsigned char *p;
+    for(p=(const unsigned char*) str; *p!='\0'; p++) 
+    h = 65599*h + *p; 
+    return h%size; 
+}
