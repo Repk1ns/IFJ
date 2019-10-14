@@ -5,6 +5,7 @@ Lexikalni analyza = 1. commit
   dodam stejne tak i komentare a dokumentaci
   2. commit = opraveny cisla, stringy, jediny eof zlobi, zaznamenala jsem to ted pred par minutami, nicmene vse ostatni by melo fungovat uz;
   instrukce tam tedy nepatri, hodila jsem vam je do mainu do komentare abyste je pouzili potom dale a nemuseli je psat znova :)
+  !! PROSIM, kdyztak si opravte nazev, mela jsem puvodne napsano lexical_analyse, ale je to spatne, spravne je lexical_analysis, tak at vam to nezlobi
 
 SymTable = 2. commit 
   -> Upraveny Makefile s CFLAGMI kvoli errorom pri preklade
