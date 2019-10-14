@@ -3,6 +3,8 @@
 Lexikalni analyza = 1. commit
   nefunguji cisla a string ma taky problemy, ale vim kde je chyba a opravim to asap hned jak bude cas
   dodam stejne tak i komentare a dokumentaci
+  2. commit = opraveny cisla, stringy, jediny eof zlobi, zaznamenala jsem to ted pred par minutami, nicmene vse ostatni by melo fungovat uz;
+  instrukce tam tedy nepatri, hodila jsem vam je do mainu do komentare abyste je pouzili potom dale a nemuseli je psat znova :)
 
 SymTable = 2. commit 
   -> Upraveny Makefile s CFLAGMI kvoli errorom pri preklade
