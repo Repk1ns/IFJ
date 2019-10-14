@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c99 -pedantic -Wall -Wextra -Werror -g
+CFLAGS=-std=c99 -pedantic -Wall -Wextra -Werror -g -lm
 OFLAGS=-O2
 
 default: ifj
