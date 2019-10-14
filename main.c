@@ -1,17 +1,69 @@
 #include <stdlib.h>
-#include "lexical_analyse.h"
-#include "syntax_analyse.h"
-#include "symtable.h"
+#include "lexical_analysis.h"
+
+
+// these instructions are prepared for you, enjoyy :) 
+
+// #define INSTRUCTION_COUNT 56
+/*
+const char* instructions [INSTRUCTION_COUNT] = {
+  "MOVE", "CREATEFRAME", "PUSHFRAME", "POPFRAME", "DEFVAR", "CALL", "RETURN", "PUSHS", "POPS", "CLEARS",
+  "ADD", "SUB", "MUL", "DIV", "IDIV", "ADDS", "SUBS", "MULS", "DIVS", "IDIVS",
+  "LT", "GT", "EQ", "LTS", "GTS", "EQS", "AND", "OR", "NOT", "ANDS", 
+  "ORS", "NOTS", "INT2FLOAT", "FLOAT2INT", "INT2CHAR", "STRI2INT", "INT2FLOATS", "FLOAT2INT", "INT2CHARS", "STRI2INTS", 
+  "READ", "WRITE", "CONCAT", "STRLEN", "GETCHAR", "SETCHAR", "TYPE", "LABEL", "JUMP", "JUMPIFEQ", 
+  "JUMPIFNEQ", "JUMPIFEQS", "JUMPIFNEQS", "EXIT", "BREAK", "DPRINT"
+}; */
 
 int main() {
-  //lexikalni analyzatore, dej mi dalsi symbol:
   struct Symbol symbol;
   do {
     symbol = getNextSymbol(stdin);
-    printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
-    //printf("type: %d\n", symbol.type);
+    switch (symbol.type){
+      case _int: {
+        printf("type: %d, data: %d\n", symbol.type, symbol.data.int_data);
+        break;
+      }
+      case _double: {
+        printf("type: %d, data: %f\n", symbol.type, symbol.data.dbl_data);
+        break;
+      }
+      case _func: {
+        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
+        break;
+      }
+      case _keyword: {
+        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
+        break;
+      }
+      case _id: {
+        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
+        break;
+      }
+      case _eof: {
+        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
+        break;
+      }
+      case _eol: {
+        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
+        break;
+      }
+      case _operator: {
+        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
+        break;
+      }
+      case _ifjcode: {
+        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
+        break;
+      }
+      case _whitespace: {
+        printf("type: %d, data: %d\n", symbol.type, symbol.data.int_data);
+        break;
+      }
+      default: {
+        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
+        break;
+      }
+    }
   } while (symbol.type == _eof);
-  
-  //printf("type: %d, value: %d", symbol.type, symbol.data.int_data);
-  //tady zpracuji symbol
 }
