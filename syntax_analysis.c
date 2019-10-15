@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "symtable.h"
-#include "syntax_analyse.h"
+#include "syntax_analysis.h"
 
 
 

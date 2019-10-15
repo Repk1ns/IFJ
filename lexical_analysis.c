@@ -33,7 +33,7 @@ struct Symbol getNextSymbol(FILE* input) {
   char IFJbuffer[10]; // buffer for .IFJcode19
   char help[2];
   int whitespace = 1; 
-  char* tmp_str = '\0';
+  //char* tmp_str = '\0';
   buffer[0] = '\0'; // clear buffer from mess 
 
 
@@ -189,7 +189,7 @@ struct Symbol getNextSymbol(FILE* input) {
         if(character == '"') { 
           state = S;
           break;
-        } else if (character = EOF){
+        } else if (character == EOF){
           state = EOF;
           break;
         } else {
