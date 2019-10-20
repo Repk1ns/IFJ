@@ -20,7 +20,8 @@ int main() {
   do {
     symbol = getNextSymbol(stdin);
     switch (symbol.type){
-      case _int: {
+      case _int:
+      case _whitespace: {
         printf("type: %d, data: %d\n", symbol.type, symbol.data.int_data);
         break;
       }
@@ -28,42 +29,11 @@ int main() {
         printf("type: %d, data: %f\n", symbol.type, symbol.data.dbl_data);
         break;
       }
-      case _func: {
-        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
-        break;
-      }
-      case _keyword: {
-        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
-        break;
-      }
-      case _id: {
-        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
-        break;
-      }
-      case _eof: {
-        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
-        break;
-      }
-      case _eol: {
-        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
-        break;
-      }
-      case _operator: {
-        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
-        break;
-      }
-      case _ifjcode: {
-        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
-        break;
-      }
-      case _whitespace: {
-        printf("type: %d, data: %d\n", symbol.type, symbol.data.int_data);
-        break;
-      }
       default: {
         printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
         break;
       }
     }
-  } while (symbol.type == _eof);
+    printf("--------------------------------------\n");
+  } while (symbol.type != _eof);
 }

@@ -19,18 +19,18 @@ union Data {
 };
 
 enum Type {
-  _int,
-  _string,
-  _none,
-  _func,
-  _keyword,
-  _double,
-  _id,
-  _eof,
-  _eol,
-  _operator,
-  _ifjcode,
-  _whitespace,
+  _int,         //  0
+  _string,      //  1
+  _none,        //  2
+  _func,        //  3
+  _keyword,     //  4
+  _double,      //  5
+  _id,          //  6
+  _eof,         //  7
+  _eol,         //  8
+  _operator,    //  9
+  _ifjcode,     // 10
+  _whitespace,  // 11
 };
 
 

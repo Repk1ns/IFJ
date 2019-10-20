@@ -32,7 +32,6 @@ struct Symbol getNextSymbol(FILE* input) {
   char exponent_sign = '+';
   char IFJbuffer[10]; // buffer for .IFJcode19
   char help[2];
-  int whitespace = 1; 
   //char* tmp_str = '\0';
   buffer[0] = '\0'; // clear buffer from mess 
 
@@ -111,15 +110,18 @@ struct Symbol getNextSymbol(FILE* input) {
             state = Q9;
           }
           break;
+        } else if(character == EOL) {
+          symbol.type = _eol;
+          return symbol;
         } else if(isspace(character)) {
+          if (character == ' '){
+            symbol.data.int_data ++;
+          }
+          symbol.type = _whitespace;
           state = Q20;
           break;
         } else if(character == EOF) {
           state = F;
-          break;
-        } else if(character == EOL) {
-          symbol.type = _eol;
-          state = S;
           break;
         } else {
           state = Fx;
@@ -464,16 +466,15 @@ struct Symbol getNextSymbol(FILE* input) {
           state = Q1;
           break;
         } else if (isspace(character)) {
-          whitespace++;
-          printf("%d\n", whitespace);
+          if (character == ' '){
+            symbol.data.int_data ++;
+          }
           break;
         } else if(character == EOL) {
-          whitespace = 0;
-          break;
+          symbol.type = _eol;
+          return symbol;
         } else {
           ungetc(character, input);
-          symbol.type = _whitespace;
-          symbol.data.int_data = whitespace;
           return symbol;
         }
       }
