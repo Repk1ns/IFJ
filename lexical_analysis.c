@@ -20,8 +20,8 @@ const char* functions [FUNCTION_COUNT] = {
 // buffer for var names, strings, etc.
 char buffer[MAX_ID_LENGTH];
 
-struct Symbol getNextSymbol(FILE* input) {
-  struct Symbol symbol;
+Symbol_t getNextSymbol(FILE* input) {
+  Symbol_t symbol;
   
   symbol.data.dbl_data = 0.0; 
   bool while_condition = true;

@@ -33,7 +33,7 @@ enum Type {
   _whitespace,  // 11
 };
 
-
+typedef struct Symbol Symbol_t;
 struct Symbol {
   enum Type type;
   union Data data;
@@ -75,7 +75,7 @@ enum State {
 #define KEYWORD_COUNT 7
 #define FUNCTION_COUNT 8
 
-struct Symbol getNextSymbol(FILE*);
+Symbol_t getNextSymbol(FILE*);
 int intcat(int, int);
 int asciiToNumber(int);
 double myPow(double, int, char);
