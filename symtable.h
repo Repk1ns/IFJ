@@ -5,30 +5,10 @@
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
 
-
-//typ unia pre data identifikatora (moze byt int, string alebo double cislo)
-typedef union SymData {
-  int _int_data;
-  char* _str_data;
-  double _dbl_data;
-} SymData_t;
-
-//typ symbolu
-typedef enum SymType {
-  __int,
-  __string,
-  __none,
-  __func,
-  __keyword,
-  __double,
-  __id,
-  __eof,
-  __instruction,
-  __operator,
-  __ifjcode,
-  __whitespace,
-} SymType_t;
-
+//velkost kluca na vyhladavanie
+#define SIZE_OF_KEY 10
+//velkost hashovacej tabulky
+#define SIZE_OF_SYMTABLE 1
 //neuplna deklarace struktur
 typedef struct SymTableItem SymTableItem_t;
 typedef struct SymTable SymTable_t;
@@ -46,13 +26,13 @@ struct SymTable
 //polozka tabulky
 struct SymTableItem
 {
-     
-    //typ polozky
-    SymType_t SymItemType;
-    //data polozky
-    SymData_t SymItemData;
-    //ukazovatel na dalsiu polozku
+    
+    //Data polozky
+    Symbol_t SymData;
+    //ukazovatel na dalsi symbol
     SymTableItem_t *SymItemNext;
+    //vyhladavaci kluc
+    char SymKey[]; 
 
 };
 
@@ -71,11 +51,16 @@ SymTable_t* SymTableInit(size_t size);
 //vymazanie tabulky
 void SymTableDelete(SymTable_t *ST);
 //hladanie v tabulke podla key
-void SymTableSearch(SymTable_t *ST);
+bool SymTableSearch(SymTable_t *ST, char  *Key);
+//pomocna funkcia na vytvorenie noveho itemu
+SymTableItem_t* NewItem(Symbol_t data);
 //vlozenie do tabulky
-void SymTableInsert(SymTable_t *ST);
+void SymTableInsert(SymTable_t *ST, Symbol_t token);
 //hashovacia funkcia
 unsigned int SymTableHashFunction(const char *str, int SymTableSize); 
+//funckia na porovnanie dvoch klucov
+bool CompareKeys(char* Key1, char* Key2);
+
 
 
 #endif
