@@ -8,7 +8,7 @@
 //velkost kluca na vyhladavanie
 #define SIZE_OF_KEY 10
 //velkost hashovacej tabulky
-#define SIZE_OF_SYMTABLE 1
+#define SIZE_OF_SYMTABLE 31
 //neuplna deklarace struktur
 typedef struct SymTableItem SymTableItem_t;
 typedef struct SymTable SymTable_t;
