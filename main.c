@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include "lexical_analysis.h"
+#include "symtable.h"
+#include "syntax_analysis.h" 
 
 
 // these instructions are prepared for you, enjoyy :) 
@@ -16,24 +18,23 @@ const char* instructions [INSTRUCTION_COUNT] = {
 }; */
 
 int main() {
-  struct Symbol symbol;
-  do {
-    symbol = getNextSymbol(stdin);
-    switch (symbol.type){
-      case _int:
-      case _whitespace: {
-        printf("type: %d, data: %d\n", symbol.type, symbol.data.int_data);
-        break;
-      }
-      case _double: {
-        printf("type: %d, data: %f\n", symbol.type, symbol.data.dbl_data);
-        break;
-      }
-      default: {
-        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
-        break;
-      }
-    }
-    printf("--------------------------------------\n");
-  } while (symbol.type != _eof);
+
+  //pointer to symtable
+  SymTable_t *ST;
+  //result of syntax analysis
+  int result;
+  //inicialization
+  ST = SymTableInit(SIZE_OF_SYMTABLE);
+
+  //calling parser
+  result = parse(ST);
+
+  //which error?
+  printf("result: %d \n", result);
+
+  //delete symtable
+  SymTableDelete(ST);
+
+  
+  
 }
