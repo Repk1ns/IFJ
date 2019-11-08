@@ -1,0 +1,6 @@
+if a > b :
+  pom = "ahoj"
+  print(pom)
+else :
+  pom2 = "cau"
+  print(pom2);

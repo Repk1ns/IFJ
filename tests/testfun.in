@@ -1,0 +1,2 @@
+def funkcia(par1, par2, par3):
+  print("hello world");
