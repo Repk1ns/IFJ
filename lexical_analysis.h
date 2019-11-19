@@ -31,6 +31,8 @@ enum Type {
   _operator,    //  9
   _ifjcode,     // 10
   _whitespace,  // 11
+  _indent,      // 12
+  _dedent       // 13
 };
 
 typedef struct Symbol Symbol_t;
