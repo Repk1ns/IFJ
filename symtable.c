@@ -188,7 +188,7 @@ bool CompareKeys(char* Key1, char* Key2)
     }
     else
     {
-        return  false;
+        return false;
     }
 
 }

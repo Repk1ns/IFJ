@@ -27,7 +27,7 @@ int main() {
   ST = SymTableInit(SIZE_OF_SYMTABLE);
 
   //calling parser
-  result = parse(ST);
+  result = Parse(ST);
 
   //which error?
   printf("result: %d \n", result);
