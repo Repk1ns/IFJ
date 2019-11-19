@@ -1,7 +1,7 @@
 #ifndef ERRORCODES_H
 #define ERRORCODES_H
 
-
+#define IT_IS_OKAY 0
 #define LEXICAL_ERROR 1
 #define SYNTAX_ERROR 2
 #define SEMANTIC_ERROR 3
