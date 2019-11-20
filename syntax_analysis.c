@@ -7,6 +7,8 @@
 
 //globalna premmenna tokenu
 Symbol_t Token;
+bool ProgRuleCalled = false;
+
 // parse fukncia, chyba parameter pre vytvaranie trojadresnych instrukcii
 // funkcia getnextsymbol() sa nebude volat v maine ale v parse funkcii, TODO
 int Parse(SymTable_t *ST)
@@ -47,7 +49,14 @@ int Parse(SymTable_t *ST)
     bool found = SymTableSearch(ST, "totojetest2");
     printf("is item in table? :%d\n", found);
     printf("---------------------------------------------\n");
+
+
+ //pomocny token na prenasanie informacii medzi pravidlami
+  
+  
+
     //vysledok parseru
+
     int result;
     result = ProgRule();
 
@@ -57,9 +66,14 @@ int Parse(SymTable_t *ST)
 
 int ProgRule()
 {
+    
     int result = -1;
-    //nacitanie pociatocneho tokenu
-    Token = getNextSymbol(stdin);
+    //nacitanie pociatocneho tokenu ak sme volame prvy krat prog rule
+    if(!ProgRuleCalled) 
+    {
+        Token = getNextSymbol(stdin);
+    }
+    ProgRuleCalled = false;
 
     //ak je token definicia funckie, simulujem pravidlo DEF
     if(Token.type == _keyword && (strcmp(Token.data.str_data,"def") == 0) )
@@ -67,6 +81,7 @@ int ProgRule()
         printf("DEF!\n");
        
         //DEF
+
     }
     if(Token.type == _eof)
     //alebo je token EOF tak koncim program
@@ -78,6 +93,11 @@ int ProgRule()
     {
         //STAT
         result = StatRule();
+        //zavolanie pravidla prog pre prejdenie celeho suboru az po eof, ale iba ak je vsetko v poriadku
+        if(result == IT_IS_OKAY) 
+        {   
+            result = ProgRule();
+        }
     }
     
     return result;
@@ -94,11 +114,14 @@ int StatRule()
         break;
         //ak token je _func, simulujem pravidla pre vstavane funkcie
         case _func:
-        /* code */
+          result = FuncRule();
         break;
         //ak je token _keyword, simulujem pravidla pre keywordy
         case _keyword:
             result = KeywordsRule();
+        break;
+        //ak je token eol, pokracujem dalej
+        case _eol:
         break;
     default:
         result = SYNTAX_ERROR;
@@ -115,7 +138,32 @@ int IdRule()
 
 int FuncRule()
 {
-    return IT_IS_OKAY;
+    int result = SYNTAX_ERROR;
+    if(strcmp(Token.data.str_data, "inputs") == 0)
+    {
+        Token = getNextSymbol(stdin);
+
+        if(strcmp(Token.data.str_data, "(") == 0)
+        {
+            Token = getNextSymbol(stdin);
+            if(strcmp(Token.data.str_data, ")") == 0)
+            {
+                Token = getNextSymbol(stdin);
+                if(Token.type == _eol)
+                {
+                    result = IT_IS_OKAY;
+                }
+            }
+            
+        }
+      
+    }
+    else
+    {
+        result = SEMANTIC_ERROR;
+    }
+    
+    return result;
 }
 
 int KeywordsRule()
@@ -129,7 +177,7 @@ int KeywordsRule()
     //simulujem pravidlo pre while
     else if(strcmp(Token.data.str_data,"while") == 0)
     {
-
+        result = WhileRule();
     }
     //simulujem pravidlo pre pass
     else if(strcmp(Token.data.str_data,"pass") == 0)
@@ -139,7 +187,18 @@ int KeywordsRule()
     //simulujem pravidlo pre None
     else if(strcmp(Token.data.str_data,"None") == 0)
     {
-
+        //ak je to None a nasledujci token je eol je vsetko v poriadku
+        Token = getNextSymbol(stdin);
+        //ak je token eof, to znamena ze None je poslendy prikaz
+        if(Token.type == _eol || Token.type == _eof)
+        {
+            result = IT_IS_OKAY;
+        }
+        else
+        {
+            result = SYNTAX_ERROR;
+        }
+        
     }
     //inak chyba
     else
@@ -171,13 +230,14 @@ int IfRule()
         Token = getNextSymbol(stdin);
         if(Token.type == _eol)
         {
-
+            
             //ak tu je dvojbodka volame pravidlo indent
             result = IndentRule();
 
             if(result == IT_IS_OKAY)
             {
-
+                
+                Token = getNextSymbol(stdin);
                 //ak prisie indent, nasleduje znova sekvencia statementov
                 result = StatRule();
                 //ak je to v poriadku, osetrime dedent
@@ -190,35 +250,24 @@ int IfRule()
                     {
                         //volame else rule
                         result = ElseRule();
-
-                    }
-                    else
-                    {
-                        result = SYNTAX_ERROR;
-                    }
+                        
+                        
+                    } 
                 
                 } 
-                else
-                {
-                    result = SYNTAX_ERROR;
-                }
+                
                 
             }
-            else
-            {
-                result = SYNTAX_ERROR;
-            }
+ 
+        }
         
-        }
-        else
-        {
-            result = SYNTAX_ERROR;
-        }
+        
         
     }
     else
     {
         result = SYNTAX_ERROR;
+        
     }
     
     return result;
@@ -230,7 +279,59 @@ int ElseRule()
     int result = 0;
     //volame dalsi token
     Token = getNextSymbol(stdin);
-    //ak else neexistuje
+    
+    //ak to je else, simulujeme pravidlo pre else statemts
+    if(strcmp(Token.data.str_data, "else") == 0 )
+    {
+        //nacitame dalsi token, co musi byt :
+        Token = getNextSymbol(stdin);
+        if(strcmp(Token.data.str_data, ":") == 0  )
+        {
+            // je tu dvojbodka, zavolame dalsi token, co by mal byt eol
+            Token = getNextSymbol(stdin);
+            if(Token.type == _eol)
+            {
+                //ak je to eol zavolame dalsi token a riesime statementy
+                //Token = getNextSymbol(stdin);
+                //ak tu je dvojbodka volame pravidlo indent
+                result = IndentRule();
+
+                if(result == IT_IS_OKAY)
+                {
+                    //ak prisie indent, nasleduje znova sekvencia statementov
+                    Token = getNextSymbol(stdin);
+
+                    result = StatRule();
+                    //ak je to v poriadku, osetrime dedent
+                    if(result == IT_IS_OKAY)
+                    {
+                        //zavolame dedent a tu nam skoncilo pravidlo pre else
+                        result = DedentRule();
+                        //nastavime si actualny token, aby sme v dalsom pravidle necitali dalej
+                        
+                        
+                    } 
+  
+                }
+            }
+            
+        }
+        else
+        {
+            result = SYNTAX_ERROR;
+        }
+
+    }
+    //ak else neexistuje, znova pokracuju pravidla programu
+    else
+    {
+        result = IT_IS_OKAY;
+        ProgRuleCalled = true;
+        //nastavime si actualny token, aby sme v dalsom pravidle necitali dalej
+        
+     
+        
+    }
     //TODO
     return result;
 }
@@ -273,6 +374,53 @@ int DedentRule()
     return result;
 }
 
+int WhileRule()
+{
+    int result = SYNTAX_ERROR;
+    //zavolame PSA
+    result = Expression_analysis();
+    if(result!= IT_IS_OKAY) return result;
+    //teraz nam PSA vrati token, cize ocakavme :
+    Token = getNextSymbol(stdin); //<---------toto tu NEBUDE!!! vrati nam to PSA
+
+     
+    if(strcmp(Token.data.str_data, ":") == 0  )
+    {
+        // je tu dvojbodka, zavolame dalsi token, co by mal byt eol
+        Token = getNextSymbol(stdin);
+        if(Token.type == _eol)
+        {
+
+            //ak tu je dvojbodka volame pravidlo indent
+            result = IndentRule();
+
+            if(result == IT_IS_OKAY)
+            {
+                //ak prisie indent, nasleduje znova sekvencia statementov
+                Token = getNextSymbol(stdin);
+
+                result = StatRule();
+                //ak je to v poriadku, osetrime dedent
+                if(result == IT_IS_OKAY)
+                {
+                    //zavolame dedent a tu nam skoncilo pravidlo pre else
+                    result = DedentRule();
+                    //nastavime si actualny token, aby sme v dalsom pravidle necitali dalej
+                    
+                    
+                } 
+
+            }
+        }
+    }
+    else
+    {
+        result = SYNTAX_ERROR;
+    }
+    
+
+    return result;
+}
 
 
 int Expression_analysis()

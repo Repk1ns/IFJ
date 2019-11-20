@@ -17,6 +17,8 @@ int KeywordsRule();
 int IfRule();
 //pravidlo pre else
 int ElseRule();
+//pravidlo pre while;
+int WhileRule();
 //pravidlo pre indent
 int IndentRule();
 //pravidlo pre dedent

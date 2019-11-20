@@ -21,6 +21,8 @@ int main() {
 
   //pointer to symtable
   SymTable_t *ST;
+ 
+
   //result of syntax analysis
   int result;
   //inicialization
