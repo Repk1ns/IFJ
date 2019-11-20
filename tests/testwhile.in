@@ -1,10 +1,12 @@
 while :
+    inputi()
     inputs()
-    inputs()
-    inputs()
+    inputf()
+    pass
     inputs()
     None
-    input()
+    inputs()
+    pass
 inputs()
 inputs()
     
