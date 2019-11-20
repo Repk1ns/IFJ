@@ -32,7 +32,9 @@ enum Type {
   _ifjcode,     // 10
   _whitespace,  // 11
   _indent,      // 12
-  _dedent       // 13
+  _dedent,      // 13
+  _comma,        //14
+  _null
 };
 
 typedef struct Symbol Symbol_t;

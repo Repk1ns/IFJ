@@ -112,13 +112,20 @@ Symbol_t getNextSymbol(FILE* input) {
           break;
         } else if(character == EOL) {
           symbol.type = _eol;
+          symbol.data.str_data = "-";
           return symbol;
         } else if(isspace(character)) {
           if (character == ' '){
             symbol.data.int_data ++;
           }
           symbol.type = _whitespace;
-          state = Q20;
+          state = S;
+          break;
+        } else if (character == ','){ 
+          
+            symbol.data.str_data = ",";
+            symbol.type = _comma;
+            return symbol;
           break;
         } else if(character == EOF) {
           state = F;
@@ -472,6 +479,7 @@ Symbol_t getNextSymbol(FILE* input) {
           break;
         } else if(character == EOL) {
           symbol.type = _eol;
+          symbol.data.str_data = "-";
           return symbol;
         } else {
           ungetc(character, input);
