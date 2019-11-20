@@ -6,13 +6,16 @@ int Parse(SymTable_t *ST);
 int ProgRule();
 //pravidlo pre statementy
 int StatRule();
+//pravidla pre vsetky funckie
+int DefRule();
 //pravidlo pre identifikatori
 int IdRule();
 //pravidlo pre vstavane funckie
-int FuncRule();
+int BuiltInFuncRule();
+//pravidlo pre ostatne funkcie
+int DefRule();
 //pravidlo pre klucove slova
 int KeywordsRule();
-
 //pravidlo pre if
 int IfRule();
 //pravidlo pre else

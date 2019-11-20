@@ -75,12 +75,13 @@ int ProgRule()
     }
     ProgRuleCalled = false;
 
-    //ak je token definicia funckie, simulujem pravidlo DEF
-    if(Token.type == _keyword && (strcmp(Token.data.str_data,"def") == 0) )
+    //ak je token vstavana funkcia alebo token def
+    if(Token.type == _keyword && (strcmp(Token.data.str_data,"def") == 0))
     {
-        printf("DEF!\n");
-       
-        //DEF
+        
+        result = DefRule();
+        
+    
 
     }
     if(Token.type == _eof)
@@ -106,15 +107,16 @@ int ProgRule()
 int StatRule()
 {
     int result =0;
+
     switch (Token.type)
     {
         //ak token je identifikator simulujem pravidlo ID
         case _id:
         /* code */
         break;
-        //ak token je _func, simulujem pravidla pre vstavane funkcie
+        //ak je token _func, simulujem pravidla pre vstavane funkcie
         case _func:
-          result = FuncRule();
+            result = BuiltInFuncRule();
         break;
         //ak je token _keyword, simulujem pravidla pre keywordy
         case _keyword:
@@ -136,10 +138,16 @@ int IdRule()
     return IT_IS_OKAY;
 }
 
-int FuncRule()
+
+
+int BuiltInFuncRule()
 {
     int result = SYNTAX_ERROR;
-    if(strcmp(Token.data.str_data, "inputs") == 0)
+
+    
+    if(strcmp(Token.data.str_data, "inputs") == 0 ||
+       strcmp(Token.data.str_data, "inputi") == 0 ||
+       strcmp(Token.data.str_data, "inputf") == 0 )
     {
         Token = getNextSymbol(stdin);
 
@@ -154,9 +162,13 @@ int FuncRule()
                     result = IT_IS_OKAY;
                 }
             }
-            
+         
         }
       
+    }
+    else if(strcmp(Token.data.str_data, "len") == 0)
+    {
+     //TODO
     }
     else
     {
@@ -164,7 +176,15 @@ int FuncRule()
     }
     
     return result;
+
 }
+
+int DefRule()
+{
+ //DEF
+    return IT_IS_OKAY;
+}
+
 
 int KeywordsRule()
 {
@@ -182,7 +202,18 @@ int KeywordsRule()
     //simulujem pravidlo pre pass
     else if(strcmp(Token.data.str_data,"pass") == 0)
     {
-
+        //ak je to None a nasledujci token je pass je vsetko v poriadku
+        Token = getNextSymbol(stdin);
+        //ak je token eof, to znamena ze pass je poslendy prikaz
+        if(Token.type == _eol || Token.type == _eof)
+        {
+            result = IT_IS_OKAY;
+        }
+        else
+        {
+            result = SYNTAX_ERROR;
+        }
+        
     }
     //simulujem pravidlo pre None
     else if(strcmp(Token.data.str_data,"None") == 0)
@@ -260,9 +291,7 @@ int IfRule()
             }
  
         }
-        
-        
-        
+  
     }
     else
     {
