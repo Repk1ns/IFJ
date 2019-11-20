@@ -1,3 +1,10 @@
-while a > b :
-    print("ahoj")
+while :
+    inputs()
+    inputs()
+    inputs()
+    inputs()
+    None
+    input()
+inputs()
+inputs()
     
