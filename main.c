@@ -2,6 +2,7 @@
 #include "lexical_analysis.h"
 #include "symtable.h"
 #include "syntax_analysis.h" 
+#include "error_codes.h"
 
 
 // these instructions are prepared for you, enjoyy :) 
@@ -27,7 +28,7 @@ int main() {
   int result;
   //inicialization
   ST = SymTableInit(SIZE_OF_SYMTABLE);
-
+  if(ST == NULL) return INTERNAL_ERROR;
   //calling parser
   result = Parse(ST);
 

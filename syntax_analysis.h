@@ -1,5 +1,8 @@
 #ifndef SYNTAX_ANALYSIS
 #define SYNTAX_ANALYSIS
+
+#define PRINT_PARAMETERS -1
+#define DEF_PARAMETERS -2
 //parse fukncia, chyba parameter pre vytvaranie trojadresnych instrukcii
 int Parse(SymTable_t *ST);
 //hlavne pravidlo celeho parseru
