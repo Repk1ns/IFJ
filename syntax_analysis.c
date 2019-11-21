@@ -7,7 +7,9 @@
 
 //globalna premmenna tokenu
 Symbol_t Token;
+Symbol_t PreviousToken;
 bool ProgRuleCalled = false;
+int actualNumberOfParams = 0;
 
 // parse fukncia, chyba parameter pre vytvaranie trojadresnych instrukcii
 // funkcia getnextsymbol() sa nebude volat v maine ale v parse funkcii, TODO
@@ -80,9 +82,7 @@ int ProgRule()
     {
         
         result = DefRule();
-        
     
-
     }
     if(Token.type == _eof)
     //alebo je token EOF tak koncim program
@@ -144,31 +144,60 @@ int BuiltInFuncRule()
 {
     int result = SYNTAX_ERROR;
 
-    
+   
     if(strcmp(Token.data.str_data, "inputs") == 0 ||
        strcmp(Token.data.str_data, "inputi") == 0 ||
        strcmp(Token.data.str_data, "inputf") == 0 )
     {
+        
         Token = getNextSymbol(stdin);
-
         if(strcmp(Token.data.str_data, "(") == 0)
         {
-            Token = getNextSymbol(stdin);
-            if(strcmp(Token.data.str_data, ")") == 0)
-            {
-                Token = getNextSymbol(stdin);
-                if(Token.type == _eol)
-                {
-                    result = IT_IS_OKAY;
-                }
-            }
+            //Token = getNextSymbol(stdin);
+            //zavolame pravidlo pre parametre, vieme, ze ich ma byt 0
+            result = ParamsRule(0);
+            
          
         }
       
     }
-    else if(strcmp(Token.data.str_data, "len") == 0)
+    else if(strcmp(Token.data.str_data, "len") == 0 ||
+            strcmp(Token.data.str_data, "chr") == 0)
     {
-     //TODO
+        Token = getNextSymbol(stdin);
+        if(strcmp(Token.data.str_data, "(") == 0)
+        {
+        //zavolame pravidlo pre parametre, vieme, ze ich ma byt 2
+        result = ParamsRule(1);
+        }
+        
+    }
+    else if(strcmp(Token.data.str_data, "ord") == 0 )
+    {
+        Token = getNextSymbol(stdin);
+        if(strcmp(Token.data.str_data, "(") == 0)
+        {
+            //zavolame pravidlo pre parametre, vieme, ze ich ma byt 2
+            result = ParamsRule(2);
+        }
+    }
+    else if(strcmp(Token.data.str_data, "substr") == 0 )
+    {
+        Token = getNextSymbol(stdin);
+        if(strcmp(Token.data.str_data, "(") == 0)
+        {
+            //zavolame pravidlo pre parametre, vieme, ze ich ma byt 3
+            result = ParamsRule(3);
+        }
+    }
+     else if(strcmp(Token.data.str_data, "print") == 0 )
+    {
+        Token = getNextSymbol(stdin);
+        if(strcmp(Token.data.str_data, "(") == 0)
+        {
+            //zavolame pravidlo pre parametre, vieme, ze ich ma byt 3
+            result = ParamsRule(-1);
+        }
     }
     else
     {
@@ -184,6 +213,61 @@ int DefRule()
  //DEF
     return IT_IS_OKAY;
 }
+
+//pravidlo pre parametre vstavanych a aj novo definonavynch funkcii- osetruje pocet parametrov a rozhoduje aj o semnatike
+int ParamsRule(int numberOfParams)
+{
+    
+    int result = SYNTAX_ERROR;
+    PreviousToken = Token;
+    Token = getNextSymbol(stdin);
+
+    if(Token.type == _int || Token.type == _string || Token.type == _id )
+    {
+        actualNumberOfParams++;
+        
+        result = ParamsRule(numberOfParams);
+            
+    }
+    else if(strcmp(Token.data.str_data, ")") == 0)
+    {
+        Token = getNextSymbol(stdin);
+        if(Token.type == _eol || Token.type == _eof)
+        {
+            if(actualNumberOfParams == numberOfParams && PreviousToken.type != _comma)
+            {
+                result = IT_IS_OKAY;
+            }
+            else if  (numberOfParams == -1 && PreviousToken.type != _comma)
+            {
+                result = IT_IS_OKAY;
+            }
+            else
+            {
+                if(PreviousToken.type == _comma)
+                {
+                    result = SYNTAX_ERROR;
+                }
+                else result = SEMANTIC_ERROR;
+            }
+        }
+        
+    }
+    else if(Token.type == _comma)
+    {
+        result = ParamsRule(numberOfParams);
+    }
+    else
+    {
+        result = SYNTAX_ERROR;
+    }
+    
+   
+    actualNumberOfParams = 0;
+    return result;
+}
+
+
 
 
 int KeywordsRule()
@@ -237,9 +321,6 @@ int KeywordsRule()
         result = SYNTAX_ERROR;
     }
     
-     
-       
-
     return result;
 }
 
@@ -435,7 +516,6 @@ int WhileRule()
                     //zavolame dedent a tu nam skoncilo pravidlo pre else
                     result = DedentRule();
                     //nastavime si actualny token, aby sme v dalsom pravidle necitali dalej
-                    
                     
                 } 
 

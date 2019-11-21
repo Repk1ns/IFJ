@@ -26,6 +26,10 @@ int WhileRule();
 int IndentRule();
 //pravidlo pre dedent
 int DedentRule();
+//pravidlo pre parametre vo funkciach
+int ParamsRule(int numberOfParams);
+//pravidlo na zistenie typu erroru v parametroch funckiach
+int ParamsTypeOfError();
 
 int Expression_analysis();
 
