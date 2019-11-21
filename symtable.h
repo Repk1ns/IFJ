@@ -51,7 +51,7 @@ SymTable_t* SymTableInit(size_t size);
 //vymazanie tabulky
 void SymTableDelete(SymTable_t *ST);
 //hladanie v tabulke podla key
-bool SymTableSearch(SymTable_t *ST, char  *Key);
+SymTableItem_t* SymTableSearch(SymTable_t *ST, char  *Key);
 //pomocna funkcia na vytvorenie noveho itemu
 SymTableItem_t* NewItem(Symbol_t data);
 //vlozenie do tabulky

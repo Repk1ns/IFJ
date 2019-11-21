@@ -138,7 +138,7 @@ SymTableItem_t* NewItem(Symbol_t token)
 
 }
 
-bool SymTableSearch(SymTable_t *ST, char  *Key)
+SymTableItem_t* SymTableSearch(SymTable_t *ST, char  *Key)
 {
     int index;
     bool foundFlag;
@@ -171,13 +171,10 @@ bool SymTableSearch(SymTable_t *ST, char  *Key)
         //porovnanie posledneho prvku ak sme nenasli
         if(!foundFlag) foundFlag = CompareKeys(iterator->SymData.data.str_data, Key);
            
-
-
-
     }
-    return foundFlag;
-    
 
+    if(foundFlag) return iterator;
+    else return NULL;
 }
 
 bool CompareKeys(char* Key1, char* Key2)
