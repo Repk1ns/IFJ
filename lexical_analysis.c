@@ -57,30 +57,30 @@ Symbol_t getNextSymbol(FILE* input) {
           break;
         } else if(character == '+') {
           symbol.type = _plus;
-          symbol.data.str_data = "+";
+          strcpy(symbol.data.str_data,"+");
           return symbol;
         } else if(character == '-') {
           symbol.type = _minus;
-          symbol.data.str_data = "-";
+          strcpy(symbol.data.str_data,"-");
           return symbol;
         } else if(character == '*') {
           symbol.type = _multiplication;
-          symbol.data.str_data = "*";
+         strcpy(symbol.data.str_data,"*");
           return symbol;
         } else if(character == '(') {
           symbol.type = _left_bracket;
-          symbol.data.str_data = "(";
+          strcpy(symbol.data.str_data,"(");
           return symbol;
         } else if(character == ')') {
           symbol.type = _right_bracket;
-          symbol.data.str_data = ")";
+          strcpy(symbol.data.str_data,")");
           return symbol;
         } else if(character == '/') {
             state = Q22;
             break;
         } else if(character == ':') {
           symbol.type = _operator;
-          symbol.data.str_data = ":";
+          strcpy(symbol.data.str_data,":");
           return symbol;
         } else if(character == '<') {
             state = Q23;
@@ -112,7 +112,7 @@ Symbol_t getNextSymbol(FILE* input) {
           break;
         } else if(character == EOL) {
           symbol.type = _eol;
-          symbol.data.str_data = "-";
+          
           return symbol;
         } else if(isspace(character)) {
           if (character == ' '){
@@ -122,8 +122,6 @@ Symbol_t getNextSymbol(FILE* input) {
           state = S;
           break;
         } else if (character == ','){ 
-          
-            symbol.data.str_data = ",";
             symbol.type = _comma;
             return symbol;
           break;
@@ -213,7 +211,7 @@ Symbol_t getNextSymbol(FILE* input) {
           strcat(buffer, help);
           break;
         } else {
-          symbol.data.str_data = buffer;
+          strcpy(symbol.data.str_data,buffer);
           ungetc(character, input);
           state = Q8;
           break;
@@ -239,11 +237,11 @@ Symbol_t getNextSymbol(FILE* input) {
         character = getchar();
         if(character == '/') { // wholenumber division
           symbol.type = _wholenumber_division;
-          symbol.data.str_data = "//";
+          strcpy(symbol.data.str_data,"//");
         } else {
           ungetc(character, input); // simple division
           symbol.type = _division;
-          symbol.data.str_data = "/";
+           strcpy(symbol.data.str_data,"/");
         }
         //symbol.type = _operator;
         return symbol;
@@ -252,11 +250,11 @@ Symbol_t getNextSymbol(FILE* input) {
         character = getchar();
         if(character == '=') {
           symbol.type = _less_or_equal;
-          symbol.data.str_data = "<=";
+          strcpy(symbol.data.str_data,"<=");
         } else {
           ungetc(character, input);
           symbol.type = _less;
-          symbol.data.str_data = "<";
+          //symbol.data.str_data = "<";
         }
         //symbol.type = _operator;
         return symbol;
@@ -265,11 +263,11 @@ Symbol_t getNextSymbol(FILE* input) {
         character = getchar();
         if(character == '=') {
           symbol.type = _greater_or_equal;
-          symbol.data.str_data = ">=";
+          strcpy(symbol.data.str_data,">=");
         } else {
           ungetc(character, input);
           symbol.type = _greater;
-          symbol.data.str_data = ">";
+          strcpy(symbol.data.str_data,">");
         }
         //symbol.type = _operator;
         return symbol;
@@ -278,11 +276,11 @@ Symbol_t getNextSymbol(FILE* input) {
         character = getchar();
         if(character == '=') {
           symbol.type = _equal;
-          symbol.data.str_data = "==";
+          strcpy(symbol.data.str_data,"==");
         } else {
           ungetc(character, input);
           symbol.type = _equal;
-          symbol.data.str_data = "=";
+          strcpy(symbol.data.str_data,"=");
         }
         //symbol.type = _operator;
         return symbol;
@@ -291,7 +289,7 @@ Symbol_t getNextSymbol(FILE* input) {
         character = getchar();
         if(character == '=') {
           symbol.type = _not_equal;
-          symbol.data.str_data = "!=";
+          strcpy(symbol.data.str_data,"!=");
           return symbol;
         } else { // exclamation mark alone is an error
           ungetc(character, input);
@@ -320,9 +318,10 @@ Symbol_t getNextSymbol(FILE* input) {
         character = getchar();
         if(character == '\'') {
           symbol.type = _string;
-          symbol.data.str_data = buffer;
+          strcpy(symbol.data.str_data,buffer);
           return symbol;
         } else if (character == '\\') {
+          sprintf(help, "%c", character);
           strcat(buffer, help);
           state = Q17;
           break;
@@ -345,9 +344,18 @@ Symbol_t getNextSymbol(FILE* input) {
         } else if(character == EOL || character == EOF) {
           state = Fx;
           break;
-        } else {
+          
+        } 
+        else if(character == '\"' || character == '\'')
+        {
+          sprintf(help, "%c", character);
+          strcat(buffer, help);
           state = Q16;
           break;
+        }
+        else {
+        state = Q16;
+        break;
         }
       }
       case Q18: { // test if the first part is suitable for hexa number
@@ -487,7 +495,7 @@ Symbol_t getNextSymbol(FILE* input) {
           break;
         } else if(character == EOL) {
           symbol.type = _eol;
-          symbol.data.str_data = "-";
+          //symbol.data.str_data = "-";
           return symbol;
         } else {
           ungetc(character, input);

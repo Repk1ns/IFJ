@@ -14,7 +14,7 @@
 
 union Data {
   int int_data;
-  char* str_data;
+  char str_data[MAX_ID_LENGTH];
   double dbl_data;
 };
 
