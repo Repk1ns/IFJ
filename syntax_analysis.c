@@ -266,11 +266,10 @@ int DefRule()
 {
     _Result = SYNTAX_ERROR;
     int actualNumberOfParams = DEF_PARAMETERS;
+    _ActualNumberOfParams = 0;
     Symbol_t Identifier;
   
     
-    //pomocne pole na ulozenie mena identifikatora do tabulky symbolov
-    char data[MAX_SIZE_OF_STRING];
  
   
     
@@ -278,12 +277,10 @@ int DefRule()
     //ak to je identifikator
     if(_Token.type == _id)
     {
-        //zapametanie si mena identifikatora
+        //zapamatanie si identifikatora
         Identifier.type = _Token.type;
-        strcpy(data, _Token.data.str_data);
-        Identifier.data.str_data = data;
-        printf("Identifier str: %s\n", Identifier.data.str_data);
-        //riesenie semantiky TODO
+        strcpy(Identifier.data.str_data, _Token.data.str_data);
+
         _Token = getNextSymbol(stdin);
         //musi byt zatvorka
         if(strcmp(_Token.data.str_data,"(") == 0)
@@ -291,16 +288,15 @@ int DefRule()
             //zavolame pravidlo pre parametre, vieme, ze ich moze byt kolko len chce
             //musime si ich ukladat do tabulky symbolov 
             _Result = ParamsRule(actualNumberOfParams);
-            printf("actual number of params: %d\n", _ActualNumberOfParams);
+            //printf("actual number of params: %d\n", _ActualNumberOfParams);
             
             //printf("params str: %s\n", _ParamsArray[0].data.str_data);
             SymTableInsert(_ST, Identifier, _function, _ActualNumberOfParams);
+            _ActualNumberOfParams = 0;
             SymTableItem_t* item = SymTableSearch(_ST, Identifier.data.str_data);
             if(item != NULL)
             {
                 printf("TYPE: %d DATA: %s  PARAMS: %d \n", item->SymData.type, item->SymData.data.str_data, item->NumberOfParameters);
-                //if(strcmp(item->Parameters[0].data.str_data, "a") == 0) printf("|||TRUE\n");
-                //printf("DATA: %s\n", item->Parameters[0].data.str_data);
                 
             }
             else
@@ -308,7 +304,7 @@ int DefRule()
                 printf("NOT FOUND\n");
             }
             
-            _ActualNumberOfParams = 0;
+            
 
 
             if(_Result == IT_IS_OKAY)
@@ -349,7 +345,7 @@ int ParamsRule(int numberOfParams)
     _Result = SYNTAX_ERROR;
     _PreviousToken = _Token;
     _Token = getNextSymbol(stdin);
-    char data[MAX_SIZE_OF_STRING];
+    char data[MAX_ID_LENGTH];
     
     
     if(_Token.type == _int || _Token.type == _string || _Token.type == _id )
@@ -407,6 +403,7 @@ int ParamsRule(int numberOfParams)
         _Result = SYNTAX_ERROR;
     }
     
+    _ActualNumberOfParams = 0;
     
     
     return _Result;
