@@ -5,10 +5,8 @@
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
 
-//velkost kluca na vyhladavanie
-#define SIZE_OF_KEY 10
 //velkost hashovacej tabulky
-#define SIZE_OF_SYMTABLE 31
+#define SIZE_OF_SYMTABLE 1
 //neuplna deklarace struktur
 typedef struct SymTableItem SymTableItem_t;
 typedef struct SymTable SymTable_t;
@@ -40,8 +38,6 @@ struct SymTableItem
     Symbol_t SymData;
     //ukazovatel na dalsi symbol
     SymTableItem_t *SymItemNext;
-    //vyhladavaci kluc
-    char SymKey[]; 
 
 };
 
@@ -60,7 +56,7 @@ SymTable_t* SymTableInit(size_t size);
 //vymazanie tabulky
 void SymTableDelete(SymTable_t *ST);
 //hladanie v tabulke podla key
-SymTableItem_t* SymTableSearch(SymTable_t *ST, char  *Key);
+SymTableItem_t* SymTableSearch(SymTable_t *ST, const char  *Key);
 //pomocna funkcia na vytvorenie noveho itemu
 SymTableItem_t* NewItem(Symbol_t data, int type, int numberOfParameters);
 //vlozenie do tabulky
@@ -68,7 +64,7 @@ void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParame
 //hashovacia funkcia
 unsigned int SymTableHashFunction(const char *str, int SymTableSize); 
 //funckia na porovnanie dvoch klucov
-bool CompareKeys(char* Key1, char* Key2);
+bool CompareKeys(const char* Key1, const char* Key2);
 
 
 

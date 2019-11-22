@@ -76,8 +76,8 @@ void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParame
         item = NewItem(token, type, numberOfParameters);
         if(item == NULL)
         {
-                fprintf(stderr, "ERROR of allocation!\n");
-                exit(INTERNAL_ERROR);
+            fprintf(stderr, "ERROR of allocation!\n");
+            exit(INTERNAL_ERROR);
         }
         else
         {
@@ -100,11 +100,11 @@ void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParame
         }
 
         //teraz som na konci linearneho zonzamu, pripojim tam novy item
-        item = NewItem(token,type, numberOfParameters);
+        item = NewItem(token, type, numberOfParameters);
         if(item == NULL)
         {
-                fprintf(stderr, "ERROR of allocation!\n");
-                exit(INTERNAL_ERROR);
+            fprintf(stderr, "ERROR of allocation!\n");
+            exit(INTERNAL_ERROR);
         }
         else
         {
@@ -121,7 +121,7 @@ void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParame
 //pomocna funckia na vytvorenie itemu
 SymTableItem_t* NewItem(Symbol_t token, int type, int numberOfParameters)
 {
-        SymTableItem_t* item = malloc(sizeof(SymTableItem_t) + numberOfParameters) ;
+        SymTableItem_t* item = malloc(sizeof(SymTableItem_t)  + 2*sizeof(int)) ;
 
         if( item == NULL)
         {
@@ -129,6 +129,7 @@ SymTableItem_t* NewItem(Symbol_t token, int type, int numberOfParameters)
         }
         else
         {
+            
             //priradenie typu
             item->Type = type;
             //priradenie poctu parametrov, ak to je funkcia, ak nie, hodnota je -1
@@ -138,15 +139,13 @@ SymTableItem_t* NewItem(Symbol_t token, int type, int numberOfParameters)
             //nastavenie dalsieho ukazatela na null
             item->SymItemNext = NULL;
 
-           
-    
         }
 
         return item;
 
 }
 
-SymTableItem_t* SymTableSearch(SymTable_t *ST, char  *Key)
+SymTableItem_t* SymTableSearch(SymTable_t *ST, const char  *Key)
 {
     int index;
     bool foundFlag;
@@ -185,9 +184,9 @@ SymTableItem_t* SymTableSearch(SymTable_t *ST, char  *Key)
     else return NULL;
 }
 
-bool CompareKeys(char* Key1, char* Key2)
+bool CompareKeys(const char* Key1, const char* Key2)
 {
-     if(strcmp(Key1, Key2) == 0)
+    if(strcmp(Key1, Key2) == 0)
     {
         return true;
     }
