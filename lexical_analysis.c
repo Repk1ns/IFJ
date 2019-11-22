@@ -56,23 +56,23 @@ Symbol_t getNextSymbol(FILE* input) {
           state = Q7;
           break;
         } else if(character == '+') {
-          symbol.type = _operator;
+          symbol.type = _plus;
           symbol.data.str_data = "+";
           return symbol;
         } else if(character == '-') {
-          symbol.type = _operator;
+          symbol.type = _minus;
           symbol.data.str_data = "-";
           return symbol;
         } else if(character == '*') {
-          symbol.type = _operator;
+          symbol.type = _multiplication;
           symbol.data.str_data = "*";
           return symbol;
         } else if(character == '(') {
-          symbol.type = _operator;
+          symbol.type = _left_bracket;
           symbol.data.str_data = "(";
           return symbol;
         } else if(character == ')') {
-          symbol.type = _operator;
+          symbol.type = _right_bracket;
           symbol.data.str_data = ")";
           return symbol;
         } else if(character == '/') {
@@ -238,51 +238,59 @@ Symbol_t getNextSymbol(FILE* input) {
       case Q22: { //operator for division
         character = getchar();
         if(character == '/') { // wholenumber division
+          symbol.type = _wholenumber_division;
           symbol.data.str_data = "//";
         } else {
           ungetc(character, input); // simple division
+          symbol.type = _division;
           symbol.data.str_data = "/";
         }
-        symbol.type = _operator;
+        //symbol.type = _operator;
         return symbol;
       }
       case Q23: { // operator less or eq
         character = getchar();
         if(character == '=') {
+          symbol.type = _less_or_equal;
           symbol.data.str_data = "<=";
         } else {
           ungetc(character, input);
+          symbol.type = _less;
           symbol.data.str_data = "<";
         }
-        symbol.type = _operator;
+        //symbol.type = _operator;
         return symbol;
       }
       case Q24: { // operator greater than or eq
         character = getchar();
         if(character == '=') {
+          symbol.type = _greater_or_equal;
           symbol.data.str_data = ">=";
         } else {
           ungetc(character, input);
+          symbol.type = _greater;
           symbol.data.str_data = ">";
         }
-        symbol.type = _operator;
+        //symbol.type = _operator;
         return symbol;
       }
       case Q25: { // equal or assignment
         character = getchar();
         if(character == '=') {
+          symbol.type = _equal;
           symbol.data.str_data = "==";
         } else {
           ungetc(character, input);
+          symbol.type = _equal;
           symbol.data.str_data = "=";
         }
-        symbol.type = _operator;
+        //symbol.type = _operator;
         return symbol;
       }
       case Q26: { // not equal
         character = getchar();
         if(character == '=') {
-          symbol.type = _operator;
+          symbol.type = _not_equal;
           symbol.data.str_data = "!=";
           return symbol;
         } else { // exclamation mark alone is an error

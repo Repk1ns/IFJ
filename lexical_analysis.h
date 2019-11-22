@@ -28,7 +28,20 @@ enum Type {
   _id,          //  6
   _eof,         //  7
   _eol,         //  8
-  _operator,    //  9
+  _operator,
+  _plus,
+  _minus,
+  _multiplication,
+  _division,
+  _wholenumber_division,
+  _equal,
+  _not_equal,
+  _less_or_equal,
+  _less,
+  _greater_or_equal,
+  _greater,
+  _left_bracket,
+  _right_bracket,    //  9
   _ifjcode,     // 10
   _whitespace,  // 11
   _indent,      // 12
