@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "lexical_analysis.h"
 #include "symtable.h"
 #include "syntax_analysis.h"
@@ -45,17 +47,18 @@ int Parse(SymTable_t *ST)
     //testing hash table:
 
     //inserting items
-    Symbol_t testsymbol;
+    // Symbol_t testsymbol;
 
-    testsymbol.data.str_data = "totojetest1";
-    testsymbol.type =  6;
-    _ST = ST;
+    // testsymbol.data.str_data = "totojetest1";
+    // testsymbol.type =  6;
+     _ST = ST;
+     
 
-    SymTableInsert(_ST, testsymbol);
-    //serach for item
-    SymTableItem_t* found = SymTableSearch(_ST, "totojetest1");
-    if(found != NULL) printf("YES");
-    printf("---------------------------------------------\n");
+    // SymTableInsert(_ST, testsymbol, _function,0);
+    // //serach for item
+    // SymTableItem_t* found = SymTableSearch(_ST, "totojetest1");
+    // if(found != NULL) printf("YES");
+    // printf("---------------------------------------------\n");
 
 
  //pomocny _Token na prenasanie informacii medzi pravidlami
@@ -189,6 +192,7 @@ int IdRule()
 int BuiltInFuncRule()
 {
     _Result = SYNTAX_ERROR;
+    
 
     if(strcmp(_Token.data.str_data, "inputs") == 0 ||
        strcmp(_Token.data.str_data, "inputi") == 0 ||
@@ -199,6 +203,7 @@ int BuiltInFuncRule()
         if(strcmp(_Token.data.str_data, "(") == 0)
         {
             //zavolame pravidlo pre parametre, vieme, ze ich ma byt 0
+           
             _Result = ParamsRule(0);
         }
       
@@ -209,7 +214,8 @@ int BuiltInFuncRule()
         _Token = getNextSymbol(stdin);
         if(strcmp(_Token.data.str_data, "(") == 0)
         {
-            //zavolame pravidlo pre parametre, vieme, ze ich ma byt 1
+            //zavolame pravidlo pre parametre, vieme, ze ich ma byt 
+            
             _Result = ParamsRule(1);
            
         }
@@ -221,6 +227,7 @@ int BuiltInFuncRule()
         if(strcmp(_Token.data.str_data, "(") == 0)
         {
             //zavolame pravidlo pre parametre, vieme, ze ich ma byt 2
+            
             _Result = ParamsRule(2);
             
         }
@@ -231,6 +238,7 @@ int BuiltInFuncRule()
         if(strcmp(_Token.data.str_data, "(") == 0)
         {
             //zavolame pravidlo pre parametre, vieme, ze ich ma byt 3
+            
             _Result = ParamsRule(3);
             
         }
@@ -257,25 +265,52 @@ int BuiltInFuncRule()
 int DefRule()
 {
     _Result = SYNTAX_ERROR;
+    int actualNumberOfParams = DEF_PARAMETERS;
+    Symbol_t Identifier;
+  
+    
+    //pomocne pole na ulozenie mena identifikatora do tabulky symbolov
+    char data[MAX_SIZE_OF_STRING];
+ 
+  
     
     _Token = getNextSymbol(stdin);
     //ak to je identifikator
     if(_Token.type == _id)
     {
-        SymTableInsert(_ST,_Token);
-        SymTableItem_t* item = SymTableSearch(_ST, _Token.data.str_data);
-        printf("TYPE: %d \n", item->SymData.type);
-
-
+        //zapametanie si mena identifikatora
+        Identifier.type = _Token.type;
+        strcpy(data, _Token.data.str_data);
+        Identifier.data.str_data = data;
+        printf("Identifier str: %s\n", Identifier.data.str_data);
         //riesenie semantiky TODO
-
         _Token = getNextSymbol(stdin);
         //musi byt zatvorka
         if(strcmp(_Token.data.str_data,"(") == 0)
         {
             //zavolame pravidlo pre parametre, vieme, ze ich moze byt kolko len chce
             //musime si ich ukladat do tabulky symbolov 
-            _Result = ParamsRule(DEF_PARAMETERS);
+            _Result = ParamsRule(actualNumberOfParams);
+            printf("actual number of params: %d\n", _ActualNumberOfParams);
+            
+            //printf("params str: %s\n", _ParamsArray[0].data.str_data);
+            SymTableInsert(_ST, Identifier, _function, _ActualNumberOfParams);
+            SymTableItem_t* item = SymTableSearch(_ST, Identifier.data.str_data);
+            if(item != NULL)
+            {
+                printf("TYPE: %d DATA: %s  PARAMS: %d \n", item->SymData.type, item->SymData.data.str_data, item->NumberOfParameters);
+                //if(strcmp(item->Parameters[0].data.str_data, "a") == 0) printf("|||TRUE\n");
+                //printf("DATA: %s\n", item->Parameters[0].data.str_data);
+                
+            }
+            else
+            {
+                printf("NOT FOUND\n");
+            }
+            
+            _ActualNumberOfParams = 0;
+
+
             if(_Result == IT_IS_OKAY)
             {
                 _Token = getNextSymbol(stdin);
@@ -303,6 +338,7 @@ int DefRule()
         }
     }
     
+    
     return _Result;
 }
 
@@ -313,18 +349,18 @@ int ParamsRule(int numberOfParams)
     _Result = SYNTAX_ERROR;
     _PreviousToken = _Token;
     _Token = getNextSymbol(stdin);
-
-
+    char data[MAX_SIZE_OF_STRING];
     
-
+    
     if(_Token.type == _int || _Token.type == _string || _Token.type == _id )
     {
+        
+        strcpy(data,_Token.data.str_data);
+       
+                
+        
         _ActualNumberOfParams++;
-        //ak mame def funkcie, ukladame si parametre do tabulky symbolov
-        if(numberOfParams == DEF_PARAMETERS)
-        {
-
-        }
+      
         
         _Result = ParamsRule(numberOfParams);
             
@@ -371,8 +407,8 @@ int ParamsRule(int numberOfParams)
         _Result = SYNTAX_ERROR;
     }
     
-   
-    _ActualNumberOfParams = 0;
+    
+    
     return _Result;
 }
 

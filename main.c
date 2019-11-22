@@ -22,7 +22,8 @@ int main() {
 
   //pointer to symtable
   SymTable_t *ST;
- 
+  //int (*arr)[M] = malloc(sizeof(int[N][M]));
+  
 
   //result of syntax analysis
   int result;

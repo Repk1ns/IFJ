@@ -14,6 +14,12 @@ typedef struct SymTableItem SymTableItem_t;
 typedef struct SymTable SymTable_t;
 typedef struct SymTableIterator SymTableIterator_t;
 
+
+enum TypeOfId {
+    _variable,
+    _function
+};
+
 //typ hashovacia tabulka
 struct SymTable
 {
@@ -26,8 +32,11 @@ struct SymTable
 //polozka tabulky
 struct SymTableItem
 {
-    
-    //Data polozky
+    //typ polozky, ci je to funckia alebo premmenna
+    int Type;
+    //pocet parametrov
+    int NumberOfParameters;
+    //nazov funkcie alebo premmenej
     Symbol_t SymData;
     //ukazovatel na dalsi symbol
     SymTableItem_t *SymItemNext;
@@ -53,9 +62,9 @@ void SymTableDelete(SymTable_t *ST);
 //hladanie v tabulke podla key
 SymTableItem_t* SymTableSearch(SymTable_t *ST, char  *Key);
 //pomocna funkcia na vytvorenie noveho itemu
-SymTableItem_t* NewItem(Symbol_t data);
+SymTableItem_t* NewItem(Symbol_t data, int type, int numberOfParameters);
 //vlozenie do tabulky
-void SymTableInsert(SymTable_t *ST, Symbol_t token);
+void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParameters);
 //hashovacia funkcia
 unsigned int SymTableHashFunction(const char *str, int SymTableSize); 
 //funckia na porovnanie dvoch klucov

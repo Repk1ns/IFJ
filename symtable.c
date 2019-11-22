@@ -3,6 +3,7 @@
 #include <time.h>
 #include "lexical_analysis.h"
 #include "symtable.h"
+#include "error_codes.h"
 
 
 
@@ -56,7 +57,7 @@ void SymTableDelete(SymTable_t *ST)
     free(ST);
 }
 
-void SymTableInsert(SymTable_t *ST, Symbol_t token)
+void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParameters)
 {
     int index;
     //iterator v zretazenom zozname
@@ -69,13 +70,14 @@ void SymTableInsert(SymTable_t *ST, Symbol_t token)
 
     //ak na danom indexe nie je ziadny item
     if(ST->SymTableArray[index] == NULL)
-    {
+    {   
+        //printf("DATA V SYM: %s\n" ,parameters[0].data.str_data);
         //vytvorenie itemu
-        item = NewItem(token);
+        item = NewItem(token, type, numberOfParameters);
         if(item == NULL)
         {
                 fprintf(stderr, "ERROR of allocation!\n");
-                //vratit ERRORCODE
+                exit(INTERNAL_ERROR);
         }
         else
         {
@@ -98,11 +100,11 @@ void SymTableInsert(SymTable_t *ST, Symbol_t token)
         }
 
         //teraz som na konci linearneho zonzamu, pripojim tam novy item
-        item = NewItem(token);
+        item = NewItem(token,type, numberOfParameters);
         if(item == NULL)
         {
                 fprintf(stderr, "ERROR of allocation!\n");
-                //vratit ERRORCODE
+                exit(INTERNAL_ERROR);
         }
         else
         {
@@ -117,9 +119,9 @@ void SymTableInsert(SymTable_t *ST, Symbol_t token)
 }
 
 //pomocna funckia na vytvorenie itemu
-SymTableItem_t* NewItem(Symbol_t token)
+SymTableItem_t* NewItem(Symbol_t token, int type, int numberOfParameters)
 {
-        SymTableItem_t* item = malloc(sizeof(SymTableItem_t) + SIZE_OF_KEY) ;
+        SymTableItem_t* item = malloc(sizeof(SymTableItem_t) + numberOfParameters) ;
 
         if( item == NULL)
         {
@@ -127,10 +129,16 @@ SymTableItem_t* NewItem(Symbol_t token)
         }
         else
         {
+            //priradenie typu
+            item->Type = type;
+            //priradenie poctu parametrov, ak to je funkcia, ak nie, hodnota je -1
+            item->NumberOfParameters = numberOfParameters;
             //priradenie tokenu do itemu
             item->SymData = token;
             //nastavenie dalsieho ukazatela na null
             item->SymItemNext = NULL;
+
+           
     
         }
 
