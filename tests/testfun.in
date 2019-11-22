@@ -1,7 +1,8 @@
-def davko () :
+def davko (a,b,c,d,d,a) :
     return a
 inputs()
 pass
 None
-inputs()    
+inputs()
+len(a)    
 
