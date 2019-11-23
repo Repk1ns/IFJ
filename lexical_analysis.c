@@ -6,9 +6,11 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
-#include "lexical_analysis.h"
 #include <math.h>
 #include <unistd.h>
+#include "stack.h"
+#include "lexical_analysis.h"
+#include "error_codes.h"
 
 const char* keywords [KEYWORD_COUNT] = {
   "def", "else", "if", "None", "pass", "return", "while"
@@ -17,10 +19,16 @@ const char* functions [FUNCTION_COUNT] = {
   "print", "inputs", "inputi", "inputf", "len", "substr", "ord", "chr"
 };
 
+bool _FirstToken = false;
+int _NumberOfSpaces = 0;
+int _IndentChar = '\0';
+
 // buffer for var names, strings, etc.
 char buffer[MAX_ID_LENGTH];
 
-Symbol_t getNextSymbol(FILE* input) {
+
+
+Symbol_t getNextSymbol(FILE* input, void *LexStack) {
   Symbol_t symbol;
   
   symbol.data.dbl_data = 0.0; 
@@ -32,15 +40,30 @@ Symbol_t getNextSymbol(FILE* input) {
   char exponent_sign = '+';
   char IFJbuffer[10]; // buffer for .IFJcode19
   char help[2];
+  
   //char* tmp_str = '\0';
   buffer[0] = '\0'; // clear buffer from mess 
+  //tStackItem *item;
 
+  
+  
 
+  //item = sTop(LexStack);
+  //printf("TOP OF STACK %d \n", item->intdata );
 // switch case for incoming characters
   while (while_condition) {
     switch (state) {
       case S: { // start position
-        character = getchar();
+        if (_IndentChar == '\0')
+          {
+            character = getchar();
+          }
+          else
+          {
+            character = _IndentChar;
+          }
+          _IndentChar = '\0';
+
         if(character == '#') { 
           state = Q1;
           break;
@@ -53,6 +76,32 @@ Symbol_t getNextSymbol(FILE* input) {
         } else if (character == '_' || isalpha(character)){
           buffer[0] = character;
           buffer[1] = '\0';
+          //vieme ak _FirstToken je true, tak tuto pushujeme na zasobnik medzery
+          if(_FirstToken)
+          {
+            
+            _FirstToken = false;
+            int Top = sLexTop(LexStack);
+            //ak je viac medzier ako je na tope zasbniku tak generujeme indent
+            if(Top != INTERNAL_ERROR  )
+            {
+              if((_NumberOfSpaces > Top))
+              {
+                symbol = GenerateIndent(LexStack, character);
+                return symbol;
+              }
+              else if (_NumberOfSpaces < Top)
+              {
+                symbol = GenerateDedent(LexStack, character, Top);
+                return symbol;
+              }
+              
+            }
+            else exit(INTERNAL_ERROR);
+
+            if(_NumberOfSpaces != 0) sPush(LexStack, NULL, _NumberOfSpaces);
+            _NumberOfSpaces = 0;
+          }
           state = Q7;
           break;
         } else if(character == '+') {
@@ -111,14 +160,33 @@ Symbol_t getNextSymbol(FILE* input) {
           }
           break;
         } else if(character == EOL) {
-          symbol.type = _eol;
-          
-          return symbol;
-        } else if(isspace(character)) {
-          if (character == ' '){
-            symbol.data.int_data ++;
+           
+          if(_FirstToken == false) 
+          {
+            _FirstToken = true; //TRUEEEE
+            symbol.type = _eol;
+            return symbol;
           }
-          symbol.type = _whitespace;
+          _FirstToken = true; //TRUEEEE
+          state = S;
+          break;
+          
+        } else if(isspace(character)) {
+          if (character == ' ' || character == '\t'){
+            //ak je medzera nie je na zactiaku riadku, tak ostatne medzery ignorujeme
+            if(_FirstToken == false)
+            {
+              state = S;
+            }
+            //tu medzera je na zaciatku riadku
+            else
+            {
+              _NumberOfSpaces++;
+            }
+            
+            //symbol.data.int_data ++;
+          }
+          
           state = S;
           break;
         } else if (character == ','){ 
@@ -509,7 +577,7 @@ Symbol_t getNextSymbol(FILE* input) {
       }
       case Fx: {
         fprintf(stderr, "ERROR: wrong character input!\n");
-        exit(1);
+        exit(LEXICAL_ERROR);
       }
     }
   }
@@ -580,4 +648,48 @@ double myPow(double base, int exp, char sign){
 double combineDouble(int whole, int decimal){
   double help = (double) intlen(decimal);
   return whole + (decimal * (pow((double)10, (help * (-1)))));
+}
+
+Symbol_t GenerateIndent( void * LexStack, char  actualChar)
+{
+  Symbol_t symbol;
+  _IndentChar = actualChar;
+  symbol.type = _indent;
+  sPush(LexStack, NULL, _NumberOfSpaces);
+  _NumberOfSpaces = 0;
+  return symbol;
+}
+
+Symbol_t GenerateDedent(void * LexStack, char  actualChar, int Top)
+{
+  int found = false;
+  Symbol_t symbol;
+  while(Top != _NumberOfSpaces)
+  {
+    sLexPop(LexStack);
+    Top = sLexTop(LexStack);
+    if(Top == _NumberOfSpaces) 
+    {
+      found = true;
+      break;
+    }
+    else if (Top == 0)
+    {
+      found = false;
+      _FirstToken = false;
+      break;
+    }
+  }
+  //ak sme nasli pocet medzier v stacku, generujeme dedent
+  if(found)
+  {
+    _IndentChar = actualChar;
+    symbol.type = _dedent;
+    _NumberOfSpaces = 0;
+  }
+  else 
+  {
+    symbol.type =_null;
+  }
+  return symbol;
 }
