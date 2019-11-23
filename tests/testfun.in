@@ -1,15 +1,5 @@
-def davko (a,b,c,d,d,a) :
-    inputs()
-inputs()
-pass
-None
-def anakonda (a,b,c,d,d,a) :
-    inputs()
-inputs()
-len(a)  
-def anakonda5 (a,b,c,d,d,a) :
-    inputs()
-len(s) 
-def anakonda2 (a,b,c,d,d,a) :
-    inputs() 
-
+def davko (a,b,c) :
+ inputs()
+len(a)
+ inputi()
+len(b)

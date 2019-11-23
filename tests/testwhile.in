@@ -1,12 +1,7 @@
 while :
-    inputi()
-    inputs()
-    inputf()
-    pass
-    inputs()
-    None
-    inputs()
-    pass
-inputs()
-inputs()
-    
+ inputs()
+ inputs()
+ inputs()
+ inputs()
+print(a)
+

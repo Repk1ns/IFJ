@@ -1,12 +1,6 @@
 if :
   inputs()
 else :
-  inputs()
+  inputs()  
 inputs() 
-
-inputs()
-inputs()
-inputs()
-inputs()
-inputs()
 
