@@ -5,6 +5,7 @@
 #include "symtable.h"
 #include "syntax_analysis.h"
 #include "error_codes.h"
+#include "stack.h"
 
 //globalna tabulka symbolov
 SymTable_t *_ST;
@@ -16,18 +17,19 @@ bool _IndentFlag = false;
 bool _DefFlag = false;
 int _ActualNumberOfParams = 0;
 int _Result = 0;
+tStack *LexStack;
 
 // parse fukncia, chyba parameter pre vytvaranie trojadresnych instrukcii
 // funkcia getnextsymbol() sa nebude volat v maine ale v parse funkcii, TODO
-int Parse(SymTable_t *ST)
+int Parse(SymTable_t *ST, void *Stack)
 {
     
-
+    LexStack = Stack;
     // do {
-    //     _Token = getNextSymbol(stdin);
+    //     _Token = getNextSymbol(stdin, LexStack);
     //     switch (_Token.type){
     //     case _int:
-    //     case _whitespace: {
+    //     {
     //         printf("type: %d, data: %d\n", _Token.type, _Token.data.int_data);
     //         break;
     //     }
@@ -35,7 +37,14 @@ int Parse(SymTable_t *ST)
     //         printf("type: %d, data: %f\n", _Token.type, _Token.data.dbl_data);
     //         break;
     //     }
+    //     case _indent:
+    //     case _dedent:
+    //     {
+    //         printf("type: %d\n", _Token.type);
+    //         break;
+    //     }
     //     default: {
+            
     //         printf("type: %d, data: %s\n", _Token.type, _Token.data.str_data);
     //         break;
     //     }
@@ -44,30 +53,8 @@ int Parse(SymTable_t *ST)
     // } while (_Token.type != _eof);
 
 
-    //testing hash table:
-
-    //inserting items
-    // Symbol_t testsymbol;
-
-    // testsymbol.data.str_data = "totojetest1";
-    // testsymbol.type =  6;
-     _ST = ST;
-     
-
-    // SymTableInsert(_ST, testsymbol, _function,0);
-    // //serach for item
-    // SymTableItem_t* found = SymTableSearch(_ST, "totojetest1");
-    // if(found != NULL) printf("YES");
-    // printf("---------------------------------------------\n");
-
-
- //pomocny _Token na prenasanie informacii medzi pravidlami
-  
-  
-
-    //vysledok parseru
-
     
+    _ST = ST;
     _Result = ProgRule();
 
     
@@ -82,15 +69,18 @@ int ProgRule()
     if(!_ProgRuleCalled) 
     {
 
-        _Token = getNextSymbol(stdin);
+        _Token = getNextSymbol(stdin, LexStack);
     }
     _ProgRuleCalled = false;
 
     //ak je _Token vstavana funkcia alebo _Token def
     if(_Token.type == _keyword && (strcmp(_Token.data.str_data,"def") == 0))
     {
-        
-        _Result = DefRule();
+        if(_Result == IT_IS_OKAY)
+        {
+            _Result = DefRule();
+        }
+
 
         //zavolanie pravidla prog pre prejdenie celeho suboru az po eof, ale iba ak je vsetko v poriadku
         if(_Result == IT_IS_OKAY) 
@@ -108,7 +98,10 @@ int ProgRule()
     else
     {
         //STAT
-        _Result = StatRule();
+        if(_Result == IT_IS_OKAY)
+        {
+            _Result = StatRule();
+        }
         //zavolanie pravidla prog pre prejdenie celeho suboru az po eof, ale iba ak je vsetko v poriadku
         if(_Result == IT_IS_OKAY) 
         {   
@@ -127,50 +120,63 @@ int StatRule()
     {
         //ak _Token je identifikator simulujem pravidlo ID
         case _id:
-        /* code */
+            _Result = IdRule();
         break;
         //ak je _Token _func, simulujem pravidla pre vstavane funkcie
         case _func:
             _Result = BuiltInFuncRule();
-            //ak som v indente tak tam mozu byt iba statementy
-            if(_IndentFlag) 
+            if(_Result == IT_IS_OKAY)
             {
-                //_Token = getNextSymbol(stdin);
-                _Token.type =_dedent;
-                _Token.data.int_data = 3;
-                if(_Token.type == _dedent)
+                //ak som v indente tak tam mozu byt iba statementy
+                if(_IndentFlag) 
                 {
-                    _IndentFlag = false;
-                    break;
-                }
-                else
-                {
-                    _Result = StatRule();
+                    _Token = getNextSymbol(stdin, LexStack);
+                    
+                    if(_Token.type == _dedent)
+                    {
+                        _IndentFlag = false;
+                        break;
+                    }
+                    else if(_Token.type == _null)
+                    {
+                        _Result = SYNTAX_ERROR;
+                        break;
+                    }
+                    else
+                    {
+                        _Result = StatRule();
+                    }
                 }
             }
         break;
         //ak je _Token _keyword, simulujem pravidla pre keywordy
         case _keyword:
             _Result = KeywordsRule();
-            if(_IndentFlag) 
+            if(_Result == IT_IS_OKAY)
             {
-                //_Token = getNextSymbol(stdin);
-                _Token.type =_dedent;
-                _Token.data.int_data = 3;
-                if(_Token.type == _dedent)
+                if(_IndentFlag) 
                 {
-                    _IndentFlag = false;
-                    break;
-                }
-                else
-                {
-                    _Result = StatRule();
+                    _Token = getNextSymbol(stdin, LexStack);
+                    if(_Token.type == _dedent)
+                    {
+                        _IndentFlag = false;
+                        break;
+                    }
+                        else if(_Token.type == _null)
+                    {
+                        _Result = SYNTAX_ERROR;
+                        break;
+                    }
+                    else
+                    {
+                        _Result = StatRule();
+                    }
                 }
             }
         break;
         //ak je _Token eol, pokracujem dalej
         case _eol:
-            // _Token = getNextSymbol(stdin);
+            // _Token = getNextSymbol(stdin, LexStack);
             // _Result = StatRule();
         break;
         
@@ -184,7 +190,79 @@ int StatRule()
 
 int IdRule()
 {
-    return IT_IS_OKAY;
+    //dalsi symbol musi byt rovna sa
+    _Token = getNextSymbol(stdin, LexStack);
+    if(_Token.type == _equal)
+    {
+        //teraz sa musime rozhodnut, ci volame funckiu alebo priradzujeme vyraz
+        _Token = getNextSymbol(stdin,LexStack);
+        //vieme, ze ak volame funkciu, tak nasledujuci identifikator musi byt v TS
+        SymTableItem_t* prevDefFun = SymTableSearch(_ST, _Token.data.str_data);
+        if(prevDefFun != NULL)
+        {
+            //vynulujeme premennu s parametrami
+            _ActualNumberOfParams = 0;
+            //simulujeme pravidlo pre volanie funckie
+            //ocakavame ako dalsi token zatvorku
+            _Token = getNextSymbol(stdin,LexStack);
+            if(_Token.type == _left_bracket)
+            {
+                //osetrime parametre
+                _Result = ParamsRule(INF_PARAMETERS);
+                if(_Result == IT_IS_OKAY)
+                {
+                    //porovname pocet parametrov z predtym definovanou funkciou
+                    if(prevDefFun->NumberOfParameters == _ActualNumberOfParams)
+                    {
+                        //ako dalsi token ocakavme eol, ten nam musi vrati paramsrule
+                        if(_Token.type == _eol)
+                        {
+                            _Result = IT_IS_OKAY;
+                        }
+                    }
+                    //semanticka chyba poctu parametrov
+                    else
+                    {
+                        _Result = SEMANTIC_PARAMS_ERROR;
+                    }
+                }
+                _ActualNumberOfParams = 0;
+                
+            }
+            //nenasli sme funckiu ,sematicka chyba
+            
+        }
+        //ak sme nenasli, na zaklade dalsieho tokenu sa rozhodujeme, ci ide o semanticku chybu alebo volame PSA
+        else
+        {
+            _Token = getNextSymbol(stdin,LexStack);
+            //ak sa dalsi token je lava zatvorka, vieme, ze sa jednalo o funkciu a program skonci chybou
+            if(_Token.type == _left_bracket)
+            {
+                //nedefinovana funkcia
+                _Result = SEMANTIC_ERROR;
+            }
+            else
+            {
+                //PSA musite povedat, ze sme nacitali jeden jej token, cize ona jedno nacitanie tokenu preskoci
+                _Result = Expression_analysis();
+                //skontrolujeme result, ako token mi ma vrati EOL
+            }
+        }
+        
+    }
+    else
+    {
+        //ak dalsi token je EOL mame nedefinovanu premmennu, inak je to SYNTAX ERROR
+        
+        if(_Token.type == _eol)
+        {
+            _Result = SEMANTIC_ERROR;
+        }
+        else _Result = SYNTAX_ERROR;
+    }
+    
+    return _Result;
 }
 
 
@@ -199,7 +277,7 @@ int BuiltInFuncRule()
        strcmp(_Token.data.str_data, "inputf") == 0 )
     {
         
-        _Token = getNextSymbol(stdin);
+        _Token = getNextSymbol(stdin, LexStack);
         if(strcmp(_Token.data.str_data, "(") == 0)
         {
             //zavolame pravidlo pre parametre, vieme, ze ich ma byt 0
@@ -211,45 +289,50 @@ int BuiltInFuncRule()
     else if(strcmp(_Token.data.str_data, "len") == 0 ||
             strcmp(_Token.data.str_data, "chr") == 0)
     {
-        _Token = getNextSymbol(stdin);
+        _Token = getNextSymbol(stdin, LexStack);
         if(strcmp(_Token.data.str_data, "(") == 0)
         {
             //zavolame pravidlo pre parametre, vieme, ze ich ma byt 
             
             _Result = ParamsRule(1);
+            _ActualNumberOfParams = 0;
+            
            
         }
         
     }
     else if(strcmp(_Token.data.str_data, "ord") == 0 )
     {
-        _Token = getNextSymbol(stdin);
+        _Token = getNextSymbol(stdin, LexStack);
         if(strcmp(_Token.data.str_data, "(") == 0)
         {
             //zavolame pravidlo pre parametre, vieme, ze ich ma byt 2
             
             _Result = ParamsRule(2);
+            _ActualNumberOfParams = 0;
             
         }
     }
     else if(strcmp(_Token.data.str_data, "substr") == 0 )
     {
-        _Token = getNextSymbol(stdin);
+        _Token = getNextSymbol(stdin, LexStack);
         if(strcmp(_Token.data.str_data, "(") == 0)
         {
             //zavolame pravidlo pre parametre, vieme, ze ich ma byt 3
             
             _Result = ParamsRule(3);
+            _ActualNumberOfParams = 0;
             
         }
     }
      else if(strcmp(_Token.data.str_data, "print") == 0 )
     {
-        _Token = getNextSymbol(stdin);
+        _Token = getNextSymbol(stdin, LexStack);
         if(strcmp(_Token.data.str_data, "(") == 0)
         {
             //zavolame pravidlo pre parametre, vieme, ze ich moze byt kolko len chce
-            _Result = ParamsRule(PRINT_PARAMETERS);
+            _Result = ParamsRule(INF_PARAMETERS);
+            _ActualNumberOfParams = 0;
             
         }
     }
@@ -265,7 +348,6 @@ int BuiltInFuncRule()
 int DefRule()
 {
     _Result = SYNTAX_ERROR;
-    int actualNumberOfParams = DEF_PARAMETERS;
     _ActualNumberOfParams = 0;
     Symbol_t Identifier;
   
@@ -273,7 +355,7 @@ int DefRule()
  
   
     
-    _Token = getNextSymbol(stdin);
+    _Token = getNextSymbol(stdin, LexStack);
     //ak to je identifikator
     if(_Token.type == _id)
     {
@@ -281,39 +363,30 @@ int DefRule()
         Identifier.type = _Token.type;
         strcpy(Identifier.data.str_data, _Token.data.str_data);
 
-        _Token = getNextSymbol(stdin);
+        _Token = getNextSymbol(stdin, LexStack);
         //musi byt zatvorka
         if(strcmp(_Token.data.str_data,"(") == 0)
         {
             //zavolame pravidlo pre parametre, vieme, ze ich moze byt kolko len chce
             //musime si ich ukladat do tabulky symbolov 
-            _Result = ParamsRule(actualNumberOfParams);
+            _Result = ParamsRule(DEF_PARAMETERS);
             //printf("actual number of params: %d\n", _ActualNumberOfParams);
             
             //printf("params str: %s\n", _ParamsArray[0].data.str_data);
             SymTableInsert(_ST, Identifier, _function, _ActualNumberOfParams);
             _ActualNumberOfParams = 0;
-            SymTableItem_t* item = SymTableSearch(_ST, Identifier.data.str_data);
-            if(item != NULL)
-            {
-                printf("TYPE: %d DATA: %s  PARAMS: %d \n", item->SymData.type, item->SymData.data.str_data, item->NumberOfParameters);
-                
-            }
-            else
-            {
-                printf("NOT FOUND\n");
-            }
+            
             
             
 
 
             if(_Result == IT_IS_OKAY)
             {
-                _Token = getNextSymbol(stdin);
+                _Token = getNextSymbol(stdin, LexStack);
                 //ak je vsetko v poriadku tak po dvojbodke ocavame _Token EOL
                 if(_Token.type == _eol)
                 {
-                    //_Token = getNextSymbol(stdin);
+                    //_Token = getNextSymbol(stdin, LexStack);
                     _Result = IndentRule();
                     //musi prist indent
                     if(_Token.type == _indent)
@@ -323,7 +396,7 @@ int DefRule()
                         //som v definicii funkcie, moze tam byt aj return
                         _DefFlag = true;
                         //dasli _Token mozu byt statementy alebo return
-                        _Token = getNextSymbol(stdin);
+                        _Token = getNextSymbol(stdin, LexStack);
 
                         _Result = StatRule();
 
@@ -344,7 +417,7 @@ int ParamsRule(int numberOfParams)
     
     _Result = SYNTAX_ERROR;
     _PreviousToken = _Token;
-    _Token = getNextSymbol(stdin);
+    _Token = getNextSymbol(stdin, LexStack);
     char data[MAX_ID_LENGTH];
     
     
@@ -363,14 +436,14 @@ int ParamsRule(int numberOfParams)
     }
     else if(strcmp(_Token.data.str_data, ")") == 0)
     {
-        _Token = getNextSymbol(stdin);
+        _Token = getNextSymbol(stdin, LexStack);
         if(_Token.type == _eol || _Token.type == _eof)
         {
             if((_ActualNumberOfParams == numberOfParams) && (_PreviousToken.type != _comma))
             {
                 _Result = IT_IS_OKAY;
             }
-            else if  ((numberOfParams == PRINT_PARAMETERS) && (_PreviousToken.type != _comma))
+            else if  ((numberOfParams == INF_PARAMETERS) && (_PreviousToken.type != _comma))
             {
                 _Result = IT_IS_OKAY;
             }
@@ -403,7 +476,7 @@ int ParamsRule(int numberOfParams)
         _Result = SYNTAX_ERROR;
     }
     
-    _ActualNumberOfParams = 0;
+    
     
     
     return _Result;
@@ -429,7 +502,7 @@ int KeywordsRule()
     else if(strcmp(_Token.data.str_data,"pass") == 0 || (strcmp(_Token.data.str_data,"None") == 0))
     {
         //ak je to None a nasledujci _Token je pass je vsetko v poriadku
-        _Token = getNextSymbol(stdin);
+        _Token = getNextSymbol(stdin, LexStack);
         //ak je _Token eof, to znamena ze pass je poslendy prikaz
         if(_Token.type == _eol || _Token.type == _eof)
         {
@@ -449,7 +522,7 @@ int KeywordsRule()
             
             // po returne ocakavame identifikator
             // vieme, ze za returnom ocakavame vyraz, cize volame PSA
-            _Token = getNextSymbol(stdin); //---> TOTO TU NEBUDE!
+            _Token = getNextSymbol(stdin, LexStack); //---> TOTO TU NEBUDE!
             _Result = Expression_analysis();
 
             _DefFlag = false;
@@ -474,19 +547,19 @@ int KeywordsRule()
 //pravidlo pre if 
 int IfRule()
 {
-    _Result = 0;
+    
     //teraz som v pravidle if, a viem, ze v _Tokene mam if, cize teraz volam PSA
     //ona vola getnextSYmbol() a ked skocni, vrati mi errorcode a nasledujuci _Token do pravidla, cize by to mala byt dvojbodka
     _Result = Expression_analysis();
     if(_Result!= IT_IS_OKAY) return _Result;
     
     //zavolame dalsi _Token a zisitme, ci tam je ":"
-    _Token = getNextSymbol(stdin); //->>>>> TOTO TU NEBUDE LEBO MI VRATI _Token PSA
+    _Token = getNextSymbol(stdin, LexStack); //->>>>> TOTO TU NEBUDE LEBO MI VRATI _Token PSA
     if(strcmp(_Token.data.str_data, ":") == 0)
     {
 
         // je tu dvojbodka, zavolame dalsi _Token, co by mal byt eol
-        _Token = getNextSymbol(stdin);
+        _Token = getNextSymbol(stdin, LexStack);
         if(_Token.type == _eol)
         {
             
@@ -497,7 +570,7 @@ int IfRule()
             {
                 _IndentFlag = true;
                 
-                _Token = getNextSymbol(stdin);
+                _Token = getNextSymbol(stdin, LexStack);
                 //ak prisie indent, nasleduje znova sekvencia statementov
                 _Result = StatRule();
                 //ak je to v poriadku, osetrime dedent
@@ -527,21 +600,21 @@ int ElseRule()
 
     _Result = 0;
     //volame dalsi _Token
-    _Token = getNextSymbol(stdin);
+    _Token = getNextSymbol(stdin, LexStack);
     
     //ak to je else, simulujeme pravidlo pre else statemts
     if(strcmp(_Token.data.str_data, "else") == 0 )
     {
         //nacitame dalsi _Token, co musi byt :
-        _Token = getNextSymbol(stdin);
+        _Token = getNextSymbol(stdin, LexStack);
         if(strcmp(_Token.data.str_data, ":") == 0  )
         {
             // je tu dvojbodka, zavolame dalsi _Token, co by mal byt eol
-            _Token = getNextSymbol(stdin);
+            _Token = getNextSymbol(stdin, LexStack);
             if(_Token.type == _eol)
             {
                 //ak je to eol zavolame dalsi _Token a riesime statementy
-                //_Token = getNextSymbol(stdin);
+                //_Token = getNextSymbol(stdin, LexStack);
                 //ak tu je dvojbodka volame pravidlo indent
                 _Result = IndentRule();
 
@@ -549,12 +622,10 @@ int ElseRule()
                 {
                     _IndentFlag = true;
                     //ak prisie indent, nasleduje znova sekvencia statementov
-                    _Token = getNextSymbol(stdin);
+                    _Token = getNextSymbol(stdin, LexStack);
 
                     _Result = StatRule();
                     
-                   
-  
                 }
             }
             
@@ -578,15 +649,16 @@ int ElseRule()
 
 int IndentRule()
 {
-    _Result = 0;
-    //_Token = getNextSymbol(stdin);
-    _Token.type =_indent;
-    _Token.data.int_data = 3;
+    
+    _Token = getNextSymbol(stdin, LexStack);
+    // _Token.type =_indent;
+    // _Token.data.int_data = 3;
     //osetrime, ci je nasleudjuci _Token indent
     if(_Token.type == _indent)
     {
         _Result = IT_IS_OKAY;
     }
+    
     else
     {
         _Result = SYNTAX_ERROR;
@@ -597,8 +669,8 @@ int IndentRule()
 
 int DedentRule()
 {
-    _Result = 0;
-    //_Token = getNextSymbol(stdin);
+    
+    //_Token = getNextSymbol(stdin, LexStack);
     _Token.type =_dedent;
     _Token.data.int_data = 3;
     //osetrime, ci je nasleudjuci _Token dedent
@@ -621,13 +693,13 @@ int WhileRule()
     _Result = Expression_analysis();
     if(_Result!= IT_IS_OKAY) return _Result;
     //teraz nam PSA vrati _Token, cize ocakavme :
-    _Token = getNextSymbol(stdin); //<---------toto tu NEBUDE!!! vrati nam to PSA
+    _Token = getNextSymbol(stdin, LexStack); //<---------toto tu NEBUDE!!! vrati nam to PSA
 
      
     if(strcmp(_Token.data.str_data, ":") == 0  )
     {
         // je tu dvojbodka, zavolame dalsi _Token, co by mal byt eol
-        _Token = getNextSymbol(stdin);
+        _Token = getNextSymbol(stdin, LexStack);
         if(_Token.type == _eol)
         {
 
@@ -638,7 +710,7 @@ int WhileRule()
             {
                 _IndentFlag = true;
                 //ak prisie indent, nasleduje znova sekvencia statementov
-                _Token = getNextSymbol(stdin);
+                _Token = getNextSymbol(stdin, LexStack);
 
                 _Result = StatRule();
                 

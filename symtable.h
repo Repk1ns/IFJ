@@ -6,7 +6,7 @@
 #define SYMTABLE_H
 
 //velkost hashovacej tabulky
-#define SIZE_OF_SYMTABLE 1
+#define SIZE_OF_SYMTABLE 7901
 //neuplna deklarace struktur
 typedef struct SymTableItem SymTableItem_t;
 typedef struct SymTable SymTable_t;

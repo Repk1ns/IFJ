@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "stack.h"
 #include "lexical_analysis.h"
 #include "symtable.h"
 #include "syntax_analysis.h" 
@@ -23,19 +24,22 @@ int main() {
   //pointer to symtable
   SymTable_t *ST;
   //int (*arr)[M] = malloc(sizeof(int[N][M]));
-  
-
+  tStack LexStack;
+  sInit(&LexStack);
+  sPush(&LexStack, NULL, 0);
   //result of syntax analysis
   int result;
   //inicialization
   ST = SymTableInit(SIZE_OF_SYMTABLE);
+  
   if(ST == NULL) return INTERNAL_ERROR;
   //calling parser
-  result = Parse(ST);
+  result = Parse(ST, &LexStack);
 
   //which error?
   printf("result: %d \n", result);
 
+  sDispose(&LexStack);
   //delete symtable
   SymTableDelete(ST);
 
