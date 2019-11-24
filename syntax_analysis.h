@@ -7,7 +7,7 @@
 
 
 
-//parse fukncia, chyba parameter pre vytvaranie trojadresnych instrukcii
+//parse fukncia
 int Parse(SymTable_t *ST, void *Stack, void *List);
 //hlavne pravidlo celeho parseru
 int ProgRule();
