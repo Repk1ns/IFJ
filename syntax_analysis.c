@@ -6,7 +6,10 @@
 #include "syntax_analysis.h"
 #include "error_codes.h"
 #include "stack.h"
+#include "generator.h"
 
+//globalni seznam instrukci
+tListOfInstr *_IL;
 //globalna tabulka symbolov
 SymTable_t *_ST;
 //globalna premmenna _Tokenu
@@ -19,11 +22,12 @@ int _ActualNumberOfParams = 0;
 int _Result = 0;
 tStack *LexStack;
 
-// parse fukncia, chyba parameter pre vytvaranie trojadresnych instrukcii
+// parse fukncia
 // funkcia getnextsymbol() sa nebude volat v maine ale v parse funkcii, TODO
-int Parse(SymTable_t *ST, void *Stack)
+int Parse(SymTable_t *ST, void *Stack, void *List)
 {
     
+    _IL = List;
     LexStack = Stack;
     // do {
     //     _Token = getNextSymbol(stdin, LexStack);
@@ -727,6 +731,24 @@ int WhileRule()
     return _Result;
 }
 
+void generateInstruction(int instType, int prefix1, void *addr1, int prefix2, void *addr2, int prefix3, void *addr3)
+// vlozi novou instrukci do seznamu instrukci
+{
+   tInstr I;
+
+   I.instType = instType;
+
+   I.prefix1 = prefix1;
+   I.addr1 = addr1;
+
+   I.prefix2 = prefix2;
+   I.addr2 = addr2;
+
+   I.prefix3 = prefix3;
+   I.addr3 = addr3;
+
+   listInsertLast(_IL, I);
+}
 
 int Expression_analysis()
 {
