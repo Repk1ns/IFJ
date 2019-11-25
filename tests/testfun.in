@@ -1,5 +1,5 @@
 def davko (a,b,c) :
  inputs()
 len(a)
- inputi()
+inputi()
 len(b)
