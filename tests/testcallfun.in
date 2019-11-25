@@ -1,5 +1,5 @@
 
-def funkcia(par1) :
+def funkcia(par1,par2) :
  print(a)
  print(b)
  if :
