@@ -7,6 +7,7 @@
 #include "error_codes.h"
 #include "stack.h"
 #include "generator.h"
+#include "expression.h"
 
 //globalni seznam instrukci
 tListOfInstr *_IL;
@@ -554,7 +555,7 @@ int IfRule()
     
     //teraz som v pravidle if, a viem, ze v _Tokene mam if, cize teraz volam PSA
     //ona vola getnextSYmbol() a ked skocni, vrati mi errorcode a nasledujuci _Token do pravidla, cize by to mala byt dvojbodka
-    _Result = Expression_analysis();
+    _Result = Expression(&_Token);
     if(_Result!= IT_IS_OKAY) return _Result;
     
     //zavolame dalsi _Token a zisitme, ci tam je ":"
