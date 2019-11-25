@@ -4,6 +4,7 @@
 #include "symtable.h"
 #include "syntax_analysis.h" 
 #include "error_codes.h"
+#include "generator.h"
 
 
 // these instructions are prepared for you, enjoyy :) 
@@ -21,6 +22,10 @@ const char* instructions [INSTRUCTION_COUNT] = {
 
 int main() {
 
+  //list of instructions
+  tListOfInstr IL;
+  listInit(&IL);
+
   //pointer to symtable
   SymTable_t *ST;
   //int (*arr)[M] = malloc(sizeof(int[N][M]));
@@ -34,7 +39,7 @@ int main() {
   
   if(ST == NULL) return INTERNAL_ERROR;
   //calling parser
-  result = Parse(ST, &LexStack);
+  result = Parse(ST, &LexStack, &IL);
 
   //which error?
   printf("result: %d \n", result);
@@ -42,6 +47,13 @@ int main() {
   sDispose(&LexStack);
   //delete symtable
   SymTableDelete(ST);
+  
+  if(result == IT_IS_OKAY)
+  {
+      printInstructions(&IL);
+  }
+
+  listFree(&IL);
 
   
   

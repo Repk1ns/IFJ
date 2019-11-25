@@ -7,8 +7,8 @@
 
 
 
-//parse fukncia, chyba parameter pre vytvaranie trojadresnych instrukcii
-int Parse(SymTable_t *ST, void *Stack);
+//parse fukncia
+int Parse(SymTable_t *ST, void *Stack, void *List);
 //hlavne pravidlo celeho parseru
 int ProgRule();
 //pravidlo pre statementy
@@ -37,6 +37,8 @@ int DedentRule();
 int ParamsRule(int numberOfParams);
 //pravidlo na zistenie typu erroru v parametroch funckiach
 int ParamsTypeOfError();
+//fce pro generovani instrukci
+void generateInstruction(int instType, int prefix1, void *addr1, int prefix2, void *addr2, int prefix3, void *addr3);
 
 int Expression_analysis();
 
