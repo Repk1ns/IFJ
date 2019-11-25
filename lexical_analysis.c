@@ -208,7 +208,10 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           state = F;
           break;
         } else if(character == EOL) { // S
+          _FirstToken = true;
           state = S;
+          symbol.type = _eol;
+          return symbol;
           break;
         } else {
           break;
@@ -562,6 +565,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           }
           break;
         } else if(character == EOL) {
+          _FirstToken = true;
           symbol.type = _eol;
           //symbol.data.str_data = "-";
           return symbol;
