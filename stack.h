@@ -3,12 +3,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
+
+
 
 typedef struct StackItem {
-	void *data;
-	int intdata;
+	Precedence_table_symbol stackSymbol;
+	enum Type typ;
 	struct StackItem *nextItem;
 } tStackItem;
 
@@ -18,10 +18,10 @@ typedef struct {
 } tStack;
 
 void sInit(tStack *);
-int sPush(tStack *, void *, int data);
+int sPush(tStack *, Precedence_table_symbol, Type);
+tStackItem* TopTerminal(tStack*);
+bool push_TopTerminal(tStack* Stack, Precedence_table_symbol symbol, Type);
 void *sTop(tStack *);
-int sLexTop(tStack *);
-void sLexPop(tStack *);
 void *sTopPop(tStack *);
 int sDelete(tStack *);
 int sDispose(tStack *);

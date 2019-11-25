@@ -1,10 +1,8 @@
 #include <stdlib.h>
-#include "stack.h"
 #include "lexical_analysis.h"
-#include "symtable.h"
-#include "syntax_analysis.h" 
-#include "error_codes.h"
-#include "generator.h"
+#include "stack.h"
+#include "expression.h"
+
 
 
 // these instructions are prepared for you, enjoyy :) 
@@ -19,42 +17,35 @@ const char* instructions [INSTRUCTION_COUNT] = {
   "READ", "WRITE", "CONCAT", "STRLEN", "GETCHAR", "SETCHAR", "TYPE", "LABEL", "JUMP", "JUMPIFEQ", 
   "JUMPIFNEQ", "JUMPIFEQS", "JUMPIFNEQS", "EXIT", "BREAK", "DPRINT"
 }; */
-
+/*
 int main() {
+  struct Symbol symbol;
+  do {
+    symbol = getNextSymbol(stdin);
+    Expression(symbol);
+    switch (symbol.type){
+      case _int:
+      case _whitespace: {
+        printf("type: %d, data: %d\n", symbol.type, symbol.data.int_data);
+        break;
+      }
+      case _double: {
+        printf("type: %d, data: %f\n", symbol.type, symbol.data.dbl_data);
+        break;
+      }
+      default: {
+        printf("type: %d, data: %s\n", symbol.type, symbol.data.str_data);
+        break;
+      }
+    }
+    printf("--------------------------------------\n");
+  } while (symbol.type != _eof);
+}*/
 
-  //list of instructions
-  tListOfInstr IL;
-  listInit(&IL);
-
-  //pointer to symtable
-  SymTable_t *ST;
-  //int (*arr)[M] = malloc(sizeof(int[N][M]));
-  tStack LexStack;
-  sInit(&LexStack);
-  sPush(&LexStack, NULL, 0);
-  //result of syntax analysis
-  int result;
-  //inicialization
-  ST = SymTableInit(SIZE_OF_SYMTABLE);
-  
-  if(ST == NULL) return INTERNAL_ERROR;
-  //calling parser
-  result = Parse(ST, &LexStack, &IL);
-
-  //which error?
-  printf("result: %d \n", result);
-
-  sDispose(&LexStack);
-  //delete symtable
-  SymTableDelete(ST);
-  
-  if(result == IT_IS_OKAY)
-  {
-      printInstructions(&IL);
-  }
-
-  listFree(&IL);
-
-  
-  
+int main(){
+  int a;
+  a = Expression();
+  printf("vysledek: %d:\n", a);
+  return 0;
 }
+
