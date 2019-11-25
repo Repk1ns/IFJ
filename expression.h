@@ -45,7 +45,7 @@ typedef enum {
 
 
 
-int Expression(Symbol_t token);
+int Expression(Symbol_t* token);
 int reduction();
 
 

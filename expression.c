@@ -188,19 +188,18 @@ int reduction()
     }
     return IT_IS_OKAY;
 }
-int Expression(Symbol_t token)
+int Expression(Symbol_t* token)
 {
 
-    Actual_Token = token;
+    Actual_Token = getNextSymbol(stdin,NULL);
+
 
     sInit(&Stack);
 
     int row, column;
 
-    if(!sPush(&Stack, SYMBOL_DOLLAR, Actual_Token.type))   // vlozeni $ na Stack
-    {
-        return SYNTAX_ERROR;
-    }
+    sPush(&Stack, SYMBOL_DOLLAR, Actual_Token.type);  // vlozeni $ na Stack
+    
 
     do
     {
@@ -233,9 +232,10 @@ int Expression(Symbol_t token)
         }
 
 
-    }while(!(row == SYMBOL_DOLLAR && column == SYMBOL_DOLLAR));
+    }while(row != SYMBOL_DOLLAR && column != SYMBOL_DOLLAR);
 
     sDispose(&Stack);
+    *token = Actual_Token;
     return IT_IS_OKAY;
 
     
