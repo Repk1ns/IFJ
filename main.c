@@ -31,7 +31,7 @@ int main() {
   //int (*arr)[M] = malloc(sizeof(int[N][M]));
   tStack LexStack;
   sInit(&LexStack);
-  sPush(&LexStack, NULL, 0);
+  sPush(&LexStack, 0, 0);
   //result of syntax analysis
   int result;
   //inicialization

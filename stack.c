@@ -1,3 +1,6 @@
+#include "lexical_analysis.h"
+#include "generator.h"
+#include "expression.h"
 #include "stack.h"
 #include "error_codes.h"
 
@@ -16,7 +19,7 @@ void sInit(tStack* Stack)
 	//return stack;
 }
 
-int sPush(tStack *Stack, void *data, int intdata)
+int sPush(tStack *Stack, int precedenceTableSymbol, int intdata)
 {
 	if(Stack == NULL)
 	{
@@ -29,7 +32,8 @@ int sPush(tStack *Stack, void *data, int intdata)
 		return INTERNAL_ERROR;
 	}
 	NewStackItem->intdata = intdata;
-	NewStackItem->data = data;
+	NewStackItem->stackSymbol = precedenceTableSymbol;
+	//NewStackItem->data = data;
 	NewStackItem->nextItem = Stack->topItem;
 	Stack->topItem = NewStackItem;
 	Stack->size++;
@@ -82,7 +86,7 @@ void *sTopPop(tStack *Stack)
 	tStackItem* pom = Stack->topItem;
 	Stack->topItem = Stack->topItem->nextItem;
 	
-	void* back_data = pom->data;
+	int* back_data = &(pom->stackSymbol);
 
 	free(pom);	
 	Stack->size--;
@@ -137,4 +141,57 @@ bool sEmpty(tStack *Stack)
 	}
 	
 	return (Stack->topItem == NULL) ? true : false;
+}
+tStackItem* TopTerminal(tStack *Stack)
+{
+    tStackItem *tmp = Stack->topItem;
+    while(tmp != NULL)
+    {
+        if (tmp->stackSymbol < SYMBOL_SHIFT)
+        {
+            return tmp;
+        }
+        else
+        {
+            tmp = tmp->nextItem;
+        }
+    }
+    return NULL;
+}
+
+bool push_TopTerminal(tStack* Stack, int symbol, int type)
+{
+    tStackItem* prevItem = NULL;
+    tStackItem* pom = Stack->topItem;
+    while(pom != NULL)
+    {
+        if(pom->stackSymbol < SYMBOL_SHIFT)
+        {
+            tStackItem* newItem = (tStackItem*) malloc(sizeof(tStackItem));
+            if(newItem == NULL)
+            {
+                return false;
+            }
+            newItem->stackSymbol = symbol;
+            newItem->typ = type;
+
+            if (prevItem == NULL)
+            {
+                newItem->nextItem = Stack->topItem;
+                Stack->topItem = newItem;
+            }
+            else
+            {
+                newItem->nextItem = prevItem->nextItem;
+                prevItem->nextItem = newItem;
+            }
+
+            return true;
+        }
+        
+        prevItem = pom;
+        pom = pom->nextItem;
+    }
+
+    return false;
 }

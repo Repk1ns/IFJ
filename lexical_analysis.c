@@ -99,7 +99,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
             }
             else exit(INTERNAL_ERROR);
 
-            if(_NumberOfSpaces != 0) sPush(LexStack, NULL, _NumberOfSpaces);
+            if(_NumberOfSpaces != 0) sPush(LexStack, 0, _NumberOfSpaces);
             _NumberOfSpaces = 0;
           }
           state = Q7;
@@ -655,7 +655,7 @@ Symbol_t GenerateIndent( void * LexStack, char  actualChar)
   Symbol_t symbol;
   _IndentChar = actualChar;
   symbol.type = _indent;
-  sPush(LexStack, NULL, _NumberOfSpaces);
+  sPush(LexStack, 0, _NumberOfSpaces);
   _NumberOfSpaces = 0;
   return symbol;
 }
