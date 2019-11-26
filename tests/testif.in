@@ -1,8 +1,4 @@
 if :
-<<<<<<< HEAD
-  inputs()
-  
-=======
   while :
    a = 'pajko'
    while:
@@ -14,8 +10,8 @@ if :
       inputi() 
       #ahoj
      else :
+      #ahoj
       inputs() 
->>>>>>> parser-dev
 else :
   inputs() #ahoj 
 inputs() 
