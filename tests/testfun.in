@@ -1,5 +1,5 @@
-def davko (a,b,c) :
- inputs()
+def davko (a) :
+ inputs() #ahoj
+
+ 
 len(a)
-inputi()
-len(b)
