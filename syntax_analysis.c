@@ -31,32 +31,32 @@ int Parse(SymTable_t *ST, void *Stack, void *List)
     
     _IL = List;
     LexStack = Stack;
-    do {
-        _Token = getNextSymbol(stdin, LexStack);
-        switch (_Token.type){
-        case _int:
-        {
-            printf("type: %d, data: %d\n", _Token.type, _Token.data.int_data);
-            break;
-        }
-        case _double: {
-            printf("type: %d, data: %f\n", _Token.type, _Token.data.dbl_data);
-            break;
-        }
-        case _indent:
-        case _dedent:
-        {
-            printf("type: %d\n", _Token.type);
-            break;
-        }
-        default: {
+    // do {
+    //     _Token = getNextSymbol(stdin, LexStack);
+    //     switch (_Token.type){
+    //     case _int:
+    //     {
+    //         printf("type: %d, data: %d\n", _Token.type, _Token.data.int_data);
+    //         break;
+    //     }
+    //     case _double: {
+    //         printf("type: %d, data: %f\n", _Token.type, _Token.data.dbl_data);
+    //         break;
+    //     }
+    //     case _indent:
+    //     case _dedent:
+    //     {
+    //         printf("type: %d\n", _Token.type);
+    //         break;
+    //     }
+    //     default: {
             
-            printf("type: %d, data: %s\n", _Token.type, _Token.data.str_data);
-            break;
-        }
-        }
-        printf("--------------------------------------\n");
-    } while (_Token.type != _eof);
+    //         printf("type: %d, data: %s\n", _Token.type, _Token.data.str_data);
+    //         break;
+    //     }
+    //     }
+    //     printf("--------------------------------------\n");
+    // } while (_Token.type != _eof);
 
 
     
