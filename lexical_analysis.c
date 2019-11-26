@@ -21,6 +21,7 @@ const char* functions [FUNCTION_COUNT] = {
 
 bool _FirstToken = false;
 int _NumberOfSpaces = 0;
+int _NumberOfPops = 0;
 int _IndentChar = '\0';
 
 // buffer for var names, strings, etc.
@@ -46,6 +47,9 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
   //tStackItem *item;
 
   
+    
+    
+  
   
 
   //item = sTop(LexStack);
@@ -54,15 +58,22 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
   while (while_condition) {
     switch (state) {
       case S: { // start position
+
+        if(_NumberOfPops > 0) 
+        {
+          state = QDedent;
+          break;
+        }
+
         if (_IndentChar == '\0')
-          {
-            character = getchar();
-          }
-          else
-          {
-            character = _IndentChar;
-          }
-          _IndentChar = '\0';
+        {
+          character = getchar();
+        }
+        else
+        {
+          character = _IndentChar;
+        }
+        _IndentChar = '\0';
 
         if(character == '#') { 
           state = Q1;
@@ -77,31 +88,36 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           buffer[0] = character;
           buffer[1] = '\0';
           //vieme ak _FirstToken je true, tak tuto pushujeme na zasobnik medzery
+            int Top = sLexTop(LexStack);
           if(_FirstToken)
           {
             
             _FirstToken = false;
-            int Top = sLexTop(LexStack);
             //ak je viac medzier ako je na tope zasbniku tak generujeme indent
             if(Top != INTERNAL_ERROR  )
             {
               if((_NumberOfSpaces > Top))
               {
                 symbol = GenerateIndent(LexStack, character);
+                
                 return symbol;
               }
               else if (_NumberOfSpaces < Top)
               {
-                symbol = GenerateDedent(LexStack, character, Top);
-                return symbol;
+                
+                symbol = GenerateDedent(LexStack, character, Top);  
+                state = QDedent;
+      
+                break;
               }
               
             }
             else exit(INTERNAL_ERROR);
 
-            if(_NumberOfSpaces != 0) sPush(LexStack, 0, _NumberOfSpaces);
+            //if(_NumberOfSpaces != 0) sPush(LexStack, 0, _NumberOfSpaces);
             _NumberOfSpaces = 0;
           }
+          
           state = Q7;
           break;
         } else if(character == '+') {
@@ -168,6 +184,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
             return symbol;
           }
           _FirstToken = true; //TRUEEEE
+          _NumberOfSpaces = 0;
           state = S;
           break;
           
@@ -202,13 +219,24 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
         }
 
       }
+      case QDedent: { // # single line comment 
+        
+        symbol.type = _dedent;
+        _NumberOfPops --;
+        return symbol;
+        break;
+      }
       case Q1: { // # single line comment 
         character = getchar();
         if(character == EOF) { // F
           state = F;
           break;
         } else if(character == EOL) { // S
+          _FirstToken = true;   
+          _NumberOfSpaces = 0;       
           state = S;
+          symbol.type = _eol;
+          return symbol;
           break;
         } else {
           break;
@@ -279,6 +307,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           strcat(buffer, help);
           break;
         } else {
+          //symbol.data.str_data = malloc(1024);
           strcpy(symbol.data.str_data,buffer);
           ungetc(character, input);
           state = Q8;
@@ -305,11 +334,11 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
         character = getchar();
         if(character == '/') { // wholenumber division
           symbol.type = _wholenumber_division;
-          strcpy(symbol.data.str_data,"//");
+          //strcpy(symbol.data.str_data,"//");
         } else {
           ungetc(character, input); // simple division
           symbol.type = _division;
-           strcpy(symbol.data.str_data,"/");
+           //strcpy(symbol.data.str_data,"/");
         }
         //symbol.type = _operator;
         return symbol;
@@ -318,7 +347,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
         character = getchar();
         if(character == '=') {
           symbol.type = _less_or_equal;
-          strcpy(symbol.data.str_data,"<=");
+          //strcpy(symbol.data.str_data,"<=");
         } else {
           ungetc(character, input);
           symbol.type = _less;
@@ -331,11 +360,11 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
         character = getchar();
         if(character == '=') {
           symbol.type = _greater_or_equal;
-          strcpy(symbol.data.str_data,">=");
+          //strcpy(symbol.data.str_data,">=");
         } else {
           ungetc(character, input);
           symbol.type = _greater;
-          strcpy(symbol.data.str_data,">");
+          //strcpy(symbol.data.str_data,">");
         }
         //symbol.type = _operator;
         return symbol;
@@ -348,7 +377,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
         } else {
           ungetc(character, input);
           symbol.type = _equal;
-          strcpy(symbol.data.str_data,"=");
+          //strcpy(symbol.data.str_data,"=");
         }
         //symbol.type = _operator;
         return symbol;
@@ -386,6 +415,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
         character = getchar();
         if(character == '\'') {
           symbol.type = _string;
+          //symbol.data.str_data = malloc(1024);
           strcpy(symbol.data.str_data,buffer);
           return symbol;
         } else if (character == '\\') {
@@ -664,10 +694,9 @@ Symbol_t GenerateDedent(void * LexStack, char  actualChar, int Top)
 {
   int found = false;
   Symbol_t symbol;
-  while(Top != _NumberOfSpaces)
+  while(true)
   {
-    sLexPop(LexStack);
-    Top = sLexTop(LexStack);
+    
     if(Top == _NumberOfSpaces) 
     {
       found = true;
@@ -679,6 +708,9 @@ Symbol_t GenerateDedent(void * LexStack, char  actualChar, int Top)
       _FirstToken = false;
       break;
     }
+    sLexPop(LexStack);
+    _NumberOfPops++;
+    Top = sLexTop(LexStack);
   }
   //ak sme nasli pocet medzier v stacku, generujeme dedent
   if(found)
