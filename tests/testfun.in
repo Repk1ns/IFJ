@@ -3,3 +3,8 @@ def davko (a) :
 
  
 len(a)
+<<<<<<< HEAD
+=======
+inputi()
+len(b)
+>>>>>>> parser-dev

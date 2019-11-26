@@ -1,7 +1,22 @@
 if :
+<<<<<<< HEAD
   inputs()
   
+=======
+  while :
+   a = 'pajko'
+   while:
+    b = 'lolko'
+    while:
+     c = 'lolko'
+     if :
+      inputs() #ahoj
+      inputi() 
+      #ahoj
+     else :
+      inputs() 
+>>>>>>> parser-dev
 else :
-  inputs()  
+  inputs() #ahoj 
 inputs() 
 

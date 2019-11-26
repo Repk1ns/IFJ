@@ -7,7 +7,8 @@
 #include <string.h>
 
 typedef struct StackItem {
-	void *data;
+	int stackSymbol;
+	int typ;
 	int intdata;
 	struct StackItem *nextItem;
 } tStackItem;
@@ -18,7 +19,7 @@ typedef struct {
 } tStack;
 
 void sInit(tStack *);
-int sPush(tStack *, void *, int data);
+int sPush(tStack *, int precedenceTableSymbol, int data);
 void *sTop(tStack *);
 int sLexTop(tStack *);
 void sLexPop(tStack *);
@@ -26,5 +27,7 @@ void *sTopPop(tStack *);
 int sDelete(tStack *);
 int sDispose(tStack *);
 bool sEmpty(tStack *);
+tStackItem* TopTerminal(tStack*);
+bool push_TopTerminal(tStack* Stack, int symbol, int type);
 
 #endif
