@@ -2,9 +2,9 @@ def davko (a) :
  inputs() #ahoj
 
  
-len(a)
-<<<<<<< HEAD
-=======
+
 inputi()
 len(b)
+>>>>>>> parser-dev
+=======
 >>>>>>> parser-dev
