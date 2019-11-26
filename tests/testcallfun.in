@@ -4,6 +4,15 @@ def funkcia(par1) :
  print(b)
  if :
   len(s)
+  while :
+    inputs()
+    if :
+      abc = 'ahoj'
+      print(abc)
+      #ja som komentar
+    else :
+      len(c)
+    len(b)
   len(a)
  else :
   inputi()

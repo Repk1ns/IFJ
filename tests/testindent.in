@@ -1,13 +1,16 @@
 while :
- inputs()
  if :
-    inputs()
-    len(a)
+  while :
+   len(a)
+
+
+
+   len(b)
+  len(c)
+
+  inputi() 
  else :
   inputs()
-  while :
-    print(a,b,c)
-    inputi()
-  inputs()  
-print(a)
+
+
 

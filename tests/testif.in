@@ -1,6 +1,17 @@
-if a <  :
-  inputs()
+if :
+  while :
+   a = 'pajko'
+   while:
+    b = 'lolko'
+    while:
+     c = 'lolko'
+     if :
+      inputs() #ahoj
+      inputi() 
+      #ahoj
+     else :
+      inputs() 
 else :
-  inputs()  
+  inputs() #ahoj 
 inputs() 
 
