@@ -592,6 +592,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           }
           break;
         } else if(character == EOL) {
+         
           symbol.type = _eol;
           //symbol.data.str_data = "-";
           return symbol;
