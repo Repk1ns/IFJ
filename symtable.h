@@ -14,8 +14,8 @@ typedef struct SymTableIterator SymTableIterator_t;
 
 
 enum TypeOfId {
-    _variable,
-    _function
+    _IDvariable,
+    _IDfunction
 };
 
 //typ hashovacia tabulka
