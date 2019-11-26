@@ -118,6 +118,10 @@ void printInstructions(tListOfInstr *L)
             {
                 printf(" nil@nil");
             }
+            else if(L->active->Instruction.prefix1 == P_LABEL) //pokud je operand navesti
+            {
+                printf(" %s", (char *)L->active->Instruction.addr1);
+            }
             else//Jinak to bude konstanta string, bool nebo promenna. Ty se vsechny zapisuji jako "prefix@nejaky_string".
             {
                 printf(" %s@%s", prefixes[L->active->Instruction.prefix1], (char *)L->active->Instruction.addr1);

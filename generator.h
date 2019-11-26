@@ -84,6 +84,7 @@ const char* prefixes [PREFIX_COUNT];
 #define P_NIL       7
 
 #define P_NULL      -1
+#define P_LABEL     -2
 
 typedef struct
 {
