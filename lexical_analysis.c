@@ -232,12 +232,8 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           state = F;
           break;
         } else if(character == EOL) { // S
-<<<<<<< HEAD
-          _FirstToken = true;
-=======
           _FirstToken = true;   
           _NumberOfSpaces = 0;       
->>>>>>> parser-dev
           state = S;
           symbol.type = _eol;
           return symbol;
