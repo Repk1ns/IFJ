@@ -18,8 +18,8 @@ Symbol_t _Token;
 Symbol_t _PreviousToken;
 bool _ProgRuleCalled = false;
 bool _IndentFlag = false;
-int _ActualIndent = 0;
 bool _DefFlag = false;
+int _ActualIndent = 0;
 int _ActualNumberOfParams = 0;
 int _Result = 0;
 tStack *LexStack;
@@ -223,7 +223,7 @@ int StatRule()
                     {
                         _ActualIndent--;
                         _Result = IT_IS_OKAY;
-                        _IndentFlag = false;
+                        if(_ActualIndent == 0) _IndentFlag = false;
                         
                         
                         break;
@@ -293,21 +293,34 @@ int IdRule()
             //nenasli sme funckiu ,sematicka chyba
             
         }
-        //ak sme nenasli, na zaklade dalsieho tokenu sa rozhodujeme, ci ide o semanticku chybu alebo volame PSA
+        //ak sme nenasli, na zaklade dalsieho tokenu sa rozhodujeme, ci ide o volanie vstavanej funkcie alebo volame PSA
         else
         {
             
-            //ak sa dalsi token je lava zatvorka, vieme, ze sa jednalo o funkciu a program skonci chybou
+            //ak typ dalsieho tokena je je _func, to znamena, ze priradzujeme built in funkciu 
             if(_Token.type == _func)
             {
                 //nedefinovana funkcia
                 _Result = BuiltInFuncRule();
             }
+            //inak sa jedna o vyraz
             else
-            {
-                //PSA musite povedat, ze sme nacitali jeden jej token, cize ona jedno nacitanie tokenu preskoci
-                _Result = Expression_analysis();
-                //skontrolujeme result, ako token mi ma vrati EOL
+            {   
+
+                //ak dalsi symbol je zatvorka jedna sa o nedefinovanu funckiu
+            
+                if(_Token.type == _left_bracket)
+                {
+                    _Result = SEMANTIC_ERROR;
+                }
+                else
+                {
+                    //PSA musite povedat, ze sme nacitali jeden jej token, cize ona jedno nacitanie tokenu preskoci
+                    _Result = Expression_analysis();
+                    //skontrolujeme result, ako token mi ma vrati EOL
+                    
+                }
+                     
             }
         }
         
@@ -585,11 +598,10 @@ int KeywordsRule()
             
             // po returne ocakavame identifikator
             // vieme, ze za returnom ocakavame vyraz, cize volame PSA
-            _Token = getNextSymbol(stdin, LexStack); //---> TOTO TU NEBUDE!
+            //_Token = getNextSymbol(stdin, LexStack); //---> TOTO TU NEBUDE!
             _Result = Expression_analysis();
 
             _DefFlag = false;
-            _IndentFlag = false;
         }
         else
         {
