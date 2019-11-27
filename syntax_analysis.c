@@ -3,10 +3,10 @@
 #include <string.h>
 #include "lexical_analysis.h"
 #include "symtable.h"
+#include "generator.h"
 #include "syntax_analysis.h"
 #include "error_codes.h"
 #include "stack.h"
-#include "generator.h"
 
 //globalni seznam instrukci
 tListOfInstr *_IL;
@@ -24,10 +24,10 @@ tStack *LexStack;
 
 // parse fukncia
 // funkcia getnextsymbol() sa nebude volat v maine ale v parse funkcii, TODO
-int Parse(SymTable_t *ST, void *Stack, void *List)
+int Parse(SymTable_t *ST, void *Stack, tListOfInstr *List)
 {
 
-    _IL = List;
+    
     LexStack = Stack;
     // do {
     //     _Token = getNextSymbol(stdin, LexStack);
@@ -57,7 +57,7 @@ int Parse(SymTable_t *ST, void *Stack, void *List)
     // } while (_Token.type != _eof);
 
 
-
+    _IL = List;
     _ST = ST;
     _Result = ProgRule();
 
@@ -366,6 +366,7 @@ int DefRule()
         //zapamatanie si identifikatora
         Identifier.type = _Token.type;
         strcpy(Identifier.data.str_data, _Token.data.str_data);
+
         generateInstruction(I_LABEL, P_LABEL, &(Identifier.data.str_data), P_NULL, NULL, P_NULL, NULL);
         generateInstruction(I_PUSHFRAME, P_NULL, NULL, P_NULL, NULL, P_NULL, NULL);
         char *retvalstr = "%retval";
@@ -756,15 +757,17 @@ void generateInstruction(int instType, int prefix1, void *addr1, int prefix2, vo
    I.instType = instType;
 
    I.prefix1 = prefix1;
-   I.addr1 = addr1;
-
+   if(addr1 != NULL)
+   strcpy(I.addr1.str_data,addr1);
+  
    I.prefix2 = prefix2;
-   I.addr2 = addr2;
-
+   if(addr2 != NULL)
+    strcpy(I.addr2.str_data,addr2);
    I.prefix3 = prefix3;
-   I.addr3 = addr3;
+ if(addr3 != NULL)
+     strcpy(I.addr3.str_data,addr3);
 
-   listInsertLast(_IL, I);
+   listInsertLast(_IL, &I);
 }
 
 int Expression_analysis()

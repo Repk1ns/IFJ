@@ -8,7 +8,7 @@
 
 
 //parse fukncia
-int Parse(SymTable_t *ST, void *Stack, void *List);
+int Parse(SymTable_t *ST, void *Stack, tListOfInstr *List);
 //hlavne pravidlo celeho parseru
 int ProgRule();
 //pravidlo pre statementy

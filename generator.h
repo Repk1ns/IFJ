@@ -86,18 +86,24 @@ const char* prefixes [PREFIX_COUNT];
 #define P_NULL      -1
 #define P_LABEL     -2
 
+
+typedef union AdrData {
+  int int_data;
+  char str_data[1000];
+  double dbl_data;
+}AdrDataType_t;
 typedef struct
 {
     int instType;  // typ instrukce
 
     int prefix1; // prefix 1
-    void *addr1; // adresa 1
+    AdrDataType_t addr1; // adresa 1
 
     int prefix2; // prefix 2
-    void *addr2; // adresa 2
+    AdrDataType_t addr2; // adresa 2
 
     int prefix3; // prefix 3
-    void *addr3; // adresa 3
+    AdrDataType_t addr3; // adresa 3
 
 } tInstr;
 
@@ -117,7 +123,7 @@ typedef struct
 //fce pro praci se seznamem instrukci
 void listInit(tListOfInstr *L);
 void listFree(tListOfInstr *L);
-void listInsertLast(tListOfInstr *L, tInstr I);
+void listInsertLast(tListOfInstr *L, tInstr *I);
 void listFirst(tListOfInstr *L);
 void listNext(tListOfInstr *L);
 void listGoto(tListOfInstr *L, void *gotoInstr);

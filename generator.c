@@ -40,18 +40,21 @@ void listFree(tListOfInstr *L)
   }
 }
 
-void listInsertLast(tListOfInstr *L, tInstr I)
+void listInsertLast(tListOfInstr *L, tInstr* I)
 // vlozi novou instruci na konec seznamu
 {
   tListItem *newItem;
-  newItem = malloc(sizeof (tListItem));
+  newItem = malloc(sizeof (tListItem)+sizeof(int)*3);
   if(newItem == NULL)
   {
     fprintf(stderr, "ERROR of allocation!\n");
     exit(INTERNAL_ERROR);
   }
-  newItem->Instruction = I;
+  newItem->Instruction = *I;
+  // printf("INTIN: %d\n",(int)newItem->Instruction.prefix1);
+  // printf("ADEIN: %s\n",(char *)newItem->Instruction.addr1);
   newItem->nextItem = NULL;
+
   if (L->first == NULL)
      L->first = newItem;
   else
@@ -101,18 +104,18 @@ void printInstructions(tListOfInstr *L)
     listFirst(L);
     while(L->active != NULL)//opakuj pro vsechny instrukce
     {
-
-        printf("%s", instructions[L->active->Instruction.instType]);//vytskni operacni kod instrukce
+        //printf("ahoj");
+        //printf("%s", instructions[L->active->Instruction.instType]);//vytskni operacni kod instrukce
 
         if(L->active->Instruction.prefix1 != P_NULL)//pokud existuje prvni operand instrukce
         {
             if(L->active->Instruction.prefix1 == P_INT)//pokud je prvni operand instrukce konstanta int, zapiseme ji jako %d
             {
-                printf(" %s@%d ", prefixes[L->active->Instruction.prefix1], *(int *)L->active->Instruction.addr1);
+                printf(" %s@%d ", prefixes[L->active->Instruction.prefix1], L->active->Instruction.addr1.int_data);
             }
             else if(L->active->Instruction.prefix1 == P_FLOAT)//pokud je prvni operand instrukce konstanta int, zapiseme ji jako %a
             {
-                printf(" %s@%a", prefixes[L->active->Instruction.prefix1], *(double *)L->active->Instruction.addr1);
+                printf(" %s@%a", prefixes[L->active->Instruction.prefix1], L->active->Instruction.addr1.dbl_data);
             }
             else if(L->active->Instruction.prefix1 == P_NIL)//pokud je prvni operand instrukce konstanta nil, zapiseme ji jako "nil@nil"
             {
@@ -120,53 +123,53 @@ void printInstructions(tListOfInstr *L)
             }
             else if(L->active->Instruction.prefix1 == P_LABEL) //pokud je operand navesti
             {
-                printf(" %s", (char *)L->active->Instruction.addr1);
+                printf(" %s", (char *)L->active->Instruction.addr1.str_data);
             }
             else//Jinak to bude konstanta string, bool nebo promenna. Ty se vsechny zapisuji jako "prefix@nejaky_string".
             {
-                printf(" %s@%s", prefixes[L->active->Instruction.prefix1], (char *)L->active->Instruction.addr1);
+               // printf(" %s@%s", prefixes[L->active->Instruction.prefix1], (char *)L->active->Instruction.addr1);
             }
         }
 
-        if(L->active->Instruction.prefix2 != P_NULL)//pokud existuje druhy operand instrukce
-        {
-            if(L->active->Instruction.prefix2 == P_INT)//pokud je druhy operand instrukce konstanta int, zapiseme ji jako %d
-            {
-                printf(" %s@%d", prefixes[L->active->Instruction.prefix2], *(int *)L->active->Instruction.addr2);
-            }
-            else if(L->active->Instruction.prefix2 == P_FLOAT)//pokud je druhy operand instrukce konstanta int, zapiseme ji jako %a
-            {
-                printf(" %s@%a", prefixes[L->active->Instruction.prefix2], *(double *)L->active->Instruction.addr2);
-            }
-            else if(L->active->Instruction.prefix2 == P_NIL)//pokud je druhy operand instrukce konstanta nil, zapiseme ji jako "nil@nil"
-            {
-                printf(" nil@nil");
-            }
-            else//Jinak to bude konstanta string, bool nebo promenna. Ty se vsechny zapisuji jako "prefix@nejaky_string".
-            {
-                printf(" %s@%s", prefixes[L->active->Instruction.prefix2], (char *)L->active->Instruction.addr2);
-            }
-        }
+        // if(L->active->Instruction.prefix2 != P_NULL)//pokud existuje druhy operand instrukce
+        // {
+        //     if(L->active->Instruction.prefix2 == P_INT)//pokud je druhy operand instrukce konstanta int, zapiseme ji jako %d
+        //     {
+        //         printf(" %s@%d", prefixes[L->active->Instruction.prefix2], *(int *)L->active->Instruction.addr2);
+        //     }
+        //     else if(L->active->Instruction.prefix2 == P_FLOAT)//pokud je druhy operand instrukce konstanta int, zapiseme ji jako %a
+        //     {
+        //         printf(" %s@%a", prefixes[L->active->Instruction.prefix2], *(double *)L->active->Instruction.addr2);
+        //     }
+        //     else if(L->active->Instruction.prefix2 == P_NIL)//pokud je druhy operand instrukce konstanta nil, zapiseme ji jako "nil@nil"
+        //     {
+        //         printf(" nil@nil");
+        //     }
+        //     else//Jinak to bude konstanta string, bool nebo promenna. Ty se vsechny zapisuji jako "prefix@nejaky_string".
+        //     {
+        //         printf(" %s@%s", prefixes[L->active->Instruction.prefix2], (char *)L->active->Instruction.addr2);
+        //     }
+        // }
 
-        if(L->active->Instruction.prefix3 != P_NULL)//pokud existuje prvni operand instrukce
-        {
-            if(L->active->Instruction.prefix3 == P_INT)//pokud je prvni operand instrukce konstanta int, zapiseme ji jako %d
-            {
-                printf(" %s@%d", prefixes[L->active->Instruction.prefix3], *(int *)L->active->Instruction.addr3);
-            }
-            else if(L->active->Instruction.prefix3 == P_FLOAT)//pokud je prvni operand instrukce konstanta int, zapiseme ji jako %a
-            {
-                printf(" %s@%a", prefixes[L->active->Instruction.prefix3], *(double *)L->active->Instruction.addr3);
-            }
-            else if(L->active->Instruction.prefix3 == P_NIL)//pokud je prvni operand instrukce konstanta nil, zapiseme ji jako "nil@nil"
-            {
-                printf(" nil@nil");
-            }
-            else//Jinak to bude konstanta string, bool nebo promenna. Ty se vsechny zapisuji jako "prefix@nejaky_string".
-            {
-                printf(" %s@%s", prefixes[L->active->Instruction.prefix3], (char *)L->active->Instruction.addr3);
-            }
-        }
+        // if(L->active->Instruction.prefix3 != P_NULL)//pokud existuje prvni operand instrukce
+        // {
+        //     if(L->active->Instruction.prefix3 == P_INT)//pokud je prvni operand instrukce konstanta int, zapiseme ji jako %d
+        //     {
+        //         printf(" %s@%d", prefixes[L->active->Instruction.prefix3], *(int *)L->active->Instruction.addr3);
+        //     }
+        //     else if(L->active->Instruction.prefix3 == P_FLOAT)//pokud je prvni operand instrukce konstanta int, zapiseme ji jako %a
+        //     {
+        //         printf(" %s@%a", prefixes[L->active->Instruction.prefix3], *(double *)L->active->Instruction.addr3);
+        //     }
+        //     else if(L->active->Instruction.prefix3 == P_NIL)//pokud je prvni operand instrukce konstanta nil, zapiseme ji jako "nil@nil"
+        //     {
+        //         printf(" nil@nil");
+        //     }
+        //     else//Jinak to bude konstanta string, bool nebo promenna. Ty se vsechny zapisuji jako "prefix@nejaky_string".
+        //     {
+        //         printf(" %s@%s", prefixes[L->active->Instruction.prefix3], (char *)L->active->Instruction.addr3);
+        //     }
+        // }
         printf("\n");
 
         listNext(L);//presun se na dalsi instrukci
