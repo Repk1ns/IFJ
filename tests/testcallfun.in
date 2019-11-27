@@ -1,5 +1,4 @@
 
-value = funkcia(par1)
 def funkcia(par1) :
  print(a)
  print(b)
@@ -20,3 +19,4 @@ def funkcia(par1) :
   inputi() 
 inputs()
 
+value = funkcia(par1)
