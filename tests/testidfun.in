@@ -1,13 +1,11 @@
-def funkcia(a,b) :
-  c = p
+def funkcia105(a,b) :
+  c = a
   a = c
-  result = funkcia(a,b)
-  result = funkcia2(a,b)
+  
 
 def funkcia2(a,b) :
   print('ahojte')
   return b
 
-c = 5
-c = 6
-milacik = c + 5
+funkcia = 5
+milacik = 5
