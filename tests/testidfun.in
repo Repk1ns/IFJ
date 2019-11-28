@@ -1,4 +1,13 @@
 def funkcia(a,b) :
-  a = 'ahoj'
+  c = p
+  a = c
+  result = funkcia(a,b)
+  result = funkcia2(a,b)
+
+def funkcia2(a,b) :
   print('ahojte')
-result = funkcia(a,b)
+  return b
+
+c = 5
+c = 6
+milacik = c + 5
