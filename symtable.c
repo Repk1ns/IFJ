@@ -57,7 +57,7 @@ void SymTableDelete(SymTable_t *ST)
     free(ST);
 }
 
-void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParameters)
+void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParameters, int sizeOfSymbtable)
 {
     int index;
     //iterator v zretazenom zozname
@@ -65,7 +65,7 @@ void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParame
     SymTableItem_t* iterator;
 
     //generuj index vygenerovanym klucom
-    index = SymTableHashFunction(token.data.str_data ,SIZE_OF_SYMTABLE);
+    index = SymTableHashFunction(token.data.str_data ,sizeOfSymbtable);
     printf("index: %d \n", index);
 
     //ak na danom indexe nie je ziadny item
@@ -145,14 +145,14 @@ SymTableItem_t* NewItem(Symbol_t token, int type, int numberOfParameters)
 
 }
 
-SymTableItem_t* SymTableSearch(SymTable_t *ST, const char  *Key)
+SymTableItem_t* SymTableSearch(SymTable_t *ST, const char  *Key, int sizeOfSymtable)
 {
     int index;
     bool foundFlag;
     SymTableItem_t* iterator;
    
     //generuj index predanym klucom
-    index = SymTableHashFunction(Key,SIZE_OF_SYMTABLE);
+    index = SymTableHashFunction(Key,sizeOfSymtable);
     //na indexe nie je ziadny prvok
     if(ST->SymTableArray[index] == NULL)
     {

@@ -35,7 +35,7 @@ int main() {
   //result of syntax analysis
   int result;
   //inicialization
-  ST = SymTableInit(SIZE_OF_SYMTABLE);
+  ST = SymTableInit(SIZE_OF_SYMTABLE_GLOBAL);
   
   if(ST == NULL) return INTERNAL_ERROR;
   //calling parser

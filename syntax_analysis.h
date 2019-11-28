@@ -17,6 +17,8 @@ int StatRule();
 int DefRule();
 //pravidlo pre identifikatori
 int IdRule();
+//pravidlo pre volanie funkcii
+int FuncCallRule(SymTableItem_t *item);
 //pravidlo pre vstavane funckie
 int BuiltInFuncRule();
 //pravidlo pre ostatne funkcie
