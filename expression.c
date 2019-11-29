@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lexical_analysis.h"
+#include "symtable.h"
 #include "expression.h"
 #include "stack.h"
 #include "error_codes.h"
@@ -206,7 +207,16 @@ int reduction()
 int Expression(Symbol_t* token, bool preLoadToken)
 {
 
-    if(preLoadToken == false) Actual_Token = getNextSymbol(stdin,NULL);
+    if(preLoadToken == false) 
+    {
+        Actual_Token = getNextSymbol(stdin,NULL);
+        
+    }
+    else
+    {
+        Actual_Token = *token;
+    }
+    //printf("PRELOAD %d type: %d data: %s \n", preLoadToken,Actual_Token.type,Actual_Token.data.str_data);
 
     sInit(&Stack);
 

@@ -42,19 +42,19 @@ int main() {
   result = Parse(ST, &LexStack, &IL);
 
   //which error?
-  printf("result: %d \n", result);
+  printf("%d\n",result);
 
   sDispose(&LexStack);
   //delete symtable
   SymTableDelete(ST);
-  
-  if(result == IT_IS_OKAY)
-  {
-      printInstructions(&IL);
-  }
+
+  // if(result == IT_IS_OKAY)
+  // {
+  //     printInstructions(&IL);
+  // }
 
   listFree(&IL);
 
   
-  
+  return result;
 }

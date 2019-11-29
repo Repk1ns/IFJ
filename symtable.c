@@ -66,7 +66,8 @@ void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParame
 
     //generuj index vygenerovanym klucom
     index = SymTableHashFunction(token.data.str_data ,sizeOfSymbtable);
-    printf("index: %d \n", index);
+    // printf("INSERT KEY: %s: \n", token.data.str_data);
+    // printf("INSERT: size of Sym: %d index: %d \n",sizeOfSymbtable, index);
 
     //ak na danom indexe nie je ziadny item
     if(ST->SymTableArray[index] == NULL)
@@ -153,6 +154,7 @@ SymTableItem_t* SymTableSearch(SymTable_t *ST, const char  *Key, int sizeOfSymta
    
     //generuj index predanym klucom
     index = SymTableHashFunction(Key,sizeOfSymtable);
+    //printf("SEARCH: size of Sym: %d index: %d \n",sizeOfSymtable, index);
     //na indexe nie je ziadny prvok
     if(ST->SymTableArray[index] == NULL)
     {

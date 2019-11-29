@@ -26,8 +26,8 @@ int _ActualNumberOfParams = 0;
 int _Result = 0;
 int _NumberOfNotDefFun = 0;
 tStack *LexStack;
-union Data pomocna_data; //pomocná struktura pro generaci kódu
-union Data pomocna_data1; //druhá pomocná struktura pro generaci kódu
+union Data pomocna_data; //pomocnï¿½ struktura pro generaci kï¿½du
+union Data pomocna_data1; //druhï¿½ pomocnï¿½ struktura pro generaci kï¿½du
 
 // parse fukncia
 // funkcia getnextsymbol() sa nebude volat v maine ale v parse funkcii, TODO
@@ -160,8 +160,11 @@ int StatRule()
                     else
                     {
                         _Result = StatRule();
+                        
                     }
+                        
                 }
+                        
             }
         break;
         //ak je _Token _func, simulujem pravidla pre vstavane funkcie
@@ -259,6 +262,10 @@ int StatRule()
 int IdRule()
 {
     SymTableItem_t* prevDefFun;
+    Symbol_t identifier;
+    //zapamatanie si identifikatora
+    identifier.type = _Token.type;
+    strcpy(identifier.data.str_data, _Token.data.str_data);
     //ak nie sme v definicii funkcie ulozime si indetifikator do globanej tabulky symbolov ako typ premennej
     if(_DefFlag == false)
     {
@@ -284,27 +291,33 @@ int IdRule()
             if(_DefFlag == false)
             {
                 if(prevDefFun!= NULL)
-            {
-                //ak identifikator je typ funkcie, jedna sa o redefiniciou a je to error
-                if(prevDefFun->Type == _IDfunction) _Result = SEMANTIC_ERROR;
-            }
-                if(_Result == IT_IS_OKAY) SymTableInsert(_ST,_Token,_IDvariable, ID_PARAMETERS, SIZE_OF_SYMTABLE_GLOBAL);
+                {
+                    //ak identifikator je typ funkcie, jedna sa o redefiniciou a je to error
+                    if(prevDefFun->Type == _IDfunction) _Result = SEMANTIC_ERROR;
+                }
+                if(_Result == IT_IS_OKAY) 
+                {
+                    SymTableInsert(_ST,identifier,_IDvariable, ID_PARAMETERS, SIZE_OF_SYMTABLE_GLOBAL);
+                }
             }
 
             if(_Result == IT_IS_OKAY)
             {
                 //teraz sa musime rozhodnut, ci volame funckiu alebo priradzujeme vyraz -> prednacitame si jeden token
                 _Token = getNextSymbol(stdin,LexStack);
+                identifier.type = _Token.type;
+                strcpy(identifier.data.str_data, _Token.data.str_data);
 
                 //teraz riesime globalny kontext
                 if(_DefFlag == false)
                 {
                     //vieme, ze ak volame funkciu, tak nasledujuci identifikator musi byt v TS a musi to byt typ funkcia
-                    prevDefFun = SymTableSearch(_ST, _Token.data.str_data, SIZE_OF_SYMTABLE_GLOBAL);
+                    if(_Token.type == _id) prevDefFun = SymTableSearch(_ST, _Token.data.str_data, SIZE_OF_SYMTABLE_GLOBAL);
                     //ak sme identifikator nasli a je uz predtym definovany ako _IDfunction tak sa jedna o volanie funkcie
                     if((prevDefFun != NULL) && (prevDefFun->Type == _IDfunction))
                     {
                         _Result = FuncCallRule(prevDefFun);
+                        
                         _ActualNumberOfParams = 0;
                     }
                     //ak sme identifikator nasli ale je to typ _ID variable, volame PSA
@@ -314,23 +327,35 @@ int IdRule()
                         //PSA musite povedat, ze sme nacitali jeden jej token, cize ona jedno nacitanie tokenu preskoci
                         //tu sa bude musiet riesit semantika identifikatorov vo vyraze, ci su definovane
                         //ja mu predam pointer na tabulku symbolov, ci uz lokalnu alebo globalnu
-                        _Result = Expression(&_Token, true);
+                        if(_Token.type == _func) 
+                        {
+                            _Result = BuiltInFuncRule();
+                        }
+                        else
+                        {
+                            _Result = Expression(&_Token, true);
+                        }
                         //skontrolujeme result, ako token mi ma vrati EOL
                     }
                     //ak sme token nenasli a je to identifikator jedna sa nedefinovanu funkciu/premennu
                     else if (prevDefFun == NULL && _Token.type == _id)
                     {
+                        
                         _Result = SEMANTIC_ERROR;
+                        
                     }
                     //ak token je vstavana funckia, volame pravidlo pre vstavane funckie
-                    else if(_Token.type == _func)
+                    else if(identifier.type == _func)
                     {
+                        prevDefFun = NULL;
                         _Result = BuiltInFuncRule();
+                        
                     }
                     //inak proste volame PSA a ta nam povie co je zle
                     else
                     {
                         _Result = Expression(&_Token, true);
+                        
                     }
 
 
@@ -339,7 +364,7 @@ int IdRule()
                 else
                 {
                     //hladame v lokalnej tabulke symbolov
-                    prevDefFun = SymTableSearch(_STlocal, _Token.data.str_data, SIZE_OF_SYMTABLE_LOCAL);
+                    prevDefFun = SymTableSearch(_STlocal, identifier.data.str_data, SIZE_OF_SYMTABLE_LOCAL);
                     //ak sme identifikator nasli ale je to typ _ID variable, volame PSA
                     if ((prevDefFun != NULL) && (prevDefFun->Type == _IDvariable))
                     {
@@ -349,7 +374,7 @@ int IdRule()
 
                     }
                     //ak token je vstavana funckia, volame pravidlo pre vstavane funkcie
-                    else if(_Token.type == _func)
+                    else if(identifier.type == _func)
                     {
                         _Result = BuiltInFuncRule();
                     }
@@ -357,7 +382,7 @@ int IdRule()
                     else
                     {
                         //skusime ho vyhladat v globalnej tabulke symbolov, ci sa nahodou nejedna o volanie funkcie pre funkciu, ktora uz je definovana
-                        prevDefFun = SymTableSearch(_ST, _Token.data.str_data, SIZE_OF_SYMTABLE_GLOBAL);
+                        prevDefFun = SymTableSearch(_ST, identifier.data.str_data, SIZE_OF_SYMTABLE_GLOBAL);
                         //ak sme nasli, jedna sa o volanie funkcie, porovname pocet parametrov
                         if(prevDefFun != NULL)
                         {
@@ -396,6 +421,7 @@ int IdRule()
                         else
                         {
                             //musime povedat, ze sme prednacitali jeden token
+                            
                             _Result = Expression(&_Token, true);
                         }
 
@@ -417,9 +443,11 @@ int IdRule()
             //     _Result = SEMANTIC_ERROR;
             // }
             // else _Result = SYNTAX_ERROR;
+            _Result = IT_IS_OKAY;
         }
     }
 
+    //printf("RESULT ID2 %d \n", _Result);
     return _Result;
 }
 
