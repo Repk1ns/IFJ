@@ -1,0 +1,11 @@
+def funkcia105(a,b) :
+  c = a
+  a = c
+  
+
+def funkcia2(a,b) :
+  print('ahojte')
+  return b
+
+funkcia = 5
+milacik = 5

@@ -1,0 +1,9 @@
+
+def pixel_color(lightness):  
+ if (lightness > 0.100000):
+  return 'a'
+ else:
+  return 'a'
+
+
+print(a)

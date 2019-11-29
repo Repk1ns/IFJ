@@ -1,0 +1,5 @@
+def davko (a) :
+ inputs() #ahoj
+
+ 
+len(a)
