@@ -1,4 +1,0 @@
-def funkcia(a,b) :
-  a = 'ahoj'
-  print('ahojte')
-result = funkcia(a,b)
