@@ -33,7 +33,6 @@ int sPush(tStack *Stack, int precedenceTableSymbol, int intdata)
 	}
 	NewStackItem->intdata = intdata;
 	NewStackItem->stackSymbol = precedenceTableSymbol;
-	//NewStackItem->data = data;
 	NewStackItem->nextItem = Stack->topItem;
 	Stack->topItem = NewStackItem;
 	Stack->size++;
@@ -185,7 +184,6 @@ bool push_TopTerminal(tStack* Stack, int symbol, int type)
                 newItem->nextItem = prevItem->nextItem;
                 prevItem->nextItem = newItem;
             }
-
             return true;
         }
         

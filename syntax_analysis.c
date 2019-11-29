@@ -312,7 +312,7 @@ int IdRule()
                         //PSA musite povedat, ze sme nacitali jeden jej token, cize ona jedno nacitanie tokenu preskoci
                         //tu sa bude musiet riesit semantika identifikatorov vo vyraze, ci su definovane
                         //ja mu predam pointer na tabulku symbolov, ci uz lokalnu alebo globalnu
-                        _Result = Expression_analysis();
+                        _Result = Expression(&_Token, true);
                         //skontrolujeme result, ako token mi ma vrati EOL
                     }
                     //ak sme token nenasli a je to identifikator jedna sa nedefinovanu funkciu/premennu
@@ -328,7 +328,7 @@ int IdRule()
                     //inak proste volame PSA a ta nam povie co je zle
                     else
                     {
-                        _Result = Expression_analysis();
+                        _Result = Expression(&_Token, true);
                     }
                     
                     
@@ -343,7 +343,7 @@ int IdRule()
                     {
                         
                         //musime povedat, ze sme prednacitali jeden token
-                        _Result = Expression_analysis();
+                        _Result = Expression(&_Token,true);
                         
                     }
                     //ak token je vstavana funckia, volame pravidlo pre vstavane funkcie
@@ -394,7 +394,7 @@ int IdRule()
                         else
                         {
                             //musime povedat, ze sme prednacitali jeden token
-                            _Result = Expression_analysis();
+                            _Result = Expression(&_Token, true);
                         }
                         
                         
@@ -778,7 +778,7 @@ int KeywordsRule()
             // po returne ocakavame identifikator
             // vieme, ze za returnom ocakavame vyraz, cize volame PSA
             //_Token = getNextSymbol(stdin, LexStack); //---> TOTO TU NEBUDE!
-            _Result = Expression_analysis();
+            _Result = Expression(&_Token,false);
 
             
         }
@@ -804,7 +804,8 @@ int IfRule()
     
     //teraz som v pravidle if, a viem, ze v _Tokene mam if, cize teraz volam PSA
     //ona vola getnextSYmbol() a ked skocni, vrati mi errorcode a nasledujuci _Token do pravidla, cize by to mala byt dvojbodka
-    _Result = Expression_analysis();;
+    _Result = Expression(&_Token,false);
+    
     if(_Result!= IT_IS_OKAY) return _Result;
     
     //zavolame dalsi _Token a zisitme, ci tam je ":"
@@ -950,7 +951,7 @@ int WhileRule()
 {
     _Result = SYNTAX_ERROR;
     //zavolame PSA
-    _Result = Expression_analysis();
+    _Result = Expression(&_Token,false);
     if(_Result!= IT_IS_OKAY) return _Result;
     //teraz nam PSA vrati _Token, cize ocakavme :
     //_Token = getNextSymbol(stdin, LexStack); //<---------toto tu NEBUDE!!! vrati nam to PSA
