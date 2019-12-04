@@ -2,3 +2,5 @@
 *.o
 # Output file
 ifj
+# Debugger files
+\.vscode
