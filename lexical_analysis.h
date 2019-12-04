@@ -11,7 +11,7 @@
 
 
 #define EOL '\n'
-#define MAX_ID_LENGTH 1024
+#define MAX_ID_LENGTH 10024
 
 union Data {
   int int_data;

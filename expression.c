@@ -207,6 +207,8 @@ int reduction()
 int Expression(Symbol_t* token, bool preLoadToken, void *ST_global, void * ST_local, bool IsItDef)
 {
     
+   bool null_division = 0;
+
    SymTableItem_t *item;
     
     if(preLoadToken == false) 
@@ -266,6 +268,22 @@ int Expression(Symbol_t* token, bool preLoadToken, void *ST_global, void * ST_lo
             case E:
                 sPush(&Stack, column, Actual_Token.type);
                 Actual_Token = getNextSymbol(stdin, NULL);
+                if(Actual_Token.type == _division || Actual_Token.type == _wholenumber_division)
+                {
+                    null_division = 1;
+                }
+                else if(Actual_Token.data.int_data == '0')
+                {
+                    if(null_division == 1)
+                    {
+                        sDispose(&Stack);
+                        return DIVBYZERO_ERROR;
+                    }
+                }
+                else
+                {
+                    null_division = 0;
+                }
                 if(Actual_Token.type == _id)
                 {
                     item = SemanticCheck(ST_global, ST_local, IsItDef);
@@ -285,6 +303,22 @@ int Expression(Symbol_t* token, bool preLoadToken, void *ST_global, void * ST_lo
                 push_TopTerminal(&Stack, SYMBOL_SHIFT, Actual_Token.type);
                 sPush(&Stack, column, Actual_Token.type);
                 Actual_Token = getNextSymbol(stdin, NULL);
+                if(Actual_Token.type == _division || Actual_Token.type == _wholenumber_division)
+                {
+                    null_division = 1;
+                }
+                else if(Actual_Token.data.int_data == '0')
+                {
+                    if(null_division == 1)
+                    {
+                        sDispose(&Stack);
+                        return DIVBYZERO_ERROR;
+                    }
+                }
+                else
+                {
+                    null_division = 0;
+                }
                 if(Actual_Token.type == _id)
                 {
                     item = SemanticCheck(ST_global, ST_local, IsItDef);
@@ -330,7 +364,7 @@ void * SemanticCheck(void *ST_global,void *ST_local, bool IsItDef)
     {
         item = SymTableSearch(ST_local, Actual_Token.data.str_data, SIZE_OF_SYMTABLE_LOCAL);
         //skusime, ci nahodou nemame globalnu premennu
-        if(item == NULL) item = SymTableSearch(ST_global, Actual_Token.data.str_data, SIZE_OF_SYMTABLE_LOCAL);
+        if(item == NULL) item = SymTableSearch(ST_global, Actual_Token.data.str_data, SIZE_OF_SYMTABLE_GLOBAL);
     }
     else
     {

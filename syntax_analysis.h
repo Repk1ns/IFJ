@@ -18,7 +18,7 @@ int DefRule(int Result);
 //pravidlo pre identifikatori
 int IdRule(int Result);
 //pravidlo pre volanie funkcii
-int FuncCallRule(int Result,SymTableItem_t *item);
+int FuncCallRule(int Result,SymTableItem_t *item, bool CalledAlone);
 //pravidlo pre vstavane funckie
 int BuiltInFuncRule(int Result);
 //pravidlo pre ostatne funkcie
