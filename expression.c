@@ -204,17 +204,33 @@ int reduction()
     }
     return IT_IS_OKAY;
 }
-int Expression(Symbol_t* token, bool preLoadToken)
+int Expression(Symbol_t* token, bool preLoadToken, void *ST_global, void * ST_local, bool IsItDef)
 {
-
+    
+   SymTableItem_t *item;
+    
     if(preLoadToken == false) 
     {
         Actual_Token = getNextSymbol(stdin,NULL);
+        //skontrolujeme, ci sa nejedna o : tak je syntax error
+        if(Actual_Token.type == _operator) return SYNTAX_ERROR;
         
     }
     else
     {
         Actual_Token = *token;
+        if(Actual_Token.type == _eol || Actual_Token.type == _eof) return SYNTAX_ERROR;
+    }
+
+
+
+    //ak mame identifikator, skontrolujeme, ci je definovany
+    if(Actual_Token.type == _id)
+    {
+        //ak sa nachadzame  v definici funkcie, tak hladame v lokalnej tabulke symbolov
+        item = SemanticCheck(ST_global, ST_local, IsItDef);
+        //ak sme nenasli, semanticka chyba, id nie je definovane
+        if(item == NULL) return SEMANTIC_ERROR;
     }
     //printf("PRELOAD %d type: %d data: %s \n", preLoadToken,Actual_Token.type,Actual_Token.data.str_data);
 
@@ -241,6 +257,7 @@ int Expression(Symbol_t* token, bool preLoadToken)
             pri chybe
             */
             case X:
+                sDispose(&Stack);
                 return SYNTAX_ERROR;
                 break;
             /* Stav E - Equal (=)
@@ -249,6 +266,16 @@ int Expression(Symbol_t* token, bool preLoadToken)
             case E:
                 sPush(&Stack, column, Actual_Token.type);
                 Actual_Token = getNextSymbol(stdin, NULL);
+                if(Actual_Token.type == _id)
+                {
+                    item = SemanticCheck(ST_global, ST_local, IsItDef);
+                    //ak sme nenasli, semanticka chyba, id nie je definovane
+                    if(item == NULL) 
+                    {
+                        sDispose(&Stack);
+                        return SEMANTIC_ERROR;
+                    }
+                }
                 break;
             /*Stav P - Shift
             push nejvrchnějšího terminalu na stack
@@ -258,6 +285,15 @@ int Expression(Symbol_t* token, bool preLoadToken)
                 push_TopTerminal(&Stack, SYMBOL_SHIFT, Actual_Token.type);
                 sPush(&Stack, column, Actual_Token.type);
                 Actual_Token = getNextSymbol(stdin, NULL);
+                if(Actual_Token.type == _id)
+                {
+                    item = SemanticCheck(ST_global, ST_local, IsItDef);
+                    if(item == NULL) 
+                    {
+                        sDispose(&Stack);
+                        return SEMANTIC_ERROR;
+                    }
+                }
                 break;
 
             /* Stav R - reduce
@@ -269,11 +305,15 @@ int Expression(Symbol_t* token, bool preLoadToken)
             case R:
                 if(reduction() != 0)
                 {
+                    sDispose(&Stack);
                     return SYNTAX_ERROR;
                 }
                 break;
             default:
+                {
+                sDispose(&Stack);
                 return SYNTAX_ERROR;
+                }
         }
     }while(!(row == SYMBOL_DOLLAR && column == SYMBOL_DOLLAR));
     
@@ -281,4 +321,21 @@ int Expression(Symbol_t* token, bool preLoadToken)
     sDispose(&Stack);
     *token = Actual_Token;
     return IT_IS_OKAY;
+}
+
+void * SemanticCheck(void *ST_global,void *ST_local, bool IsItDef)
+{
+    SymTableItem_t *item; 
+    if(IsItDef == true)
+    {
+        item = SymTableSearch(ST_local, Actual_Token.data.str_data, SIZE_OF_SYMTABLE_LOCAL);
+        //skusime, ci nahodou nemame globalnu premennu
+        if(item == NULL) item = SymTableSearch(ST_global, Actual_Token.data.str_data, SIZE_OF_SYMTABLE_LOCAL);
+    }
+    else
+    {
+        item = SymTableSearch(ST_global, Actual_Token.data.str_data, SIZE_OF_SYMTABLE_GLOBAL);
+    }
+    return item;
+    //ak sme nenasli, semanticka chyba, id nie je definovane
 }

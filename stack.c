@@ -1,7 +1,7 @@
 #include "lexical_analysis.h"
-#include "generator.h"
 #include "expression.h"
 #include "stack.h"
+#include "generator.h"
 #include "error_codes.h"
 
 // Stack initialization

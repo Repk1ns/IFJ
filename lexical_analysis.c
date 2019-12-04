@@ -20,6 +20,7 @@ const char* functions [FUNCTION_COUNT] = {
 };
 
 bool _FirstToken = false;
+bool _ZeroFlag = false;
 int _NumberOfSpaces = 0;
 int _NumberOfPops = 0;
 int _IndentChar = '\0';
@@ -68,6 +69,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
         if (_IndentChar == '\0')
         {
           character = getchar();
+          if(character != '0') _ZeroFlag = false;
         }
         else
         {
@@ -491,8 +493,16 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           break;
         } else {
           ungetc(character, input);
-          symbol.type = _int;
-          symbol.data.int_data = '0';
+          if(_ZeroFlag == false)
+          {
+            symbol.type = _int;
+            symbol.data.int_data = '0';
+          }
+          else
+          {
+              exit(LEXICAL_ERROR);
+          }
+          _ZeroFlag = true;
           return symbol;
         }
       }

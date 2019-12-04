@@ -10,35 +10,33 @@
 //parse fukncia
 int Parse(SymTable_t *ST, void *Stack, void *List);
 //hlavne pravidlo celeho parseru
-int ProgRule();
+int ProgRule(int Result);
 //pravidlo pre statementy
-int StatRule();
+int StatRule(int Result);
 //pravidla pre vsetky funckie
-int DefRule();
+int DefRule(int Result);
 //pravidlo pre identifikatori
-int IdRule();
+int IdRule(int Result);
 //pravidlo pre volanie funkcii
-int FuncCallRule(SymTableItem_t *item);
+int FuncCallRule(int Result,SymTableItem_t *item);
 //pravidlo pre vstavane funckie
-int BuiltInFuncRule();
+int BuiltInFuncRule(int Result);
 //pravidlo pre ostatne funkcie
-int DefRule();
+int DefRule(int Result);
 //pravidlo pre klucove slova
-int KeywordsRule();
+int KeywordsRule(int Result);
 //pravidlo pre if
-int IfRule();
+int IfRule(int Result);
 //pravidlo pre else
-int ElseRule();
+int ElseRule(int Result);
 //pravidlo pre while;
-int WhileRule();
+int WhileRule(int Result);
 //pravidlo pre indent
-int IndentRule();
+int IndentRule(int Result);
 //pravidlo pre dedent
-int DedentRule();
+int DedentRule(int Result);
 //pravidlo pre parametre vo funkciach
-int ParamsRule(int numberOfParams);
-//pravidlo na zistenie typu erroru v parametroch funckiach
-int ParamsTypeOfError();
+int ParamsRule(int Result,int numberOfParams);
 //fce pro generovani instrukci
 void generateInstruction(int instType, int prefix1, union Data data1, int prefix2, union Data data2, int prefix3, union Data data3);
 

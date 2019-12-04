@@ -2,6 +2,7 @@
 #include "stack.h"
 #include "lexical_analysis.h"
 #include "symtable.h"
+#include "expression.h"
 #include "syntax_analysis.h" 
 #include "error_codes.h"
 #include "generator.h"

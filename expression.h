@@ -45,8 +45,9 @@ typedef enum {
 
 
 
-int Expression(Symbol_t* token, bool preLoadToken);
+int Expression(Symbol_t* token, bool preLoadToken, void *ST_global,void *ST_local, bool IsItDef);
 int reduction();
+void * SemanticCheck(void *ST_global,void *ST_local, bool IsItDef);
 
 
 #endif
