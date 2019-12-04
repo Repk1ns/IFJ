@@ -1,4 +1,4 @@
-def a():
+def a(param):
     pass
 
 def a(param):
