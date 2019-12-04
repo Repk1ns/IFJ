@@ -1,4 +1,7 @@
 
-premenna = 5 + a + 9)
+a = 0
+c = 6
+da = 4
+premenna = c \ a + 9 +da
 
 

@@ -1,11 +1,8 @@
+
 def funkcia105(a,b) :
-  c = a
-  a = c
-  
+  print('ahoj')
 
-def funkcia2(a,b) :
-  print('ahojte')
-  return b
+pom =  funkcia105(1,1)
+print(pom)
 
-funkcia = 5
-milacik = 5
+a = b + c +d 

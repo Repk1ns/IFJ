@@ -1,13 +1,11 @@
-while :
- if :
-  while :
+
+a = 5
+while a < 2 :
+ if 2 < 2:
+  while 3 < 6:
    len(a)
-
-
-
    len(b)
   len(c)
-
   inputi() 
  else :
   inputs()
