@@ -1,3 +1,8 @@
+/* IFJ project 2019/2020: IFJcode19
+* syntax_analysis.c
+* Authors = David Spavor (xspavo00) 
+*           Vojtech Jurka (xjurka08)
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,36 +51,8 @@ int Parse(SymTable_t *ST, void *Stack, void *List)
     int Result = IT_IS_OKAY;
     _IL = List;
     LexStack = Stack;
-    // do {
-    //     _Token = getNextSymbol(stdin, LexStack);
-    //     switch (_Token.type){
-    //     case _int:
-    //     {
-    //         printf("type: %d, data: %d\n", _Token.type, _Token.data.int_data);
-    //         break;
-    //     }
-    //     case _double: {
-    //         printf("type: %d, data: %f\n", _Token.type, _Token.data.dbl_data);
-    //         break;
-    //     }
-    //     case _indent:
-    //     case _dedent:
-    //     {
-    //         printf("type: %d\n", _Token.type);
-    //         break;
-    //     }
-    //     default: {
-
-    //         printf("type: %d, data: %s\n", _Token.type, _Token.data.str_data);
-    //         break;
-    //     }
-    //     }
-    //     printf("--------------------------------------\n");
-    // } while (_Token.type != _eof);
-
-
-
     _ST = ST;
+
     Result = ProgRule(Result);
     //ostala nam funkcia, ktora nebola definovana
     if(_NumberOfNotDefFun != 0) Result = SEMANTIC_ERROR;
@@ -1756,13 +1733,8 @@ int WhileRule(int Result)
     sprintf(pomocna_data1.str_data, "%%whileB%d", condCounter);
     generateInstruction(I_JUMPIFEQ, P_LABEL, pomocna_data1, P_GF, pomocna_data, P_BOOL, pomocna_data2);
 
-
-
     if(Result!= IT_IS_OKAY) return Result;
     //teraz nam PSA vrati _Token, cize ocakavme :
-    //_Token = getNextSymbol(stdin, LexStack); //<---------toto tu NEBUDE!!! vrati nam to PSA
-
-
     if(strcmp(_Token.data.str_data, ":") == 0  )
     {
         // je tu dvojbodka, zavolame dalsi _Token, co by mal byt eol
@@ -1821,16 +1793,3 @@ void generateInstruction(int instType, int prefix1, union Data data1, int prefix
    listInsertLast(_IL, I);
 }
 
-//ako parametre budu tabulka symbolov, lokalna a globalna, flag na vyraz(lebo prednacitavam token - podla neho zistime si je vyraz alebo if a vieme, cim ma koncit ten vyraz)
-int Expression_analysis()
-{
-    do
-    {
-        _Token = getNextSymbol(stdin, LexStack);
-        if (strcmp(_Token.data.str_data, ":") == 0) break;
-        if (_Token.type == _eof)  break;
-        /* code */
-    } while ((_Token.type != _eol) );
-
-    return IT_IS_OKAY;
-}

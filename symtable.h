@@ -1,3 +1,7 @@
+/* IFJ project 2019/2020: IFJcode19
+* symtable.h
+* Author = David Spavor (xspavo00) 
+*/
 //Symtable.h
 #include <string.h> // size_t 
 

@@ -1,3 +1,7 @@
+/* IFJ project 2019/2020: IFJcode19
+* stack.h
+* Author = Vojtech Mimochodek (xmimoc01)
+*/
 #ifndef STACK_H
 #define STACK_H
 

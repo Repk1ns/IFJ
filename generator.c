@@ -1,3 +1,7 @@
+/* IFJ project 2019/2020: IFJcode19
+* generator.c
+* Author = Vojtech Jurka (xjurka08)
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "generator.h"

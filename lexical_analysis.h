@@ -1,6 +1,7 @@
 /* IFJ project 2019/2020: IFJcode19
-* Lexical analysis
-* Author = Martina Tuckova (xtucko00)
+* lexical analysis.h
+* Authors = Martina Tuckova (xtucko00)
+*           David Spavor (xspavo00)
 */
 
 #ifndef LEXICAL_ANALYSIS

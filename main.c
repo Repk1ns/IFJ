@@ -1,3 +1,10 @@
+/* IFJ project 2019/2020: IFJcode19
+* main.c
+* Authors = Martina Tuckova (xtucko00) 
+*           David Spavor (xspavo00) 
+*           Vojtech Jurka (xjurka08)
+*           Vojtech Mimochodek (xmimoc01)
+*/
 #include <stdlib.h>
 #include "stack.h"
 #include "lexical_analysis.h"
@@ -7,19 +14,6 @@
 #include "error_codes.h"
 #include "generator.h"
 
-
-// these instructions are prepared for you, enjoyy :) 
-
-// #define INSTRUCTION_COUNT 56
-/*
-const char* instructions [INSTRUCTION_COUNT] = {
-  "MOVE", "CREATEFRAME", "PUSHFRAME", "POPFRAME", "DEFVAR", "CALL", "RETURN", "PUSHS", "POPS", "CLEARS",
-  "ADD", "SUB", "MUL", "DIV", "IDIV", "ADDS", "SUBS", "MULS", "DIVS", "IDIVS",
-  "LT", "GT", "EQ", "LTS", "GTS", "EQS", "AND", "OR", "NOT", "ANDS", 
-  "ORS", "NOTS", "INT2FLOAT", "FLOAT2INT", "INT2CHAR", "STRI2INT", "INT2FLOATS", "FLOAT2INT", "INT2CHARS", "STRI2INTS", 
-  "READ", "WRITE", "CONCAT", "STRLEN", "GETCHAR", "SETCHAR", "TYPE", "LABEL", "JUMP", "JUMPIFEQ", 
-  "JUMPIFNEQ", "JUMPIFEQS", "JUMPIFNEQS", "EXIT", "BREAK", "DPRINT"
-}; */
 
 int main() {
 
@@ -42,18 +36,15 @@ int main() {
   //calling parser
   result = Parse(ST, &LexStack, &IL);
 
-  //which error?
-  printf("%d\n",result);
+
+  if(result == IT_IS_OKAY)
+  {
+    printInstructions(&IL);
+  }
 
   sDispose(&LexStack);
   //delete symtable
   SymTableDelete(ST);
-
-  if(result == IT_IS_OKAY)
-  {
-      printInstructions(&IL);
-  }
-
   listFree(&IL);
 
   

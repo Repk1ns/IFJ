@@ -1,6 +1,7 @@
-//IFJ PROJECT 2019/20
-//Generator
-//Autor - Vojtech Jurka (xjurka08)
+/* IFJ project 2019/2020: IFJcode19
+* generator.h
+* Author = Vojtech Jurka (xjurka08)
+*/
 
 #ifndef GENERATOR_H
 #define GENERATOR_H

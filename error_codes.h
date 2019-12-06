@@ -1,3 +1,7 @@
+/* IFJ project 2019/2020: IFJcode19
+* errorcodes.h
+* Author = David Spavor (xspavo00)
+*/
 #ifndef ERRORCODES_H
 #define ERRORCODES_H
 

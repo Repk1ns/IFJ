@@ -1,3 +1,7 @@
+/* IFJ project 2019/2020: IFJcode19
+* symtable.c
+* Author = David Spavor (xspavo00) 
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

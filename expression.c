@@ -1,3 +1,7 @@
+/* IFJ project 2019/2020: IFJcode19
+* expression.c
+* Author = Vojtech Mimochodek (xmimoc01)
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "lexical_analysis.h"
@@ -16,14 +20,14 @@ tStack Stack;
 
 int Precedence_table[Table_size][Table_size] =
 {
-              //|+- |* /| r | ( | ) | i | $ |
-                { R , P , R , P , R , P , R }, //       "+,-"
-                { R , R , R , P , R , P , R }, //       "*, /, //"
-                { P , P , X , P , R , P , R }, // r ->  "<, <=, >, >=, ==, !="
-                { P , P , P , P , E , P , X }, //       "("
-                { R , R , R , X , R , X , R }, //       ")"
-                { R , R , R , X , R , X , R }, // i ->  "ID,INT,FLOAT,STRING"
-                { P , P , P , P , X , P , K }  //       "$"
+    //|+- |* /| r | ( | ) | i | $ |
+    { R , P , R , P , R , P , R }, //       "+,-"
+    { R , R , R , P , R , P , R }, //       "*, /, //"
+    { P , P , X , P , R , P , R }, // r ->  "<, <=, >, >=, ==, !="
+    { P , P , P , P , E , P , X }, //       "("
+    { R , R , R , X , R , X , R }, //       ")"
+    { R , R , R , X , R , X , R }, // i ->  "ID,INT,FLOAT,STRING"
+    { P , P , P , P , X , P , K }  //       "$"
 };
 
 

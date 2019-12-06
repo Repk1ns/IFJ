@@ -1,3 +1,8 @@
+/* IFJ project 2019/2020: IFJcode19
+* syntax_analysis.h
+* Authors = David Spavor (xspavo00) 
+*           Vojtech Jurka (xjurka08)
+*/
 #ifndef SYNTAX_ANALYSIS
 #define SYNTAX_ANALYSIS
 
@@ -40,6 +45,5 @@ int ParamsRule(int Result,int numberOfParams);
 //fce pro generovani instrukci
 void generateInstruction(int instType, int prefix1, union Data data1, int prefix2, union Data data2, int prefix3, union Data data3);
 
-int Expression_analysis();
 
 #endif

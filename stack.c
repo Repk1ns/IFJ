@@ -1,3 +1,7 @@
+/* IFJ project 2019/2020: IFJcode19
+* stack.c
+* Author = Vojtech Mimochodek (xmimoc01)
+*/
 #include "lexical_analysis.h"
 #include "expression.h"
 #include "stack.h"

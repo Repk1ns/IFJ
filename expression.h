@@ -1,3 +1,7 @@
+/* IFJ project 2019/2020: IFJcode19
+* expression.h
+* Author = Vojtech Mimochodek (xmimoc01)
+*/
 #ifndef EXPRESSION_H_INCLUDED
 #define EXPRESSION_H_INCLUDED
 

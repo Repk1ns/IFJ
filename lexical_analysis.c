@@ -1,6 +1,7 @@
 /* IFJ project 2019/2020: IFJcode19
-* Lexical analysis
+* lexical analysis.c
 * Author = Martina Tuckova (xtucko00)
+*          David Spavor (xspavo00)
 */
 
 #include <ctype.h>
@@ -43,18 +44,9 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
   char IFJbuffer[10]; // buffer for .IFJcode19
   char help[2];
   
-  //char* tmp_str = '\0';
+
   buffer[0] = '\0'; // clear buffer from mess 
-  //tStackItem *item;
-
-  
-    
-    
-  
-  
-
-  //item = sTop(LexStack);
-  //printf("TOP OF STACK %d \n", item->intdata );
+ 
 // switch case for incoming characters
   while (while_condition) {
     switch (state) {
