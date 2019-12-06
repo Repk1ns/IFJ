@@ -49,10 +49,10 @@ int main() {
   //delete symtable
   SymTableDelete(ST);
 
-  // if(result == IT_IS_OKAY)
-  // {
-  //     printInstructions(&IL);
-  // }
+  if(result == IT_IS_OKAY)
+  {
+      printInstructions(&IL);
+  }
 
   listFree(&IL);
 
