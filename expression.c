@@ -1,6 +1,7 @@
 /* IFJ project 2019/2020: IFJcode19
 * expression.c
 * Author = Vojtech Mimochodek (xmimoc01)
+           Vojtech Jurka (xjurka08)
 */
 #include <stdio.h>
 #include <stdlib.h>
