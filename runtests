@@ -1,0 +1,73 @@
+#!/bin/bash
+
+
+red=`tput setaf 1`
+green=`tput setaf 2`
+yellow=`tput setaf 3`
+magenta=`tput setaf 5`
+cyan=`tput setaf 6`
+white=`tput setaf 7`
+
+total_tests=0
+success_tests=0
+failed_tests=0
+res=0
+ref=0
+
+files=./tests/test*
+
+
+for file in $files ; do
+echo ${cyan}-------------------------------------------------${reset}
+echo
+echo    ${cyan}  TESTING FILE:${yellow} $file  ${reset}
+echo
+echo ${cyan}-------------------------------------------------${reset}
+
+./ifj < $file > result_file
+
+echo $? > result_file
+
+
+
+
+#out=$(echo -n $?)
+
+if [ $(grep "#output" $file | wc -l) -eq "0"  ]; then
+	echo Nezadan komentar s referencnim resenim
+	output_status=${red}"FAILED"${reset}
+else
+
+	grep "#output" "$file" | cut -c 9- > ref_file
+	echo "exptected: " 
+	cat ref_file
+	echo "result: " 
+	cat result_file
+	diff ref_file result_file > /dev/null
+
+	if [ "$?" -eq "0" ]; then
+		output_status=${green}"SUCCESSFUL"${reset}
+		success_tests=$(( success_tests+1 ))
+	else
+		output_status=${red}"FAILED"${reset}
+		failed_tests=$(( failed_tests+1 ))
+	fi
+	total_tests=$(( total_tests+1 ))
+fi
+echo
+echo               RESULT: $output_status
+echo
+
+rm result_file
+
+done
+rm ref_file
+
+echo ${cyan}_________________________________________________${reset}
+echo ${cyan}       total tests: $total_tests ${reset}
+echo ${cyan}       successful tests:$success_tests ${reset}
+echo ${cyan}       failed tests:$failed_tests ${reset}
+echo ${cyan}_________________________________________________${reset}
+
+
+

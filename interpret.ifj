@@ -1,0 +1,15 @@
+.IFJcode19
+DEFVAR GF@%expret
+CLEARS
+PUSHS string@ahoj\032cau\010
+POPS GF@%expret
+DEFVAR GF@a
+MOVE GF@a GF@%expret
+CREATEFRAME
+DEFVAR TF@%1
+MOVE TF@%1 GF@a
+PUSHFRAME
+DEFVAR LF@%retval
+MOVE LF@%retval nil@nil
+WRITE LF@%1
+POPFRAME
