@@ -103,6 +103,7 @@ double combineDouble(int, int);
 bool ishex(int);
 Symbol_t GenerateIndent(void * LexStack, char actualChar);
 Symbol_t GenerateDedent(void * LexStack, char actualChar, int Top);
+int hexadecimalToDecimal(char *hexVal);
 
 
 #endif

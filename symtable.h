@@ -39,7 +39,7 @@ struct SymTable
 //polozka tabulky
 struct SymTableItem
 {
-    //typ polozky, ci je to funckia alebo premmenna
+    //typ polozky, ci je to funckia alebo premmenna alebo paramet
     int Type;
     //pocet parametrov
     int NumberOfParameters;

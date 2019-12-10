@@ -42,6 +42,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
   int exponent = 0;
   char exponent_sign = '+';
   char IFJbuffer[10]; // buffer for .IFJcode19
+  char hexa[3]; //pomocne pole pre hexa cislo
   char help[2];
   
 
@@ -422,7 +423,12 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           //asci hodnota medzery
           strcat(buffer, "\\032");
           break;
-        } else if(character == EOF || character == EOL) {
+          //escape pre mriezku
+        } else if(character == '#') {
+          strcat(buffer, "\\035");
+          break;
+        }  
+        else if(character == EOF || character == EOL) {
           state = Fx;
           break;
         } else { 
@@ -435,26 +441,38 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
         character = getchar();
         if(character == 'x') {
           state = Q18;
-          sprintf(help, "%c", character);
-          strcat(buffer, help);
           break;
           //ak sa jedna o newline, priradime ascii hodnotu a vratime sa spat do stavu pre stringy
         } else if(character == 'n') {
           strcat(buffer, "010");
           state = Q16;
           break;
+          //escape /t
+        } else if(character == 't') {
+          strcat(buffer, "009");
+          state = Q16;
+          break;
+          //escape sekvence pre uvodzovku "
+        } else if(character == '\"') {
+          strcat(buffer, "034");
+          state = Q16;
+          break;
+          //escape pre apostrof
+        } else if(character == '\'') {
+          strcat(buffer, "039");
+          state = Q16;
+        break;
+        //escape pre backslash
+        } else if(character == '\\') {
+          strcat(buffer, "092");
+          state = Q16;
+          break;
+        break;
         } else if(character == EOL || character == EOF) {
           state = Fx;
           break;
           
         } 
-        else if(character == '\"' || character == '\'')
-        {
-          sprintf(help, "%c", character);
-          strcat(buffer, help);
-          state = Q16;
-          break;
-        }
         else {
         state = Q16;
         break;
@@ -463,8 +481,8 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
       case Q18: { // test if the first part is suitable for hexa number
         character = getchar(); 
         if(ishex(character)) {
-          sprintf(help, "%c", character);
-          strcat(buffer, help);
+          //ulozenie prveho hexa cisla
+          hexa[0] = character;
           state = Q19;
           break;
         } else {
@@ -475,8 +493,21 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
       case Q19: { // test if the second part is suitable for hexa number
         character = getchar();
         if(ishex(character)) {
-          sprintf(help, "%c", character);
-          strcat(buffer, help);
+          //ulozenie druheho hexa cisla
+          hexa[1] = character;
+          hexa[2] = '\0';
+          //convert hexadecimal to decimal
+          int decimal = hexadecimalToDecimal(hexa);
+          //osetrit vkladanie nuly, ked je cislo mensie ako 100
+          if(decimal < 100)
+          {
+            strcat(buffer,"0");
+          }
+          //convert int do char*
+          sprintf(hexa, "%d", decimal);
+          //strcat for converted decimal number
+          strcat(buffer,hexa);
+
           state = Q16;
           break;
         } else {
@@ -488,7 +519,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
         character = getchar();
         if(character == '.') {
           symbol.type = _double;
-          state = Q10;
+          state = Q14;
           break;
         } else if(isalpha(character) || character == '_') {
           state = Fx;
@@ -498,7 +529,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           if(_ZeroFlag == false)
           {
             symbol.type = _int;
-            symbol.data.int_data = '0';
+            symbol.data.int_data = 0;
           }
           else
           {
@@ -738,3 +769,51 @@ Symbol_t GenerateDedent(void * LexStack, char  actualChar, int Top)
   }
   return symbol;
 }
+
+
+// Function to convert hexadecimal to decimal  + upravy pre podporu malych pismen
+//source: https://www.geeksforgeeks.org/program-for-hexadecimal-to-decimal/
+int hexadecimalToDecimal(char *hexVal) 
+{    
+    int len = strlen(hexVal); 
+      
+    // Initializing base value to 1, i.e 16^0 
+    int base = 1; 
+      
+    int dec_val = 0; 
+      
+    // Extracting characters as digits from last character 
+    for (int i=len-1; i>=0; i--) 
+    {    
+        // if character lies in '0'-'9', converting  
+        // it to integral 0-9 by subtracting 48 from 
+        // ASCII value. 
+        if (hexVal[i]>='0' && hexVal[i]<='9') 
+        { 
+            dec_val += (hexVal[i] - 48)*base; 
+                  
+            // incrementing base by power 
+            base = base * 16; 
+        } 
+  
+        // if character lies in 'A'-'F' , converting  
+        // it to integral 10 - 15 by subtracting 55  
+        // from ASCII value 
+        else if ((hexVal[i]>='A' && hexVal[i]<='F')  ) 
+        { 
+            dec_val += (hexVal[i] - 55)*base; 
+          
+            // incrementing base by power 
+            base = base*16; 
+        } 
+        else if (hexVal[i]>='a' && hexVal[i]<='f')
+        {
+           dec_val += (hexVal[i] - 87)*base; 
+          
+            // incrementing base by power 
+            base = base*16; 
+        }
+    } 
+      
+    return dec_val; 
+} 
