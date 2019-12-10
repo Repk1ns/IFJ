@@ -1,5 +1,6 @@
-#output 2
-def foo (a,b,c):
- return 0
+#output 0
+def func(a):
+	 a = 2
+	 print(a)
 
-return 3
+func(2)
