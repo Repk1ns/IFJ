@@ -30,7 +30,7 @@ typedef enum PTS {
 } Precedence_table_symbol;
 
 typedef enum {
-    RULE_ADD,               //(0) E -> E + E  
+    RULE_ADD,               //(0) E -> E + E
     RULE_SUB,               //(1) E -> E - E
     RULE_MUL,               //(2) E -> E * E
     RULE_DIV,               //(3) E -> E / E
@@ -49,7 +49,7 @@ typedef enum {
 
 
 
-int Expression(Symbol_t* token, bool preLoadToken, void *ST_global,void *ST_local, bool IsItDef);
+int Expression(Symbol_t* token, bool preLoadToken, void *ST_global,void *ST_local, bool IsItDef, int *cnt);
 int reduction();
 void * SemanticCheck(void *ST_global,void *ST_local, bool IsItDef);
 
