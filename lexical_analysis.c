@@ -25,6 +25,7 @@ bool _ZeroFlag = false;
 int _NumberOfSpaces = 0;
 int _NumberOfPops = 0;
 int _IndentChar = '\0';
+int zeroAfterDecimalPointCounter = 0; // Bug fix when 0.01 became 0.1 #very_importante 
 
 // buffer for var names, strings, etc.
 char buffer[MAX_ID_LENGTH];
@@ -44,7 +45,7 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
   char IFJbuffer[10]; // buffer for .IFJcode19
   char hexa[3]; //pomocne pole pre hexa cislo
   char help[2];
-  
+  zeroAfterDecimalPointCounter = 0;
 
   buffer[0] = '\0'; // clear buffer from mess 
  
@@ -564,6 +565,11 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           decimal = intcat(decimal, asciiToNumber(character));
           state = Q14;
           break;
+        } else if(character == 'e' || character == 'E') {
+          symbol.type = _double;
+          symbol.data.dbl_data = (double) symbol.data.int_data;
+          state = Q11;
+          break;
         } else {
           state = Fx;
           break;
@@ -675,6 +681,9 @@ bool ishex(int n) {
 ** Function for concatening int numbers
 */
 int intcat(int number1, int number2){
+  if (number1 == 0 && number2 == 0){
+    zeroAfterDecimalPointCounter++;
+  }
   return (number1 * 10) + number2;
 }
 
@@ -720,7 +729,7 @@ double myPow(double base, int exp, char sign){
 ** Function where you get from two int numbers a double
 */
 double combineDouble(int whole, int decimal){
-  double help = (double) intlen(decimal);
+  double help = (double) (intlen(decimal) + zeroAfterDecimalPointCounter);
   return whole + (decimal * (pow((double)10, (help * (-1)))));
 }
 
