@@ -61,7 +61,7 @@ void SymTableDelete(SymTable_t *ST)
     free(ST);
 }
 
-void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParameters, int sizeOfSymbtable)
+void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParameters,int actualParameter, int sizeOfSymbtable)
 {
     int index;
     //iterator v zretazenom zozname
@@ -78,7 +78,7 @@ void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParame
     {   
         //printf("DATA V SYM: %s\n" ,parameters[0].data.str_data);
         //vytvorenie itemu
-        item = NewItem(token, type, numberOfParameters);
+        item = NewItem(token, type, actualParameter ,numberOfParameters);
         if(item == NULL)
         {
             fprintf(stderr, "ERROR of allocation!\n");
@@ -105,7 +105,7 @@ void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParame
         }
 
         //teraz som na konci linearneho zonzamu, pripojim tam novy item
-        item = NewItem(token, type, numberOfParameters);
+        item = NewItem(token, type, actualParameter, numberOfParameters);
         if(item == NULL)
         {
             fprintf(stderr, "ERROR of allocation!\n");
@@ -124,7 +124,7 @@ void SymTableInsert(SymTable_t *ST, Symbol_t token, int type, int numberOfParame
 }
 
 //pomocna funckia na vytvorenie itemu
-SymTableItem_t* NewItem(Symbol_t token, int type, int numberOfParameters)
+SymTableItem_t* NewItem(Symbol_t token, int type, int actualParameter, int numberOfParameters)
 {
         SymTableItem_t* item = malloc(sizeof(SymTableItem_t)  + 2*sizeof(int)) ;
 
@@ -137,6 +137,8 @@ SymTableItem_t* NewItem(Symbol_t token, int type, int numberOfParameters)
             
             //priradenie typu
             item->Type = type;
+            //priradenie aktualnej pozicie parametra, ak nepriradzujem, hodnota je NONO_PARAM
+            item->ActualParameter = actualParameter;
             //priradenie poctu parametrov, ak to je funkcia, ak nie, hodnota je -1
             item->NumberOfParameters = numberOfParameters;
             //priradenie tokenu do itemu

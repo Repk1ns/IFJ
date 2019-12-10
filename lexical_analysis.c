@@ -417,6 +417,11 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           strcat(buffer, help);
           state = Q17;
           break;
+         } //ak sa jedna o medzeru, musim vypisat jeho ascii hodnotu
+          else if(character == ' ') {
+          //asci hodnota medzery
+          strcat(buffer, "\\032");
+          break;
         } else if(character == EOF || character == EOL) {
           state = Fx;
           break;
@@ -426,12 +431,17 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           break;
         }
       }
-      case Q17: { // hexa number - part /x
+      case Q17: { // hexa number and new line - part /x 
         character = getchar();
         if(character == 'x') {
           state = Q18;
           sprintf(help, "%c", character);
           strcat(buffer, help);
+          break;
+          //ak sa jedna o newline, priradime ascii hodnotu a vratime sa spat do stavu pre stringy
+        } else if(character == 'n') {
+          strcat(buffer, "010");
+          state = Q16;
           break;
         } else if(character == EOL || character == EOF) {
           state = Fx;

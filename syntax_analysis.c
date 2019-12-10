@@ -293,7 +293,7 @@ int IdRule(int Result)
     {
         localDef = SymTableSearch(_STlocal, _Token.data.str_data, SIZE_OF_SYMTABLE_LOCAL);//zjisteni zda jiz byla promenna v programu deklarovana lokalne
 
-        SymTableInsert(_STlocal,_Token,_IDvariable, ID_PARAMETERS,SIZE_OF_SYMTABLE_LOCAL);
+        SymTableInsert(_STlocal,_Token,_IDvariable, ID_PARAMETERS, NO_PARAM, SIZE_OF_SYMTABLE_LOCAL);
     }
 
     if(Result == IT_IS_OKAY)
@@ -312,7 +312,7 @@ int IdRule(int Result)
                 }
                 if(Result == IT_IS_OKAY)
                 {
-                    SymTableInsert(_ST,identifier,_IDvariable, ID_PARAMETERS, SIZE_OF_SYMTABLE_GLOBAL);
+                    SymTableInsert(_ST,identifier,_IDvariable, ID_PARAMETERS,NO_PARAM, SIZE_OF_SYMTABLE_GLOBAL);
                 }
             }
 
@@ -553,8 +553,8 @@ int IdRule(int Result)
                 {
                     //hladame v lokalnej tabulke symbolov
                     prevDefFun = SymTableSearch(_STlocal, identifier.data.str_data, SIZE_OF_SYMTABLE_LOCAL);
-                    //ak sme identifikator nasli ale je to typ _ID variable, volame PSA
-                    if ((prevDefFun != NULL) && (prevDefFun->Type == _IDvariable))
+                    //ak sme identifikator nasli ale je to typ _ID variable alebo _ID_parameter, volame PSA
+                    if ((prevDefFun != NULL) && ((prevDefFun->Type == _IDvariable) || prevDefFun->Type == _IDparameter))
                     {
 
                         if(ExpressionUsed == false)
@@ -686,6 +686,8 @@ int IdRule(int Result)
                                 //vynulujeme pocet aktualnych parametrov
                                 _ActualNumberOfParams = 0;
                             }
+                            //inak je to globalna premenna, tak volame PSA
+                            else Result = Expression(&_Token, true,_ST, _STlocal, true);
 
                             if(ExpressionUsed == false)
                             {
@@ -694,8 +696,7 @@ int IdRule(int Result)
                                 ExpressionUsed = true;
                             }
 
-                            //inak je to globalna premenna, tak volame PSA
-                            else Result = Expression(&_Token, true,_ST, _STlocal, true);
+                            
 
                             if(globalDef == NULL)
                             {
@@ -771,7 +772,7 @@ int IdRule(int Result)
                             //ak je vsetko v poriadku tak si ulozime volanu funkciu do tabulky symbolov pre pozdejsie porovnanie poctu parametrov
                             if(Result == IT_IS_OKAY)
                             {
-                                SymTableInsert(_ST, idCallFun, _IDfunction, _ActualNumberOfParams, SIZE_OF_SYMTABLE_GLOBAL);
+                                SymTableInsert(_ST, idCallFun, _IDfunction, _ActualNumberOfParams,NO_PARAM, SIZE_OF_SYMTABLE_GLOBAL);
                                 //pripocitame si pocet kontrol
                                 _NumberOfNotDefFun++;
                             }
@@ -871,7 +872,7 @@ int IdRule(int Result)
 
                     if(Result == IT_IS_OKAY)
                     {
-                        SymTableInsert(_ST, identifier, _IDfunction, _ActualNumberOfParams, SIZE_OF_SYMTABLE_GLOBAL);
+                        SymTableInsert(_ST, identifier, _IDfunction, _ActualNumberOfParams,NO_PARAM, SIZE_OF_SYMTABLE_GLOBAL);
                         //pripocitame si pocet kontrol
                         _NumberOfNotDefFun++;
                     }
@@ -1334,7 +1335,7 @@ int DefRule(int Result)
                     if(item == NULL)
                     {
                         //vlozime si indetifikator do tabulky symbolov a zapamatame si pocet paramaetrov
-                        SymTableInsert(_ST, Identifier, _IDfunction, _ActualNumberOfParams, SIZE_OF_SYMTABLE_GLOBAL);
+                        SymTableInsert(_ST, Identifier, _IDfunction, _ActualNumberOfParams,NO_PARAM, SIZE_OF_SYMTABLE_GLOBAL);
 
                     }
                     //nasli sme identifikator, bud je redefinicia funkcie alebo sa jedna o volanu funkciu pred definiciou
@@ -1427,10 +1428,11 @@ int ParamsRule(int Result,int numberOfParams)
         //vieme, ze v definicii funkcie mozu byt parametre iba identifikatori
         if(numberOfParams == DEF_PARAMETERS)
         {
-            //ak som v definicii funkci, musim su ulozit parametre funkcie do lokalnej tabulky symobolov
-            SymTableInsert(_STlocal, _Token, _IDvariable, ID_PARAMETERS, SIZE_OF_SYMTABLE_LOCAL);
             if(_Token.type == _id)
             {
+                //ak som v definicii funkci, musim su ulozit parametre funkcie do lokalnej tabulky symobolov
+                //priradzujem aj kolky parameter to je a ze je to typ _IDparameter
+                SymTableInsert(_STlocal, _Token, _IDparameter, ID_PARAMETERS, _ActualNumberOfParams, SIZE_OF_SYMTABLE_LOCAL);
                 _ActualNumberOfParams++;
 
                 sprintf(pomocna_data.str_data, "%%p%d", _ActualNumberOfParams);//vytvoreni stringu pro promennou parametru
