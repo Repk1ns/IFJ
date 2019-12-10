@@ -1,0 +1,8 @@
+#output 0
+
+def foo (a):
+ b = a
+ print(b)
+
+foo(3)
+

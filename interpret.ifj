@@ -1,7 +1,7 @@
 .IFJcode19
 DEFVAR GF@%expret
 CLEARS
-PUSHS float@0x1.c28f5c28f5c29p-4
+PUSHS float@0x1.9p+6
 POPS GF@%expret
 DEFVAR GF@a
 MOVE GF@a GF@%expret
