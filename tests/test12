@@ -1,3 +1,4 @@
+#output 0
 def print_line(width):
   line = '+'
   x = 0
@@ -142,4 +143,5 @@ while (y < resy):
   y = y + 1.000000
 
 print_line(resx)
+
 

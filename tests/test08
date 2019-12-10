@@ -1,3 +1,4 @@
+#output 2
 def a():
     b = 4
   c = 2

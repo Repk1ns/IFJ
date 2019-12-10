@@ -1,0 +1,16 @@
+#output 2
+def ProcessShape(shape):
+  if (shape == 'square'):
+    print('a')
+  else:
+    if (shape == 'ractangle'):
+      print('a')
+               else:
+      if (shape == 'circle'):
+        print('a')
+      else:
+        if (shape == 'triangle'):
+          print('a')
+        else:
+          return 1
+        return 0

@@ -1,3 +1,4 @@
+#output 3
 if s1 != None:
   while s1 != 'abcdefgh':
    print('Spatne zadana posloupnost, zkuste znovu: ')

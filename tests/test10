@@ -1,0 +1,7 @@
+#output 0
+if 5 < 10:
+  print('ahoj')
+else :
+  inputs() #ahoj 
+inputs() 
+

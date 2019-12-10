@@ -1,0 +1,6 @@
+#output 0
+def func(a):
+	 a = 2
+	 print(a)
+
+func(2)

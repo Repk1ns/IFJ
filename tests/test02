@@ -1,8 +1,9 @@
+#output 5
 
 def funkcia105(a,b) :
   print('ahoj')
 
-pom =  funkcia105(1,1)
+pom =  funkcia105(1,1,1)
 print(pom)
 
 a = b + c +d 

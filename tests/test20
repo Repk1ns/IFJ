@@ -1,0 +1,5 @@
+#output 2
+def foo (a,b,c):
+ return 0
+
+return 3

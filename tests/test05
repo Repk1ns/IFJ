@@ -1,3 +1,4 @@
+#output 3
 def a(param):
     pass
 
