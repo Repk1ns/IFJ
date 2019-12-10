@@ -86,10 +86,795 @@ Precedence_table_symbol get_precedence_table_symbol(Symbol_t Actual_Token)
             return SYMBOL_DOLLAR;
     }
 }
+
+/*
+Pomocna funkce pro generator - behova typova kontrola
+*/
+void type_check_add(int *cnt)
+{
+    union Data pomocna_data; //pomocna struktura pro generaci kodu
+    union Data pomocna_data1; //druha pomocna struktura pro generaci kodu
+    union Data pomocna_data2; //treti pomocna struktura pro generaci kodu
+    union Data pomocna_data3; //ctvrta pomocna struktura pro generaci kodu
+
+    generateInstruction(I_CREATEFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    sprintf(pomocna_data.str_data, "%%typ1");
+    sprintf(pomocna_data3.str_data, "%%typ2");
+
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    //promenne na typ
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //promenne na operandy
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pop operandu
+    generateInstruction(I_POPS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_POPS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //zjisteni typu (0,3)
+    generateInstruction(I_TYPE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
+    generateInstruction(I_TYPE, P_LF, pomocna_data3, P_LF, pomocna_data2, P_NULL, pomocna_data);
+    //promenna pro podminku
+    sprintf(pomocna_data3.str_data, "%%cond");
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ1 int
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "int");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //kdyz je typ2 float
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "float");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    sprintf(pomocna_data.str_data, "%%1");
+    generateInstruction(I_INT2FLOAT, P_LF, pomocna_data, P_LF, pomocna_data, P_NULL, pomocna_data2);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //kdyz je typ2 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pushnuti operandu zpatky na zasobnik aby byly ve stejnem poradi a provedeni operace
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    generateInstruction(I_PUSHS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    generateInstruction(I_ADDS, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)= *cnt + 3;
+
+    //kdyz je typ1 float
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "float");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //kdyz je typ2 int
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "int");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+
+    sprintf(pomocna_data.str_data, "%%2");
+    generateInstruction(I_INT2FLOAT, P_LF, pomocna_data, P_LF, pomocna_data, P_NULL, pomocna_data2);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //kdyz je typ2 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pushnuti operandu zpatky na zasobnik aby byly ve stejnem poradi a provedeni operace
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    generateInstruction(I_PUSHS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    generateInstruction(I_ADDS, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)= *cnt + 3;
+
+    //kdyz je typ1 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //kdyz je typ2 string, provedu konkatenaci
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    sprintf(pomocna_data.str_data, "%%string");
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    generateInstruction(I_CONCAT, P_LF, pomocna_data, P_LF, pomocna_data1, P_LF, pomocna_data2);
+    generateInstruction(I_PUSHS, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    generateInstruction(I_JUMP, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //jinak exit 4
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)= *cnt + 3;
+
+    generateInstruction(I_POPFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+}
+
+void type_check_mul(int *cnt)
+{
+    union Data pomocna_data; //pomocna struktura pro generaci kodu
+    union Data pomocna_data1; //druha pomocna struktura pro generaci kodu
+    union Data pomocna_data2; //treti pomocna struktura pro generaci kodu
+    union Data pomocna_data3; //ctvrta pomocna struktura pro generaci kodu
+
+    generateInstruction(I_CREATEFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    sprintf(pomocna_data.str_data, "%%typ1");
+    sprintf(pomocna_data3.str_data, "%%typ2");
+
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    //promenne na typ
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //promenne na operandy
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pop operandu
+    generateInstruction(I_POPS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_POPS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //zjisteni typu (0,3)
+    generateInstruction(I_TYPE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
+    generateInstruction(I_TYPE, P_LF, pomocna_data3, P_LF, pomocna_data2, P_NULL, pomocna_data);
+    //promenna pro podminku
+    sprintf(pomocna_data3.str_data, "%%cond");
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ1 int
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "int");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //kdyz je typ2 float
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "float");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    sprintf(pomocna_data.str_data, "%%1");
+    generateInstruction(I_INT2FLOAT, P_LF, pomocna_data, P_LF, pomocna_data, P_NULL, pomocna_data2);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //kdyz je typ2 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pushnuti operandu zpatky na zasobnik aby byly ve stejnem poradi a provedeni operace
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    generateInstruction(I_PUSHS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    generateInstruction(I_MULS, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)= *cnt + 3;
+
+    //kdyz je typ1 float
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "float");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //kdyz je typ2 int
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "int");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+
+    sprintf(pomocna_data.str_data, "%%2");
+    generateInstruction(I_INT2FLOAT, P_LF, pomocna_data, P_LF, pomocna_data, P_NULL, pomocna_data2);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //kdyz je typ2 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+    //exit 4
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pushnuti operandu zpatky na zasobnik aby byly ve stejnem poradi a provedeni operace
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    generateInstruction(I_PUSHS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    generateInstruction(I_MULS, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)= *cnt + 3;
+
+    //kdyz je typ1 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //exit 4
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    generateInstruction(I_POPFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+}
+
+void type_check_sub(int *cnt)
+{
+    union Data pomocna_data; //pomocna struktura pro generaci kodu
+    union Data pomocna_data1; //druha pomocna struktura pro generaci kodu
+    union Data pomocna_data2; //treti pomocna struktura pro generaci kodu
+    union Data pomocna_data3; //ctvrta pomocna struktura pro generaci kodu
+
+    generateInstruction(I_CREATEFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    sprintf(pomocna_data.str_data, "%%typ1");
+    sprintf(pomocna_data3.str_data, "%%typ2");
+
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    //promenne na typ
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //promenne na operandy
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pop operandu
+    generateInstruction(I_POPS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_POPS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //zjisteni typu (0,3)
+    generateInstruction(I_TYPE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
+    generateInstruction(I_TYPE, P_LF, pomocna_data3, P_LF, pomocna_data2, P_NULL, pomocna_data);
+    //promenna pro podminku
+    sprintf(pomocna_data3.str_data, "%%cond");
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ1 int
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "int");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //kdyz je typ2 float
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "float");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    sprintf(pomocna_data.str_data, "%%1");
+    generateInstruction(I_INT2FLOAT, P_LF, pomocna_data, P_LF, pomocna_data, P_NULL, pomocna_data2);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //kdyz je typ2 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pushnuti operandu zpatky na zasobnik aby byly ve stejnem poradi a provedeni operace
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    generateInstruction(I_PUSHS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    generateInstruction(I_SUBS, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)= *cnt + 3;
+
+    //kdyz je typ1 float
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "float");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //kdyz je typ2 int
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "int");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+
+    sprintf(pomocna_data.str_data, "%%2");
+    generateInstruction(I_INT2FLOAT, P_LF, pomocna_data, P_LF, pomocna_data, P_NULL, pomocna_data2);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+1);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //kdyz je typ2 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+    //exit 4
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt+2);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pushnuti operandu zpatky na zasobnik aby byly ve stejnem poradi a provedeni operace
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    generateInstruction(I_PUSHS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    generateInstruction(I_SUBS, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)= *cnt + 3;
+
+    //kdyz je typ1 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //exit 4
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    generateInstruction(I_POPFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+}
+
+void type_check_div(int *cnt)
+{
+    union Data pomocna_data; //pomocna struktura pro generaci kodu
+    union Data pomocna_data1; //druha pomocna struktura pro generaci kodu
+    union Data pomocna_data2; //treti pomocna struktura pro generaci kodu
+    union Data pomocna_data3; //ctvrta pomocna struktura pro generaci kodu
+
+    generateInstruction(I_CREATEFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    sprintf(pomocna_data.str_data, "%%typ1");
+    sprintf(pomocna_data3.str_data, "%%typ2");
+
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    //promenne na typ
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //promenne na operandy
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pop operandu
+    generateInstruction(I_POPS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_POPS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //zjisteni typu (0,3)
+    generateInstruction(I_TYPE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
+    generateInstruction(I_TYPE, P_LF, pomocna_data3, P_LF, pomocna_data2, P_NULL, pomocna_data);
+    //promenna pro podminku
+    sprintf(pomocna_data3.str_data, "%%cond");
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ1 int
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "int");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    sprintf(pomocna_data.str_data, "%%1");
+    generateInstruction(I_INT2FLOAT, P_LF, pomocna_data, P_LF, pomocna_data, P_NULL, pomocna_data2);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ2 int
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "int");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    sprintf(pomocna_data.str_data, "%%2");
+    generateInstruction(I_INT2FLOAT, P_LF, pomocna_data, P_LF, pomocna_data, P_NULL, pomocna_data2);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ1 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //exit 4
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ2 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //exit 4
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //oba operandy jsou nyni floaty
+    //kdyz je %2 0.0
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%2");
+    pomocna_data2.dbl_data = 0.0;
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_FLOAT, pomocna_data2);
+
+    //exit 9
+    pomocna_data.int_data = 9;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pushnuti operandu zpatky na zasobnik aby byly ve stejnem poradi a provedeni operace
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    generateInstruction(I_PUSHS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    generateInstruction(I_DIVS, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    generateInstruction(I_POPFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+}
+
+void type_check_idiv(int *cnt)
+{
+    union Data pomocna_data; //pomocna struktura pro generaci kodu
+    union Data pomocna_data1; //druha pomocna struktura pro generaci kodu
+    union Data pomocna_data2; //treti pomocna struktura pro generaci kodu
+    union Data pomocna_data3; //ctvrta pomocna struktura pro generaci kodu
+
+    generateInstruction(I_CREATEFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    sprintf(pomocna_data.str_data, "%%typ1");
+    sprintf(pomocna_data3.str_data, "%%typ2");
+
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    //promenne na typ
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //promenne na operandy
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pop operandu
+    generateInstruction(I_POPS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_POPS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //zjisteni typu (0,3)
+    generateInstruction(I_TYPE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
+    generateInstruction(I_TYPE, P_LF, pomocna_data3, P_LF, pomocna_data2, P_NULL, pomocna_data);
+    //promenna pro podminku
+    sprintf(pomocna_data3.str_data, "%%cond");
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ1 float
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "float");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ2 float
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "float");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ1 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //exit 4
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ2 string
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //exit 4
+    pomocna_data.int_data = 4;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //oba operandy jsou nyni inty
+    //kdyz je %2 0
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%2");
+    pomocna_data2.int_data = 0;
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_INT, pomocna_data2);
+
+    //exit 9
+    pomocna_data.int_data = 9;
+    generateInstruction(I_EXIT, P_INT, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pushnuti operandu zpatky na zasobnik aby byly ve stejnem poradi a provedeni operace
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    generateInstruction(I_PUSHS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    generateInstruction(I_IDIVS, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    generateInstruction(I_POPFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+}
+
+void type_check_relation(int *cnt)
+{
+    union Data pomocna_data; //pomocna struktura pro generaci kodu
+    union Data pomocna_data1; //druha pomocna struktura pro generaci kodu
+    union Data pomocna_data2; //treti pomocna struktura pro generaci kodu
+    union Data pomocna_data3; //ctvrta pomocna struktura pro generaci kodu
+
+    generateInstruction(I_CREATEFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    sprintf(pomocna_data.str_data, "%%typ1");
+    sprintf(pomocna_data3.str_data, "%%typ2");
+
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    //promenne na typ
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //promenne na operandy
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pop operandu
+    generateInstruction(I_POPS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_POPS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //zjisteni typu (0,3)
+    generateInstruction(I_TYPE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
+    generateInstruction(I_TYPE, P_LF, pomocna_data3, P_LF, pomocna_data2, P_NULL, pomocna_data);
+    //promenna pro podminku
+    sprintf(pomocna_data3.str_data, "%%cond");
+    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ1 int
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ1");
+    sprintf(pomocna_data2.str_data, "int");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    sprintf(pomocna_data.str_data, "%%1");
+    generateInstruction(I_INT2FLOAT, P_LF, pomocna_data, P_LF, pomocna_data, P_NULL, pomocna_data2);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    (*cnt)++;
+
+    //kdyz je typ2 int
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    sprintf(pomocna_data1.str_data, "%%typ2");
+    sprintf(pomocna_data2.str_data, "int");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_LF, pomocna_data1, P_STRING, pomocna_data2);
+
+    sprintf(pomocna_data.str_data, "%%2");
+    generateInstruction(I_INT2FLOAT, P_LF, pomocna_data, P_LF, pomocna_data, P_NULL, pomocna_data2);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", *cnt);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //pushnuti operandu zpatky na zasobnik aby byly ve stejnem poradi a provedeni operace
+    sprintf(pomocna_data1.str_data, "%%1");
+    sprintf(pomocna_data2.str_data, "%%2");
+    generateInstruction(I_PUSHS, P_LF, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    generateInstruction(I_PUSHS, P_LF, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    generateInstruction(I_POPFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+
+}
 /*
 Vyhledavani pravidla podle poctu operandu
 */
-Precedence_table_rule get_precedence_table_rule(int counter, tStackItem* op1, tStackItem* op2, tStackItem* op3)
+Precedence_table_rule get_precedence_table_rule(int counter, tStackItem* op1, tStackItem* op2, tStackItem* op3, int *cnt)
 {
     if(counter == 1)
     {
@@ -115,39 +900,45 @@ Precedence_table_rule get_precedence_table_rule(int counter, tStackItem* op1, tS
             switch(op2->intdata)
             {
                 case _plus:
-                    generateInstruction(I_ADDS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
+                    type_check_add(cnt);
                     return RULE_ADD;
                 case _minus:
-                    generateInstruction(I_SUBS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
+                    type_check_sub(cnt);
                     return RULE_SUB;
                 case _multiplication:
-                    generateInstruction(I_MULS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
+                    type_check_mul(cnt);
                     return RULE_MUL;
                 case _division:
-                    generateInstruction(I_DIVS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
+                    type_check_div(cnt);
                     return RULE_DIV;
                 case _wholenumber_division:
-                    generateInstruction(I_IDIVS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
+                    type_check_idiv(cnt);
                     return RULE_W_DIV;
                 case _equal:
+                    type_check_relation(cnt);
                     generateInstruction(I_EQS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
                     return RULE_EQUAL;
                 case _not_equal:
+                    type_check_relation(cnt);
                     generateInstruction(I_EQS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
                     generateInstruction(I_NOTS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
                     return RULE_NOT_EQUAL;
                 case _less_or_equal:
+                    type_check_relation(cnt);
                     generateInstruction(I_GTS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
                     generateInstruction(I_NOTS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
                     return RULE_LESS_OR_EQUAL;
                 case _greater_or_equal:
+                    type_check_relation(cnt);
                     generateInstruction(I_LTS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
                     generateInstruction(I_NOTS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
                     return RULE_GREATER_OR_EQUAL;
                 case _less:
+                    type_check_relation(cnt);
                     generateInstruction(I_LTS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
                     return RULE_LESS;
                 case _greater:
+                    type_check_relation(cnt);
                     generateInstruction(I_GTS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
                     return RULE_GREATER;
                 default:
@@ -181,7 +972,7 @@ int Items_to_pop()
 /*
 Funkce pro zredukovani podle pravidla
 */
-int reduction()
+int reduction(int *cnt)
 {
     tStackItem* op1 = NULL;
     tStackItem* op2 = NULL;
@@ -206,7 +997,7 @@ int reduction()
         return SYNTAX_ERROR;
     }
 
-    rule = get_precedence_table_rule(count, op1, op2, op3); // vyhledani pravidel
+    rule = get_precedence_table_rule(count, op1, op2, op3, cnt); // vyhledani pravidel
 
     if(rule == NO_RULE)
     {
@@ -224,7 +1015,7 @@ int reduction()
     }
     return IT_IS_OKAY;
 }
-int Expression(Symbol_t* token, bool preLoadToken, void *ST_global, void * ST_local, bool IsItDef)
+int Expression(Symbol_t* token, bool preLoadToken, void *ST_global, void * ST_local, bool IsItDef, int *cnt)
 {
    generateInstruction(I_CLEARS, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
 
@@ -387,7 +1178,7 @@ int Expression(Symbol_t* token, bool preLoadToken, void *ST_global, void * ST_lo
             push prave strany pravidla
             */
             case R:
-                if(reduction() != 0)
+                if(reduction(cnt) != 0)
                 {
                     sDispose(&Stack);
                     return SYNTAX_ERROR;

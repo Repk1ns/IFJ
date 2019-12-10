@@ -424,7 +424,7 @@ int IdRule(int Result)
                                 ExpressionUsed = true;
                             }
 
-                            Result = Expression(&_Token, true, _ST, _STlocal, false);
+                            Result = Expression(&_Token, true, _ST, _STlocal, false, &typCondCounter);
 
                             if(globalDef == NULL)
                             {
@@ -513,7 +513,7 @@ int IdRule(int Result)
                             ExpressionUsed = true;
                         }
 
-                        Result = Expression(&_Token, true, _ST,_STlocal, false);
+                        Result = Expression(&_Token, true, _ST,_STlocal, false, &typCondCounter);
 
                         if(globalDef == NULL)
                         {
@@ -565,7 +565,7 @@ int IdRule(int Result)
                         }
 
                         //musime povedat, ze sme prednacitali jeden token
-                        Result = Expression(&_Token,true,_ST, _STlocal, true);
+                        Result = Expression(&_Token,true,_ST, _STlocal, true, &typCondCounter);
 
                         if(localDef == NULL)
                         {
@@ -687,7 +687,7 @@ int IdRule(int Result)
                                 _ActualNumberOfParams = 0;
                             }
                             //inak je to globalna premenna, tak volame PSA
-                            else Result = Expression(&_Token, true,_ST, _STlocal, true);
+                            else Result = Expression(&_Token, true,_ST, _STlocal, true, &typCondCounter);
 
                             if(ExpressionUsed == false)
                             {
@@ -696,7 +696,7 @@ int IdRule(int Result)
                                 ExpressionUsed = true;
                             }
 
-                            
+
 
                             if(globalDef == NULL)
                             {
@@ -792,7 +792,7 @@ int IdRule(int Result)
                                 ExpressionUsed = true;
                             }
 
-                            Result = Expression(&_Token, true,_ST, _STlocal, true);
+                            Result = Expression(&_Token, true,_ST, _STlocal, true, &typCondCounter);
 
                             if(localDef == NULL)
                             {
@@ -1600,7 +1600,7 @@ int KeywordsRule(int Result)
             // po returne ocakavame identifikator
             // vieme, ze za returnom ocakavame vyraz, cize volame PSA
             //_Token = getNextSymbol(stdin, LexStack); //---> TOTO TU NEBUDE!
-            Result = Expression(&_Token,false,_ST, _STlocal, true);
+            Result = Expression(&_Token,false,_ST, _STlocal, true, &typCondCounter);
 
             sprintf(pomocna_data.str_data, "%%retval");
             sprintf(pomocna_data1.str_data, "%%expret");
@@ -1640,11 +1640,11 @@ int IfRule(int Result)
     //ona vola getnextSYmbol() a ked skocni, vrati mi errorcode a nasledujuci _Token do pravidla, cize by to mala byt dvojbodka
     if (_DefFlag == true)
     {
-        Result = Expression(&_Token,false, _ST, _STlocal, true);
+        Result = Expression(&_Token,false, _ST, _STlocal, true, &typCondCounter);
     }
     else
     {
-        Result = Expression(&_Token,false, _ST, _STlocal, false);
+        Result = Expression(&_Token,false, _ST, _STlocal, false, &typCondCounter);
     }
 
 
@@ -1836,11 +1836,11 @@ int WhileRule(int Result)
     //zavolame PSA
     if (_DefFlag == true)
     {
-        Result = Expression(&_Token,false, _ST, _STlocal, true);
+        Result = Expression(&_Token,false, _ST, _STlocal, true, &typCondCounter);
     }
     else
     {
-        Result = Expression(&_Token,false, _ST, _STlocal, false);
+        Result = Expression(&_Token,false, _ST, _STlocal, false, &typCondCounter);
     }
 
     sprintf(pomocna_data.str_data, "%%cond");
