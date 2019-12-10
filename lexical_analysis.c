@@ -533,7 +533,8 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           }
           else
           {
-              exit(LEXICAL_ERROR);
+            state = Fx;
+            break;
           }
           _ZeroFlag = true;
           return symbol;
@@ -578,11 +579,20 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
           symbol.data.dbl_data = combineDouble(symbol.data.int_data, decimal);
           state = Q11;
           break;
-        } else {
+        } else if(character == '+' || character == '-' || 
+                  character == '/' || character == '*' || 
+                  character == '\n' || character == ' ' || 
+                  character == '(' || character == ')'  ) {
           ungetc(character, input);
           symbol.data.dbl_data = combineDouble(symbol.data.int_data, decimal);
           return symbol;
         }
+        else
+        {
+          state = Fx;
+          break;
+        }
+        
       }
       case Q11: { // after the number came 'e' or 'E'
         character = getchar();
