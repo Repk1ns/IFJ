@@ -657,7 +657,7 @@ int asciiToNumber(int character){
 
 /*
 ** Function that helps me find out the length of a number
-** found on: 
+** found on: https://stackoverflow.com/questions/3068397/finding-the-length-of-an-integer-in-c?rq=1 by Eamon Nerbonne
 */
 int intlen(int number){
   if (number < 0)           return 0;
