@@ -1432,14 +1432,13 @@ int ParamsRule(int Result,int numberOfParams)
             {
                 //ak som v definicii funkci, musim su ulozit parametre funkcie do lokalnej tabulky symobolov
                 //priradzujem aj kolky parameter to je a ze je to typ _IDparameter
-                _ActualNumberOfParams++;
                 SymTableInsert(_STlocal, _Token, _IDparameter, ID_PARAMETERS, _ActualNumberOfParams, SIZE_OF_SYMTABLE_LOCAL);
+                _ActualNumberOfParams++;
 
-                sprintf(pomocna_data.str_data, "%%p%d", _ActualNumberOfParams);//vytvoreni stringu pro promennou parametru
                 sprintf(pomocna_data1.str_data, "%%%d", _ActualNumberOfParams);//vytvoreni stringu pro promennou parametru z docasneho ramce
 
-                generateInstruction(I_DEFVAR, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
-                generateInstruction(I_MOVE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
+                generateInstruction(I_DEFVAR, P_LF, _Token.data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+                generateInstruction(I_MOVE, P_LF, _Token.data, P_LF, pomocna_data1, P_NULL, pomocna_data);
 
                 Result = ParamsRule(Result,numberOfParams);
             }
