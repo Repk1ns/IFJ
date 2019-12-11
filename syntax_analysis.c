@@ -1364,11 +1364,19 @@ int BuiltInFuncRule(int Result)
             generateInstruction(I_DEFVAR, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
             generateInstruction(I_MOVE, P_LF, pomocna_data, P_NIL, pomocna_data, P_NULL, pomocna_data);
 
-            for(int i=1; i <= _ActualNumberOfParams; i++)
+            int i = 1;
+            sprintf(pomocna_data.str_data, "%%%d", i);
+            generateInstruction(I_WRITE, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+            for(i=2; i <= _ActualNumberOfParams; i++)
             {
+                sprintf(pomocna_data1.str_data, "\\032");
                 sprintf(pomocna_data.str_data, "%%%d", i);
+                generateInstruction(I_WRITE, P_STRING, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
                 generateInstruction(I_WRITE, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
             }
+            sprintf(pomocna_data.str_data, "\\010");
+            generateInstruction(I_WRITE, P_STRING, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
 
             _ActualNumberOfParams = 0;
 
