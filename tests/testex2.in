@@ -1,6 +1,7 @@
 #output 0
 # Program 2: Vypocet faktorialu (rekurzivne)
 def factorial(n):
+ result = 1
  if n < 2:
   result = 1
  else:
@@ -13,8 +14,6 @@ def factorial(n):
 # Hlavni telo programu
 print('Zadejte cislo pro vypocet faktorialu: ')
 a = inputi()
-if a < 0.0: # pred porovnanim probehne implicitni konverze int na float
- print('Faktorial nelze spocitat')
-else:
- vysl = factorial(a)
- print('Vysledek je:', vysl)
+
+vysl = factorial(a)
+print('Vysledek je:', vysl)

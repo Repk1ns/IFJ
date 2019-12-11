@@ -1131,6 +1131,11 @@ int Expression(Symbol_t* token, bool preLoadToken, void *ST_global, void * ST_lo
                 {
                     generateInstruction(I_PUSHS, P_STRING, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
                 }
+                
+                if(Actual_Token.type == _keyword && (strcmp(Actual_Token.data.str_data,"None") == 0))
+                {
+                    generateInstruction(I_PUSHS, P_NIL, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
+                }
 
                 push_TopTerminal(&Stack, SYMBOL_SHIFT, Actual_Token.type);
                 sPush(&Stack, column, Actual_Token.type);

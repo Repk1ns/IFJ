@@ -772,8 +772,8 @@ EXIT int@4
 LABEL %type113
 POPFRAME
 POPS GF@%expret
-DEFVAR GF@s
-MOVE GF@s GF@%expret
+DEFVAR LF@s
+MOVE LF@s GF@%expret
 CREATEFRAME
 DEFVAR TF@%1
 MOVE TF@%1 string@o\032=\032
