@@ -312,7 +312,7 @@ int IdRule(int Result)
         //musime si osetrit, ci nahodou sa nejedna o redefiniciu funkcie
         prevDefFun = SymTableSearch(_ST, _Token.data.str_data, SIZE_OF_SYMTABLE_GLOBAL);
 
-        globalDef = SymTableSearch(_ST, _Token.data.str_data, SIZE_OF_SYMTABLE_GLOBAL);//zjisteni zda jiz byla promenna v programu deklarovana globalne
+        globalDef = prevDefFun;//zjisteni zda jiz byla promenna v programu deklarovana globalne
 
         //ak sme nasli
 
@@ -325,7 +325,7 @@ int IdRule(int Result)
         SymTableInsert(_STlocal,_Token,_IDvariable, ID_PARAMETERS, NO_PARAM, SIZE_OF_SYMTABLE_LOCAL);
         //osetrenie aby sme nedefinovali uz definovanu globalnu premennu
         globalDef = SymTableSearch(_ST, _Token.data.str_data, SIZE_OF_SYMTABLE_GLOBAL);
-        if(globalDef != NULL) 
+        if(globalDef != NULL)
         {
             if(globalDef->Type != _IDfunction)
             {
@@ -807,7 +807,7 @@ int IdRule(int Result)
 
                                     I.instType = I_DEFVAR;
 
-                                    I.prefix1 = P_GF;
+                                    I.prefix1 = P_LF;
                                     I.data1 = identifier0.data;
 
 
@@ -821,12 +821,12 @@ int IdRule(int Result)
                                 }
                                 else
                                 {
-                                    generateInstruction(I_DEFVAR, P_GF, identifier0.data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+                                    generateInstruction(I_DEFVAR, P_LF, identifier0.data, P_NULL, pomocna_data, P_NULL, pomocna_data);
                                 }
                             }
 
                             sprintf(pomocna_data.str_data, "%%expret");
-                            generateInstruction(I_MOVE, P_GF, identifier0.data, P_GF, pomocna_data, P_NULL, pomocna_data);
+                            generateInstruction(I_MOVE, P_LF, identifier0.data, P_GF, pomocna_data, P_NULL, pomocna_data);
 
                         }
                         //ak je token identifikator, teraz predpokladame, ze sa jedna o volanie funkcie, ak sa nejedna, urcite to je chyba
