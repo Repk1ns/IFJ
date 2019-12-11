@@ -2111,6 +2111,7 @@ int DedentRule(int Result)
 int WhileRule(int Result)
 {
     condCounter++;
+    int whileCounter = condCounter;
     inWhile = true;
     post = _IL->last;//globalni ukazatel na pozici v seznamu instrukci pro pripadne vkladani defvar mimo cyklus
 
@@ -2134,7 +2135,7 @@ int WhileRule(int Result)
         listPostInsert(_IL, I, NULL);
     }
 
-    sprintf(pomocna_data.str_data, "%%whileA%d", condCounter);
+    sprintf(pomocna_data.str_data, "%%whileA%d", whileCounter);
     generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
 
 
@@ -2272,8 +2273,8 @@ int WhileRule(int Result)
 
                 Result = StatRule(Result);
 
-                sprintf(pomocna_data2.str_data, "%%whileA%d", condCounter);
-                sprintf(pomocna_data1.str_data, "%%whileB%d", condCounter);
+                sprintf(pomocna_data2.str_data, "%%whileA%d", whileCounter);
+                sprintf(pomocna_data1.str_data, "%%whileB%d", whileCounter);
                 generateInstruction(I_JUMP, P_LABEL, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
                 generateInstruction(I_LABEL, P_LABEL, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
                 inWhile = false;
