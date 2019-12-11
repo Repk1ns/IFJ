@@ -38,6 +38,7 @@ union Data pomocna_data; //pomocna struktura pro generaci kodu
 union Data pomocna_data1; //druha pomocna struktura pro generaci kodu
 union Data pomocna_data2; //treti pomocna struktura pro generaci kodu
 int condCounter = 0;
+int elseCounter = 0;
 int typCondCounter = 0;
 bool inWhile = false;
 bool firstDef = true;
@@ -1716,9 +1717,11 @@ int ElseRule(int Result)
     //ak to je else, simulujeme pravidlo pre else statemts
     if(strcmp(_Token.data.str_data, "else") == 0 )
     {
-        sprintf(pomocna_data2.str_data, "%%else%d", condCounter);
+        elseCounter++;
+        union Data elseData;
+        sprintf(elseData.str_data, "%%else%d", elseCounter);
         sprintf(pomocna_data1.str_data, "%%if%d", condCounter);
-        generateInstruction(I_JUMP, P_LABEL, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+        generateInstruction(I_JUMP, P_LABEL, elseData, P_NULL, pomocna_data, P_NULL, pomocna_data);
         generateInstruction(I_LABEL, P_LABEL, pomocna_data1, P_NULL, pomocna_data, P_NULL, pomocna_data);
 
         //nacitame dalsi _Token, co musi byt :
@@ -1743,8 +1746,8 @@ int ElseRule(int Result)
 
                     Result = StatRule(Result);
 
-                    sprintf(pomocna_data2.str_data, "%%else%d", condCounter);
-                    generateInstruction(I_LABEL, P_LABEL, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+                    generateInstruction(I_LABEL, P_LABEL, elseData, P_NULL, pomocna_data, P_NULL, pomocna_data);
 
                 }
             }
