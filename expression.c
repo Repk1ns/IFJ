@@ -1101,7 +1101,15 @@ int Expression(Symbol_t* token, bool preLoadToken, void *ST_global, void * ST_lo
                 {
                     if(IsItDef)
                     {
-                        generateInstruction(I_PUSHS, P_LF, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
+                        item = SymTableSearch(ST_global, Actual_Token.data.str_data, SIZE_OF_SYMTABLE_GLOBAL);
+                        if(item != NULL)
+                        {
+                            generateInstruction(I_PUSHS, P_GF, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
+                        }
+                        else
+                        {
+                            generateInstruction(I_PUSHS, P_LF, Actual_Token.data, P_NULL, Actual_Token.data, P_NULL, Actual_Token.data);
+                        }
                     }
                     else
                     {
