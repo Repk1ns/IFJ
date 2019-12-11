@@ -119,9 +119,6 @@ void type_check_add(int *cnt)
     //zjisteni typu (0,3)
     generateInstruction(I_TYPE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
     generateInstruction(I_TYPE, P_LF, pomocna_data3, P_LF, pomocna_data2, P_NULL, pomocna_data);
-    //promenna pro podminku
-    sprintf(pomocna_data3.str_data, "%%cond");
-    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
 
     (*cnt)++;
 
@@ -292,9 +289,6 @@ void type_check_mul(int *cnt)
     //zjisteni typu (0,3)
     generateInstruction(I_TYPE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
     generateInstruction(I_TYPE, P_LF, pomocna_data3, P_LF, pomocna_data2, P_NULL, pomocna_data);
-    //promenna pro podminku
-    sprintf(pomocna_data3.str_data, "%%cond");
-    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
 
     (*cnt)++;
 
@@ -438,9 +432,6 @@ void type_check_sub(int *cnt)
     //zjisteni typu (0,3)
     generateInstruction(I_TYPE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
     generateInstruction(I_TYPE, P_LF, pomocna_data3, P_LF, pomocna_data2, P_NULL, pomocna_data);
-    //promenna pro podminku
-    sprintf(pomocna_data3.str_data, "%%cond");
-    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
 
     (*cnt)++;
 
@@ -584,9 +575,6 @@ void type_check_div(int *cnt)
     //zjisteni typu (0,3)
     generateInstruction(I_TYPE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
     generateInstruction(I_TYPE, P_LF, pomocna_data3, P_LF, pomocna_data2, P_NULL, pomocna_data);
-    //promenna pro podminku
-    sprintf(pomocna_data3.str_data, "%%cond");
-    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
 
     (*cnt)++;
 
@@ -706,9 +694,6 @@ void type_check_idiv(int *cnt)
     //zjisteni typu (0,3)
     generateInstruction(I_TYPE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
     generateInstruction(I_TYPE, P_LF, pomocna_data3, P_LF, pomocna_data2, P_NULL, pomocna_data);
-    //promenna pro podminku
-    sprintf(pomocna_data3.str_data, "%%cond");
-    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
 
     (*cnt)++;
 
@@ -828,9 +813,6 @@ void type_check_relation(int *cnt)
     //zjisteni typu (0,3)
     generateInstruction(I_TYPE, P_LF, pomocna_data, P_LF, pomocna_data1, P_NULL, pomocna_data);
     generateInstruction(I_TYPE, P_LF, pomocna_data3, P_LF, pomocna_data2, P_NULL, pomocna_data);
-    //promenna pro podminku
-    sprintf(pomocna_data3.str_data, "%%cond");
-    generateInstruction(I_DEFVAR, P_LF, pomocna_data3, P_NULL, pomocna_data, P_NULL, pomocna_data);
 
     (*cnt)++;
 

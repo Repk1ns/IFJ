@@ -66,17 +66,19 @@ void listInsertLast(tListOfInstr *L, tInstr I)
 void listPostInsert(tListOfInstr *L, tInstr I, tListItem *X)
 // vlozi novou instruci za instrukci X, popripade na zacatek nebo konec seznamu
 {
+
+  tListItem *newItem;
+  newItem = malloc(sizeof (tListItem));
+  if(newItem == NULL)
+  {
+    fprintf(stderr, "ERROR of allocation!\n");
+    exit(INTERNAL_ERROR);
+  }
+
+  newItem->Instruction = I;
+
   if(X != NULL)
   {
-      tListItem *newItem;
-        newItem = malloc(sizeof (tListItem));
-    if(newItem == NULL)
-    {
-        fprintf(stderr, "ERROR of allocation!\n");
-        exit(INTERNAL_ERROR);
-    }
-
-    newItem->Instruction = I;
     if(L->first == NULL)
     {
         newItem->nextItem = NULL;
@@ -97,6 +99,20 @@ void listPostInsert(tListOfInstr *L, tInstr I, tListItem *X)
             X->nextItem = newItem;
             newItem->nextItem = temp;
         }
+    }
+  }
+  else//pokud je X NULL
+  {
+    if(L->first == NULL)//pokud je seznam prazdny, vloz polozku na zacatek
+    {
+        newItem->nextItem = NULL;
+        L->first = newItem;
+        L->last = newItem;
+    }
+    else//pokud neni prazdny, vloz ji taky na zacatek
+    {
+        newItem->nextItem = L->first;
+        L->first = newItem;
     }
   }
 }
