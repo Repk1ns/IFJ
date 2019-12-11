@@ -2249,7 +2249,7 @@ int WhileRule(int Result)
     sprintf(pomocna_data.str_data, "%%cond");
     generateInstruction(I_NOT, P_GF, pomocna_data, P_GF, pomocna_data, P_NULL, pomocna_data);
     sprintf(pomocna_data2.str_data, "true");
-    sprintf(pomocna_data1.str_data, "%%whileB%d", condCounter);
+    sprintf(pomocna_data1.str_data, "%%whileB%d", whileCounter);
     generateInstruction(I_JUMPIFEQ, P_LABEL, pomocna_data1, P_GF, pomocna_data, P_BOOL, pomocna_data2);
 
     if(Result!= IT_IS_OKAY) return Result;
