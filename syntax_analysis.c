@@ -421,7 +421,23 @@ int IdRule(int Result)
                             if(ExpressionUsed == false)
                             {
                                 sprintf(pomocna_data.str_data, "%%expret");
-                                generateInstruction(I_DEFVAR, P_GF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+                                tInstr I;
+
+                                I.instType = I_DEFVAR;
+
+                                I.prefix1 = P_GF;
+                                I.data1 = pomocna_data;
+
+
+                                I.prefix2 = P_NULL;
+                                I.data2 = pomocna_data;
+
+                                I.prefix3 = P_NULL;
+                                I.data3 = pomocna_data;
+
+                                listPostInsert(_IL, I, NULL);
+
                                 ExpressionUsed = true;
                             }
 
@@ -510,7 +526,23 @@ int IdRule(int Result)
                         if(ExpressionUsed == false)
                         {
                             sprintf(pomocna_data.str_data, "%%expret");
-                            generateInstruction(I_DEFVAR, P_GF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+                            tInstr I;
+
+                            I.instType = I_DEFVAR;
+
+                            I.prefix1 = P_GF;
+                            I.data1 = pomocna_data;
+
+
+                            I.prefix2 = P_NULL;
+                            I.data2 = pomocna_data;
+
+                            I.prefix3 = P_NULL;
+                            I.data3 = pomocna_data;
+
+                            listPostInsert(_IL, I, NULL);
+
                             ExpressionUsed = true;
                         }
 
@@ -561,7 +593,23 @@ int IdRule(int Result)
                         if(ExpressionUsed == false)
                         {
                             sprintf(pomocna_data.str_data, "%%expret");
-                            generateInstruction(I_DEFVAR, P_GF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+                            tInstr I;
+
+                            I.instType = I_DEFVAR;
+
+                            I.prefix1 = P_GF;
+                            I.data1 = pomocna_data;
+
+
+                            I.prefix2 = P_NULL;
+                            I.data2 = pomocna_data;
+
+                            I.prefix3 = P_NULL;
+                            I.data3 = pomocna_data;
+
+                            listPostInsert(_IL, I, NULL);
+
                             ExpressionUsed = true;
                         }
 
@@ -693,7 +741,22 @@ int IdRule(int Result)
                             if(ExpressionUsed == false)
                             {
                                 sprintf(pomocna_data.str_data, "%%expret");
-                                generateInstruction(I_DEFVAR, P_GF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+                                tInstr I;
+
+                                I.instType = I_DEFVAR;
+
+                                I.prefix1 = P_GF;
+                                I.data1 = pomocna_data;
+
+
+                                I.prefix2 = P_NULL;
+                                I.data2 = pomocna_data;
+
+                                I.prefix3 = P_NULL;
+                                I.data3 = pomocna_data;
+
+                                listPostInsert(_IL, I, NULL);
                                 ExpressionUsed = true;
                             }
 
@@ -789,7 +852,22 @@ int IdRule(int Result)
                             if(ExpressionUsed == false)
                             {
                                 sprintf(pomocna_data.str_data, "%%expret");
-                                generateInstruction(I_DEFVAR, P_GF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+                                tInstr I;
+
+                                I.instType = I_DEFVAR;
+
+                                I.prefix1 = P_GF;
+                                I.data1 = pomocna_data;
+
+
+                                I.prefix2 = P_NULL;
+                                I.data2 = pomocna_data;
+
+                                I.prefix3 = P_NULL;
+                                I.data3 = pomocna_data;
+
+                                listPostInsert(_IL, I, NULL);
                                 ExpressionUsed = true;
                             }
 
@@ -1206,7 +1284,21 @@ int BuiltInFuncRule(int Result)
             sprintf(pomocna_data.str_data, "%%cond");
             if(condCounter == 1)
             {
-                generateInstruction(I_DEFVAR, P_GF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+                tInstr I;
+
+                I.instType = I_DEFVAR;
+
+                I.prefix1 = P_GF;
+                I.data1 = pomocna_data;
+
+
+                I.prefix2 = P_NULL;
+                I.data2 = pomocna_data;
+
+                I.prefix3 = P_NULL;
+                I.data3 = pomocna_data;
+
+                listPostInsert(_IL, I, NULL);
             }
             sprintf(pomocna_data.str_data, "%%buff");
             generateInstruction(I_DEFVAR, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
@@ -1562,7 +1654,22 @@ int KeywordsRule(int Result)
         if(ExpressionUsed == false)//defvar nesmim pouzivat v tele cyklu
         {
             sprintf(pomocna_data.str_data, "%%expret");
-            generateInstruction(I_DEFVAR, P_GF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+            tInstr I;
+
+            I.instType = I_DEFVAR;
+
+            I.prefix1 = P_GF;
+            I.data1 = pomocna_data;
+
+
+            I.prefix2 = P_NULL;
+            I.data2 = pomocna_data;
+
+            I.prefix3 = P_NULL;
+            I.data3 = pomocna_data;
+
+            listPostInsert(_IL, I, NULL);
             ExpressionUsed = true;
         }
 
@@ -1593,7 +1700,22 @@ int KeywordsRule(int Result)
             if(ExpressionUsed == false)
             {
                 sprintf(pomocna_data.str_data, "%%expret");
-                generateInstruction(I_DEFVAR, P_GF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+                tInstr I;
+
+                I.instType = I_DEFVAR;
+
+                I.prefix1 = P_GF;
+                I.data1 = pomocna_data;
+
+
+                I.prefix2 = P_NULL;
+                I.data2 = pomocna_data;
+
+                I.prefix3 = P_NULL;
+                I.data3 = pomocna_data;
+
+                listPostInsert(_IL, I, NULL);
                 ExpressionUsed = true;
             }
 
@@ -1632,7 +1754,22 @@ int IfRule(int Result)
     if(ExpressionUsed == false)
     {
         sprintf(pomocna_data.str_data, "%%expret");
-        generateInstruction(I_DEFVAR, P_GF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+        tInstr I;
+
+        I.instType = I_DEFVAR;
+
+        I.prefix1 = P_GF;
+        I.data1 = pomocna_data;
+
+
+        I.prefix2 = P_NULL;
+        I.data2 = pomocna_data;
+
+        I.prefix3 = P_NULL;
+        I.data3 = pomocna_data;
+
+        listPostInsert(_IL, I, NULL);
         ExpressionUsed = true;
     }
 
@@ -1652,10 +1789,113 @@ int IfRule(int Result)
     sprintf(pomocna_data1.str_data, "%%expret");
     if(condCounter == 1)
     {
-        generateInstruction(I_DEFVAR, P_GF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+        tInstr I;
+
+        I.instType = I_DEFVAR;
+
+        I.prefix1 = P_GF;
+        I.data1 = pomocna_data;
+
+
+        I.prefix2 = P_NULL;
+        I.data2 = pomocna_data;
+
+        I.prefix3 = P_NULL;
+        I.data3 = pomocna_data;
+
+        listPostInsert(_IL, I, NULL);
     }
     generateInstruction(I_MOVE, P_GF, pomocna_data, P_GF, pomocna_data1, P_NULL, pomocna_data);
 
+    //typova kontrola pro vyraz
+    //zjisteni typu
+    generateInstruction(I_TYPE, P_GF, pomocna_data1, P_GF, pomocna_data, P_NULL, pomocna_data);
+
+    typCondCounter++;
+    int konecNum = typCondCounter;
+
+    //kdyz je %cond int
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter);
+    sprintf(pomocna_data1.str_data, "%%expret");
+    sprintf(pomocna_data2.str_data, "int");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_GF, pomocna_data1, P_STRING, pomocna_data2);
+
+    sprintf(pomocna_data2.str_data, "%%cond");
+    generateInstruction(I_INT2FLOAT, P_GF, pomocna_data2, P_GF, pomocna_data2, P_NULL, pomocna_data2);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    typCondCounter++;
+
+    //kdyz je %cond string
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter);
+    sprintf(pomocna_data1.str_data, "%%expret");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_GF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //kdyz je %cond ''
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter+1);
+    sprintf(pomocna_data1.str_data, "%%cond");
+    char *str = "";
+    sprintf(pomocna_data2.str_data, "%s", str);
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_GF, pomocna_data1, P_STRING, pomocna_data2);
+    //priradim false a jdu na konec
+    sprintf(pomocna_data2.str_data, "false");
+    generateInstruction(I_MOVE, P_GF, pomocna_data1, P_BOOL, pomocna_data2, P_NULL, pomocna_data2);
+    sprintf(pomocna_data2.str_data, "%%konec%d", konecNum);
+    generateInstruction(I_JUMP, P_LABEL, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter+1);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //priradim true
+    sprintf(pomocna_data2.str_data, "true");
+    generateInstruction(I_MOVE, P_GF, pomocna_data1, P_BOOL, pomocna_data2, P_NULL, pomocna_data2);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    typCondCounter = typCondCounter +2;
+
+    //kdyz neni %cond bool (ted uz musi byt float)
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter);
+    sprintf(pomocna_data1.str_data, "%%expret");
+    sprintf(pomocna_data2.str_data, "bool");
+    generateInstruction(I_JUMPIFEQ, P_LABEL, pomocna_data, P_GF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //kdyz je %cond 0.0
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter+1);
+    sprintf(pomocna_data1.str_data, "%%cond");
+    pomocna_data2.dbl_data = 0.0;
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_GF, pomocna_data1, P_FLOAT, pomocna_data2);
+    //priradim false a jdu na konec
+    sprintf(pomocna_data2.str_data, "false");
+    generateInstruction(I_MOVE, P_GF, pomocna_data1, P_BOOL, pomocna_data2, P_NULL, pomocna_data2);
+    sprintf(pomocna_data2.str_data, "%%konec%d", konecNum);
+    generateInstruction(I_JUMP, P_LABEL, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter+1);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //priradim true
+    sprintf(pomocna_data2.str_data, "true");
+    generateInstruction(I_MOVE, P_GF, pomocna_data1, P_BOOL, pomocna_data2, P_NULL, pomocna_data2);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    typCondCounter = typCondCounter +2;
+
+    sprintf(pomocna_data2.str_data, "%%konec%d", konecNum);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+
+    //jedeme dal
+    sprintf(pomocna_data.str_data, "%%cond");
     generateInstruction(I_NOT, P_GF, pomocna_data, P_GF, pomocna_data, P_NULL, pomocna_data);
     sprintf(pomocna_data1.str_data, "%%if%d", condCounter);
     sprintf(pomocna_data2.str_data, "true");
@@ -1824,7 +2064,21 @@ int WhileRule(int Result)
     sprintf(pomocna_data.str_data, "%%cond");
     if(condCounter == 1)
     {
-        generateInstruction(I_DEFVAR, P_GF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+        tInstr I;
+
+        I.instType = I_DEFVAR;
+
+        I.prefix1 = P_GF;
+        I.data1 = pomocna_data;
+
+
+        I.prefix2 = P_NULL;
+        I.data2 = pomocna_data;
+
+        I.prefix3 = P_NULL;
+        I.data3 = pomocna_data;
+
+        listPostInsert(_IL, I, NULL);
     }
 
     sprintf(pomocna_data.str_data, "%%whileA%d", condCounter);
@@ -1849,6 +2103,96 @@ int WhileRule(int Result)
     sprintf(pomocna_data1.str_data, "%%expret");
 
     generateInstruction(I_MOVE, P_GF, pomocna_data, P_GF, pomocna_data1, P_NULL, pomocna_data);
+
+    //typova kontrola pro vyraz
+    //zjisteni typu
+    generateInstruction(I_TYPE, P_GF, pomocna_data1, P_GF, pomocna_data, P_NULL, pomocna_data);
+
+    typCondCounter++;
+    int konecNum = typCondCounter;
+
+    //kdyz je %cond int
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter);
+    sprintf(pomocna_data1.str_data, "%%expret");
+    sprintf(pomocna_data2.str_data, "int");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_GF, pomocna_data1, P_STRING, pomocna_data2);
+
+    sprintf(pomocna_data2.str_data, "%%cond");
+    generateInstruction(I_INT2FLOAT, P_GF, pomocna_data2, P_GF, pomocna_data2, P_NULL, pomocna_data2);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    typCondCounter++;
+
+    //kdyz je %cond string
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter);
+    sprintf(pomocna_data1.str_data, "%%expret");
+    sprintf(pomocna_data2.str_data, "string");
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_GF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //kdyz je %cond ''
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter+1);
+    sprintf(pomocna_data1.str_data, "%%cond");
+    char *str = "";
+    sprintf(pomocna_data2.str_data, "%s", str);
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_GF, pomocna_data1, P_STRING, pomocna_data2);
+    //priradim false a jdu na konec
+    sprintf(pomocna_data2.str_data, "false");
+    generateInstruction(I_MOVE, P_GF, pomocna_data1, P_BOOL, pomocna_data2, P_NULL, pomocna_data2);
+    sprintf(pomocna_data2.str_data, "%%konec%d", konecNum);
+    generateInstruction(I_JUMP, P_LABEL, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter+1);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //priradim true
+    sprintf(pomocna_data2.str_data, "true");
+    generateInstruction(I_MOVE, P_GF, pomocna_data1, P_BOOL, pomocna_data2, P_NULL, pomocna_data2);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    typCondCounter = typCondCounter +2;
+
+    //kdyz neni %cond bool (ted uz musi byt float)
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter);
+    sprintf(pomocna_data1.str_data, "%%expret");
+    sprintf(pomocna_data2.str_data, "bool");
+    generateInstruction(I_JUMPIFEQ, P_LABEL, pomocna_data, P_GF, pomocna_data1, P_STRING, pomocna_data2);
+
+    //kdyz je %cond 0.0
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter+1);
+    sprintf(pomocna_data1.str_data, "%%cond");
+    pomocna_data2.dbl_data = 0.0;
+    generateInstruction(I_JUMPIFNEQ, P_LABEL, pomocna_data, P_GF, pomocna_data1, P_FLOAT, pomocna_data2);
+    //priradim false a jdu na konec
+    sprintf(pomocna_data2.str_data, "false");
+    generateInstruction(I_MOVE, P_GF, pomocna_data1, P_BOOL, pomocna_data2, P_NULL, pomocna_data2);
+    sprintf(pomocna_data2.str_data, "%%konec%d", konecNum);
+    generateInstruction(I_JUMP, P_LABEL, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    //label ifu v ifu
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter+1);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+    //priradim true
+    sprintf(pomocna_data2.str_data, "true");
+    generateInstruction(I_MOVE, P_GF, pomocna_data1, P_BOOL, pomocna_data2, P_NULL, pomocna_data2);
+
+    //label ifu
+    sprintf(pomocna_data.str_data, "%%type%d", typCondCounter);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+    typCondCounter = typCondCounter +2;
+
+    sprintf(pomocna_data2.str_data, "%%konec%d", konecNum);
+    generateInstruction(I_LABEL, P_LABEL, pomocna_data2, P_NULL, pomocna_data, P_NULL, pomocna_data);
+
+
+    //jedeme dal
+    sprintf(pomocna_data.str_data, "%%cond");
     generateInstruction(I_NOT, P_GF, pomocna_data, P_GF, pomocna_data, P_NULL, pomocna_data);
     sprintf(pomocna_data2.str_data, "true");
     sprintf(pomocna_data1.str_data, "%%whileB%d", condCounter);
