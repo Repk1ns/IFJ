@@ -773,42 +773,20 @@ int IdRule(int Result)
                                 _ActualNumberOfParams = 0;
                             }
                             //inak je to globalna premenna, tak volame PSA
-                            else Result = Expression(&_Token, true,_ST, _STlocal, true, &typCondCounter);
-
-                            if(ExpressionUsed == false)
+                            else
                             {
-                                sprintf(pomocna_data.str_data, "%%expret");
-
-                                tInstr I;
-
-                                I.instType = I_DEFVAR;
-
-                                I.prefix1 = P_GF;
-                                I.data1 = pomocna_data;
 
 
-                                I.prefix2 = P_NULL;
-                                I.data2 = pomocna_data;
-
-                                I.prefix3 = P_NULL;
-                                I.data3 = pomocna_data;
-
-                                listPostInsert(_IL, I, NULL);
-                                ExpressionUsed = true;
-                            }
-
-
-
-                            if(globalDef == NULL)
-                            {
-                                if(inWhile) //pripad kdyz jsem v cyklu while, definuju promennou mimo cyklus
+                                if(ExpressionUsed == false)
                                 {
+                                    sprintf(pomocna_data.str_data, "%%expret");
+
                                     tInstr I;
 
                                     I.instType = I_DEFVAR;
 
-                                    I.prefix1 = P_LF;
-                                    I.data1 = identifier0.data;
+                                    I.prefix1 = P_GF;
+                                    I.data1 = pomocna_data;
 
 
                                     I.prefix2 = P_NULL;
@@ -817,17 +795,41 @@ int IdRule(int Result)
                                     I.prefix3 = P_NULL;
                                     I.data3 = pomocna_data;
 
-                                    listPostInsert(_IL, I, post);
+                                    listPostInsert(_IL, I, NULL);
+                                    ExpressionUsed = true;
                                 }
-                                else
+
+                                Result = Expression(&_Token, true,_ST, _STlocal, true, &typCondCounter);
+
+                                if(localDef == NULL)
                                 {
-                                    generateInstruction(I_DEFVAR, P_LF, identifier0.data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+                                    if(inWhile) //pripad kdyz jsem v cyklu while, definuju promennou mimo cyklus
+                                    {
+                                        tInstr I;
+
+                                        I.instType = I_DEFVAR;
+
+                                        I.prefix1 = P_LF;
+                                        I.data1 = identifier0.data;
+
+
+                                        I.prefix2 = P_NULL;
+                                        I.data2 = pomocna_data;
+
+                                        I.prefix3 = P_NULL;
+                                        I.data3 = pomocna_data;
+
+                                        listPostInsert(_IL, I, post);
+                                    }
+                                    else
+                                    {
+                                        generateInstruction(I_DEFVAR, P_LF, identifier0.data, P_NULL, pomocna_data, P_NULL, pomocna_data);
+                                    }
                                 }
+
+                                sprintf(pomocna_data.str_data, "%%expret");
+                                generateInstruction(I_MOVE, P_LF, identifier0.data, P_GF, pomocna_data, P_NULL, pomocna_data);
                             }
-
-                            sprintf(pomocna_data.str_data, "%%expret");
-                            generateInstruction(I_MOVE, P_LF, identifier0.data, P_GF, pomocna_data, P_NULL, pomocna_data);
-
                         }
                         //ak je token identifikator, teraz predpokladame, ze sa jedna o volanie funkcie, ak sa nejedna, urcite to je chyba
                         else if(_Token.type == _id)
