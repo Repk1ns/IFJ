@@ -55,6 +55,34 @@ int Parse(SymTable_t *ST, void *Stack, void *List)
     LexStack = Stack;
     _ST = ST;
 
+    // do {
+    //     _Token = getNextSymbol(stdin, LexStack);
+    //     switch (_Token.type){
+    //     case _int:
+    //     {
+    //         printf("type: %d, data: %d\n", _Token.type, _Token.data.int_data);
+    //         break;
+    //     }
+    //     case _double: {
+    //         printf("type: %d, data: %f\n", _Token.type, _Token.data.dbl_data);
+    //         break;
+    //     }
+    //     case _indent:
+    //     case _dedent:
+    //     {
+    //         printf("type: %d\n", _Token.type);
+    //         break;
+    //     }
+    //     default: {
+
+    //         printf("type: %d, data: %s\n", _Token.type, _Token.data.str_data);
+    //         break;
+    //     }
+    //     }
+    //     printf("--------------------------------------\n");
+    // } while (_Token.type != _eof);
+
+
     Result = ProgRule(Result);
     //ostala nam funkcia, ktora nebola definovana
     if(_NumberOfNotDefFun != 0) Result = SEMANTIC_ERROR;
@@ -294,6 +322,15 @@ int IdRule(int Result)
         localDef = SymTableSearch(_STlocal, _Token.data.str_data, SIZE_OF_SYMTABLE_LOCAL);//zjisteni zda jiz byla promenna v programu deklarovana lokalne
 
         SymTableInsert(_STlocal,_Token,_IDvariable, ID_PARAMETERS, NO_PARAM, SIZE_OF_SYMTABLE_LOCAL);
+        //osetrenie aby sme nedefinovali uz definovanu globalnu premennu
+        globalDef = SymTableSearch(_ST, _Token.data.str_data, SIZE_OF_SYMTABLE_GLOBAL);
+        if(globalDef != NULL) 
+        {
+            if(globalDef->Type != _IDfunction)
+            {
+                Result = SEMANTIC_ERROR; // nastava redefinicia globalnej premennej
+            }
+        }
     }
 
     if(Result == IT_IS_OKAY)
@@ -880,7 +917,12 @@ int IdRule(int Result)
                 //sme v globalnom kontexte, volanie funkcie bez toho aby sa nasla je chyba
                 else
                 {
-                    Result = SEMANTIC_ERROR;
+                    //zistenie, ci sa jedna o aky typ chyby sa jedna
+                    _Token = getNextSymbol(stdin,LexStack);
+                    if(_Token.type == _eol || _Token.type == _eof ||
+                        _Token.type == _operator)
+                        Result = SYNTAX_ERROR;
+                    else Result = SEMANTIC_ERROR;
                 }
 
             }

@@ -1,15 +1,338 @@
 .IFJcode19
 DEFVAR GF@%expret
 CLEARS
-PUSHS float@0x1.9p+6
+PUSHS string@Toto\032je\032nejaky\032text
 POPS GF@%expret
-DEFVAR GF@a
-MOVE GF@a GF@%expret
+DEFVAR GF@s1
+MOVE GF@s1 GF@%expret
+CLEARS
+PUSHS GF@s1
+PUSHS string@,\032ktery\032jeste\032trochu\032obohatime
+CREATEFRAME
+PUSHFRAME
+DEFVAR LF@%typ1
+DEFVAR LF@%typ2
+DEFVAR LF@%1
+DEFVAR LF@%2
+POPS LF@%2
+POPS LF@%1
+TYPE LF@%typ1 LF@%1
+TYPE LF@%typ2 LF@%2
+DEFVAR LF@%cond
+JUMPIFNEQ %type1 LF@%typ1 string@int
+JUMPIFNEQ %type2 LF@%typ2 string@float
+INT2FLOAT LF@%1 LF@%1
+LABEL %type2
+JUMPIFNEQ %type3 LF@%typ2 string@string
+EXIT int@4 
+LABEL %type3
+PUSHS LF@%1
+PUSHS LF@%2
+ADDS
+LABEL %type1
+JUMPIFNEQ %type4 LF@%typ1 string@float
+JUMPIFNEQ %type5 LF@%typ2 string@int
+INT2FLOAT LF@%2 LF@%2
+LABEL %type5
+JUMPIFNEQ %type6 LF@%typ2 string@string
+EXIT int@4 
+LABEL %type6
+PUSHS LF@%1
+PUSHS LF@%2
+ADDS
+LABEL %type4
+JUMPIFNEQ %type7 LF@%typ1 string@string
+JUMPIFNEQ %type8 LF@%typ2 string@string
+DEFVAR LF@%string
+CONCAT LF@%string LF@%1 LF@%2
+PUSHS LF@%string
+JUMP %type9
+LABEL %type8
+EXIT int@4 
+LABEL %type9
+LABEL %type7
+POPFRAME
+POPS GF@%expret
+DEFVAR GF@s2
+MOVE GF@s2 GF@%expret
 CREATEFRAME
 DEFVAR TF@%1
-MOVE TF@%1 GF@a
+MOVE TF@%1 GF@s1
+DEFVAR TF@%2
+MOVE TF@%2 string@\010
+DEFVAR TF@%3
+MOVE TF@%3 GF@s2
+PUSHFRAME
+DEFVAR LF@%retval
+MOVE LF@%retval nil@nil
+WRITE LF@%1
+WRITE LF@%2
+WRITE LF@%3
+POPFRAME
+CREATEFRAME
+DEFVAR TF@%1
+MOVE TF@%1 GF@s1
+PUSHFRAME
+DEFVAR LF@%retval
+MOVE LF@%retval nil@nil
+DEFVAR LF@%typ
+TYPE LF@%typ LF@%1
+JUMPIFEQ %len11 LF@%typ string@string
+EXIT int@4 
+LABEL %len11
+STRLEN LF@%retval LF@%1
+POPFRAME
+DEFVAR GF@s1len
+MOVE GF@s1len TF@%retval
+CLEARS
+PUSHS GF@s1len
+PUSHS int@4 
+CREATEFRAME
+PUSHFRAME
+DEFVAR LF@%typ1
+DEFVAR LF@%typ2
+DEFVAR LF@%1
+DEFVAR LF@%2
+POPS LF@%2
+POPS LF@%1
+TYPE LF@%typ1 LF@%1
+TYPE LF@%typ2 LF@%2
+DEFVAR LF@%cond
+JUMPIFNEQ %type12 LF@%typ1 string@int
+JUMPIFNEQ %type13 LF@%typ2 string@float
+INT2FLOAT LF@%1 LF@%1
+LABEL %type13
+JUMPIFNEQ %type14 LF@%typ2 string@string
+EXIT int@4 
+LABEL %type14
+PUSHS LF@%1
+PUSHS LF@%2
+SUBS
+LABEL %type12
+JUMPIFNEQ %type15 LF@%typ1 string@float
+JUMPIFNEQ %type16 LF@%typ2 string@int
+INT2FLOAT LF@%2 LF@%2
+LABEL %type16
+JUMPIFNEQ %type17 LF@%typ2 string@string
+EXIT int@4 
+LABEL %type17
+PUSHS LF@%1
+PUSHS LF@%2
+SUBS
+LABEL %type15
+JUMPIFNEQ %type18 LF@%typ1 string@string
+EXIT int@4 
+LABEL %type18
+POPFRAME
+POPS GF@%expret
+MOVE GF@s1len GF@%expret
+CREATEFRAME
+DEFVAR TF@%1
+MOVE TF@%1 GF@s2
+DEFVAR TF@%2
+MOVE TF@%2 GF@s1len
+DEFVAR TF@%3
+MOVE TF@%3 int@4
+PUSHFRAME
+DEFVAR LF@%retval
+MOVE LF@%retval nil@nil
+DEFVAR LF@%typ
+TYPE LF@%typ LF@%1
+JUMPIFEQ %substr20 LF@%typ string@string
+EXIT int@4 
+LABEL %substr20
+TYPE LF@%typ LF@%2
+JUMPIFEQ %substr21 LF@%typ string@int
+EXIT int@4 
+LABEL %substr21
+TYPE LF@%typ LF@%3
+JUMPIFEQ %substr22 LF@%typ string@int
+EXIT int@4 
+LABEL %substr22
+DEFVAR GF@%cond
+DEFVAR LF@%buff
+LABEL %whileA1
+GT GF@%cond LF@%3 int@0
+NOT GF@%cond GF@%cond
+JUMPIFEQ %whileB1 GF@%cond bool@true
+GETCHAR LF@%buff LF@%1 LF@%2
+CONCAT LF@%retval LF@%retval LF@%buff
+ADD LF@%2 LF@%2 int@1
+SUB LF@%3 LF@%3 int@1
+JUMP %whileA1
+LABEL %whileB1
+POPFRAME
+MOVE GF@s1 TF@%retval
+CLEARS
+PUSHS GF@s1len
+PUSHS int@1 
+CREATEFRAME
+PUSHFRAME
+DEFVAR LF@%typ1
+DEFVAR LF@%typ2
+DEFVAR LF@%1
+DEFVAR LF@%2
+POPS LF@%2
+POPS LF@%1
+TYPE LF@%typ1 LF@%1
+TYPE LF@%typ2 LF@%2
+DEFVAR LF@%cond
+JUMPIFNEQ %type23 LF@%typ1 string@int
+JUMPIFNEQ %type24 LF@%typ2 string@float
+INT2FLOAT LF@%1 LF@%1
+LABEL %type24
+JUMPIFNEQ %type25 LF@%typ2 string@string
+EXIT int@4 
+LABEL %type25
+PUSHS LF@%1
+PUSHS LF@%2
+ADDS
+LABEL %type23
+JUMPIFNEQ %type26 LF@%typ1 string@float
+JUMPIFNEQ %type27 LF@%typ2 string@int
+INT2FLOAT LF@%2 LF@%2
+LABEL %type27
+JUMPIFNEQ %type28 LF@%typ2 string@string
+EXIT int@4 
+LABEL %type28
+PUSHS LF@%1
+PUSHS LF@%2
+ADDS
+LABEL %type26
+JUMPIFNEQ %type29 LF@%typ1 string@string
+JUMPIFNEQ %type30 LF@%typ2 string@string
+DEFVAR LF@%string
+CONCAT LF@%string LF@%1 LF@%2
+PUSHS LF@%string
+JUMP %type31
+LABEL %type30
+EXIT int@4 
+LABEL %type31
+LABEL %type29
+POPFRAME
+POPS GF@%expret
+MOVE GF@s1len GF@%expret
+CREATEFRAME
+DEFVAR TF@%1
+MOVE TF@%1 string@4\032znaky\032od\032
+DEFVAR TF@%2
+MOVE TF@%2 GF@s1len
+DEFVAR TF@%3
+MOVE TF@%3 string@.\032znaku\032v\032"
+DEFVAR TF@%4
+MOVE TF@%4 GF@s2
+DEFVAR TF@%5
+MOVE TF@%5 string@\034:
+DEFVAR TF@%6
+MOVE TF@%6 GF@s1
+PUSHFRAME
+DEFVAR LF@%retval
+MOVE LF@%retval nil@nil
+WRITE LF@%1
+WRITE LF@%2
+WRITE LF@%3
+WRITE LF@%4
+WRITE LF@%5
+WRITE LF@%6
+POPFRAME
+CREATEFRAME
+DEFVAR TF@%1
+MOVE TF@%1 string@Zadejte\032serazenou\032posloupnost\032vsech\032malych\032pismen\032a-h,\032
 PUSHFRAME
 DEFVAR LF@%retval
 MOVE LF@%retval nil@nil
 WRITE LF@%1
 POPFRAME
+CREATEFRAME
+DEFVAR TF@%1
+MOVE TF@%1 string@pricemz\032se\032pismena\032nesmeji\032v\032posloupnosti\032opakovat:\032
+PUSHFRAME
+DEFVAR LF@%retval
+MOVE LF@%retval nil@nil
+WRITE LF@%1
+POPFRAME
+CREATEFRAME
+PUSHFRAME
+DEFVAR LF@%retval
+MOVE LF@%retval nil@nil
+READ LF@%retval string
+POPFRAME
+MOVE GF@s1 TF@%retval
+CLEARS
+PUSHS GF@s1
+CREATEFRAME
+PUSHFRAME
+DEFVAR LF@%typ1
+DEFVAR LF@%typ2
+DEFVAR LF@%1
+DEFVAR LF@%2
+POPS LF@%2
+POPS LF@%1
+TYPE LF@%typ1 LF@%1
+TYPE LF@%typ2 LF@%2
+DEFVAR LF@%cond
+JUMPIFNEQ %type33 LF@%typ1 string@int
+INT2FLOAT LF@%1 LF@%1
+LABEL %type33
+JUMPIFNEQ %type34 LF@%typ2 string@int
+INT2FLOAT LF@%2 LF@%2
+LABEL %type34
+PUSHS LF@%1
+PUSHS LF@%2
+POPFRAME
+EQS
+NOTS
+POPS GF@%expret
+MOVE GF@%cond GF@%expret
+NOT GF@%cond GF@%cond
+JUMPIFEQ %if2 GF@%cond bool@true
+LABEL %whileA3
+CLEARS
+PUSHS GF@s1
+PUSHS string@abcdefgh
+CREATEFRAME
+PUSHFRAME
+DEFVAR LF@%typ1
+DEFVAR LF@%typ2
+DEFVAR LF@%1
+DEFVAR LF@%2
+POPS LF@%2
+POPS LF@%1
+TYPE LF@%typ1 LF@%1
+TYPE LF@%typ2 LF@%2
+DEFVAR LF@%cond
+JUMPIFNEQ %type35 LF@%typ1 string@int
+INT2FLOAT LF@%1 LF@%1
+LABEL %type35
+JUMPIFNEQ %type36 LF@%typ2 string@int
+INT2FLOAT LF@%2 LF@%2
+LABEL %type36
+PUSHS LF@%1
+PUSHS LF@%2
+POPFRAME
+EQS
+NOTS
+POPS GF@%expret
+MOVE GF@%cond GF@%expret
+NOT GF@%cond GF@%cond
+JUMPIFEQ %whileB3 GF@%cond bool@true
+CREATEFRAME
+DEFVAR TF@%1
+MOVE TF@%1 string@Spatne\032zadana\032posloupnost,\032zkuste\032znovu:\032
+PUSHFRAME
+DEFVAR LF@%retval
+MOVE LF@%retval nil@nil
+WRITE LF@%1
+POPFRAME
+CREATEFRAME
+PUSHFRAME
+DEFVAR LF@%retval
+MOVE LF@%retval nil@nil
+READ LF@%retval string
+POPFRAME
+MOVE GF@s1 TF@%retval
+JUMP %whileA3
+LABEL %whileB3
+JUMP %else3
+LABEL %if3
+LABEL %else3

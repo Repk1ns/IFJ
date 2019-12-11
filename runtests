@@ -36,6 +36,7 @@ echo $? > result_file
 if [ $(grep "#output" $file | wc -l) -eq "0"  ]; then
 	echo Nezadan komentar s referencnim resenim
 	output_status=${red}"FAILED"${reset}
+	failed_tests=$(( failed_tests+1 ))
 else
 
 	grep "#output" "$file" | cut -c 9- > ref_file

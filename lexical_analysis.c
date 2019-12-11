@@ -588,7 +588,8 @@ Symbol_t getNextSymbol(FILE* input, void *LexStack) {
         } else if(character == '+' || character == '-' || 
                   character == '/' || character == '*' || 
                   character == '\n' || character == ' ' || 
-                  character == '(' || character == ')'  ) {
+                  character == '(' || character == ')' ||
+                  character == ':') {
           ungetc(character, input);
           symbol.data.dbl_data = combineDouble(symbol.data.int_data, decimal);
           return symbol;

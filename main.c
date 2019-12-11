@@ -35,12 +35,13 @@ int main() {
   if(ST == NULL) return INTERNAL_ERROR;
   //calling parser
   result = Parse(ST, &LexStack, &IL);
-
+  
 
   if(result == IT_IS_OKAY)
   {
     printInstructions(&IL);
   }
+
 
   sDispose(&LexStack);
   //delete symtable
