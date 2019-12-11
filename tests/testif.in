@@ -1,0 +1,8 @@
+
+#output 3
+if a < b:
+  print('ahoj')
+else :
+  inputs() #ahoj 
+inputs() 
+

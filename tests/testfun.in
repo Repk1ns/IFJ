@@ -1,0 +1,8 @@
+#output 0
+def davko () :
+ a = inputs() #ahoj
+ return a
+
+b = davko() 
+len(b)
+print(b)

@@ -1,0 +1,11 @@
+a = 0
+if a == 5 :
+"""
+einstein
+einstein
+einstein
+"""
+ print(a)
+else:
+ print('not a')
+   

@@ -1,0 +1,9 @@
+#output 2
+a = 0
+
+if a<1:
+  def foo(): #_ je mezera
+    print('funkce foo')
+  foo()
+else:
+  pass

@@ -1,0 +1,6 @@
+#output 2
+
+def f():
+ a = f
+
+print(2)

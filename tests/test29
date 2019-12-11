@@ -1,0 +1,9 @@
+#output 0
+def f2():
+ print('hello')
+
+def f1():
+ a=5 
+ a = f3()
+
+f1()

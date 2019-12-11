@@ -1,0 +1,50 @@
+a = 5
+if a == 5 :
+#einstein
+    if a == 5:
+#einstein
+        if a == 5 :
+#einstein
+            if a == 5:
+#einstein
+                if a == 5:
+#einstein
+                    if a == 5:
+#einstein
+                        if a == 5:
+#einstein
+                            if a == 5:
+#einstein
+                                a = 5
+#einstein
+                            else:
+#einstein
+                                a = 5
+                        else:
+#einstein
+                            a = 5
+#einstein
+                    else:
+#einstein
+                        a = 5
+#einstein
+                else:
+#einstein
+                    a = 5
+#einstein
+            else:
+#einstein
+                a = 5
+#einstein
+        else:
+#einstein
+            a = 5
+#einstein
+    else:
+#einstein
+        a = 5
+#einstein
+else:
+#einstein
+    print(a,a,a)
+#einstein

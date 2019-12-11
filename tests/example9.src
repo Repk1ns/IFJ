@@ -1,0 +1,10 @@
+#output 0
+a = 3
+if a == 5 :
+  print(a,a,a)
+else :
+ if a == 3 :
+   print(a,a)
+ else :
+   print(a)   
+    
