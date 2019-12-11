@@ -1273,7 +1273,8 @@ int BuiltInFuncRule(int Result)
             generateInstruction(I_PUSHFRAME, P_NULL, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
             sprintf(pomocna_data.str_data, "%%retval");
             generateInstruction(I_DEFVAR, P_LF, pomocna_data, P_NULL, pomocna_data, P_NULL, pomocna_data);
-            generateInstruction(I_MOVE, P_LF, pomocna_data, P_NIL, pomocna_data, P_NULL, pomocna_data);
+            pomocna_data1.str_data[0] = '\0';
+            generateInstruction(I_MOVE, P_LF, pomocna_data, P_STRING, pomocna_data1, P_NULL, pomocna_data);
 
 
             typCondCounter++;
