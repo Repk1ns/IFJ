@@ -1,7 +1,7 @@
 #output 0
 PI = 3.14159
 print('GEOMETRY CALCULATIONS')
-exit = 0
+exit = 1
 
 def ProcessShape(shape):
   if (shape == 'square'):
